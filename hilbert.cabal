@@ -30,13 +30,3 @@ library
                        base >=4.7 && <4.8
   --hs-source-dirs:      src
   default-language:    Haskell2010
-
-test-suite Modular
-  ghc-options: -Wall -iHilbert
-  type: exitcode-stdio-1.0
-  main-is: t-Modular.hs
-  hs-source-dirs:      tests
-  build-depends:       base,
-                       random,
-                       hilbert
-  default-language:    Haskell2010
