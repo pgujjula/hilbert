@@ -23,7 +23,8 @@ library
                        Hilbert.Permutations, Hilbert.CReal,
                        Hilbert.PriorityQueue, Hilbert.Graph,
                        Hilbert.Poly, Hilbert.List
-  -- other-modules:
+  other-modules: Hilbert.Prime.MillerRabin, Hilbert.Prime.BailliePSW,
+                 Hilbert.Prime.Lucas
   -- other-extensions:
   build-depends:       random,
                        containers,
