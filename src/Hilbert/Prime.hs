@@ -4,6 +4,7 @@ import Data.List (find, foldl', intercalate)
 import Data.Maybe (fromJust)
 
 import Hilbert.Prime.MillerRabin (millerRabin)
+import Hilbert.Prime.Lucas (isPrimeLucas)
 
 import Hilbert.Legendre (jacobi)
 import Hilbert.Square (isSquare)
@@ -24,24 +25,6 @@ isPrimeTrial n | n <= 3 = True
 isPrimeTrial n = all (\a -> n `rem` a /= 0) testFactors
          where testFactors = 2:[3, 5..upperLimit]
                upperLimit = floor $ sqrt $ fromIntegral n
-
-condition2 n = any (== 0) $ take (fromIntegral s)
-             $ tail
-             $ reverse
-             $ map snd
-             $ collapseMap' p q (1, p) (path del) (n)
-               where p = 1
-                     q = (1 - d) `div` 4
-                     d = findd n
-                     (o, s) = factorOut del
-                     del = n - (jacobi d n)
-
-condition2' n =collapseMap' p q (1, p) (path del) (n)
-               where p = 1
-                     q = (1 - d) `div` 4
-                     d = findd n
-                     (o, s) = factorOut del
-                     del = n - (jacobi d n)
 
 genvsch n = zip (map (\n -> ((u_seq 1 (-1)) !! n) `rem` 101) (path n))
                 (map (\n -> ((v_seq 1 (-1)) !! n) `rem` 101) (path n))
@@ -65,47 +48,9 @@ isPrime1 n = (not $ any (\r -> n `rem` r == 0)
 bailliePSW :: (Integral a) => a -> Bool
 bailliePSW n = (millerRabin n [2]) && (isPrimeLucas n)
 
--- Lucas probabilistic prime test
--- precondition :: n >= 3
-isPrimeLucas :: (Integral a) => a -> Bool
-isPrimeLucas n = n == 2 || precondition && condition
-   where d = findd n
-         p = 1
-         q = (1 - d) `div` 4
-         (o, e) = factorOut del
-         del = n - (jacobi d n)
-         precondition = n `rem` 2 == 1
-                     && not (isSquare n)
-                     && gcd n d == 1
-                     && gcd n q == 1
-         condition = condition1 n
-                  || condition2 n
-
-condition1 n =
-  let d = findd n
-      p = 1
-      q = (1 - d) `div` 4
-      (o, e) = factorOut del
-      del = n - (jacobi d n)
-   in lucasu p q o n == 0
-
-findd :: (Integral a) => a -> a
-findd n = fromJust $ find (\a -> jacobi a n == -1) potentiald
-
-potentiald :: (Integral a) => [a]
-potentiald = alternate [5, 9..] [-7, -11..]
-
-alternate :: [a] -> [a] -> [a]
-alternate (x:xs) (y:ys) = x:y:(alternate xs ys)
-
-factorOut :: (Integral a) => a -> (a, a)
-factorOut n = if odd n
-              then (n, 0)
-              else (olda, oldb + 1)
-                  where (olda, oldb) = factorOut (n `div` 2)
-
 primes :: (Integral a) => [a]
 primes = sieve [2..]
+
 sieve :: (Integral a) => [a] -> [a]
 sieve xs = sieve' xs Map.empty
 
