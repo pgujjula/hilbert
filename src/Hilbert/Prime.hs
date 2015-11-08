@@ -2,6 +2,9 @@ module Hilbert.Prime (isPrime, primes, factor, factorizations) where
 
 import Data.List (find, foldl', intercalate)
 import Data.Maybe (fromJust)
+
+import Hilbert.Prime.MillerRabin (millerRabin)
+
 import Hilbert.Legendre (jacobi)
 import Hilbert.Square (isSquare)
 import Hilbert.Modular (modPow)
@@ -55,26 +58,12 @@ isPrime1 :: (Integral a) => a -> Bool
 isPrime1 n = (not $ any (\r -> n `rem` r == 0)
                        primesUnder100)
           && bailliePSW n
-                   
+
 
 -- Baillie-PSW primality test
 -- Precondition: n >= 3
 bailliePSW :: (Integral a) => a -> Bool
 bailliePSW n = (millerRabin n [2]) && (isPrimeLucas n)
-
--- Miller-Rabin probabilistic prime test
--- Precondition: n >= 3
-millerRabin :: (Integral a) => a -> [a] -> Bool
-millerRabin n testBases = not $ all (baseTest n) testBases
-  where baseTest n a = (part1 n a) && (part2 n a)
-        part1 n a = (modPow a d n) /= 1
-        part2 n a = all (\r -> (modPow a (2^r * d) n) /= (n - 1))
-                        [0..s - 1]
-        d = (n - 1) `div` (2^(numTwos (n - 1)))
-        s = numTwos (n - 1)
-        numTwos n = if odd n
-                    then 0
-                    else 1 + (numTwos (n `div` 2))
 
 -- Lucas probabilistic prime test
 -- precondition :: n >= 3
@@ -92,7 +81,7 @@ isPrimeLucas n = n == 2 || precondition && condition
          condition = condition1 n
                   || condition2 n
 
-condition1 n = 
+condition1 n =
   let d = findd n
       p = 1
       q = (1 - d) `div` 4
@@ -112,7 +101,7 @@ alternate (x:xs) (y:ys) = x:y:(alternate xs ys)
 factorOut :: (Integral a) => a -> (a, a)
 factorOut n = if odd n
               then (n, 0)
-              else (olda, oldb + 1) 
+              else (olda, oldb + 1)
                   where (olda, oldb) = factorOut (n `div` 2)
 
 primes :: (Integral a) => [a]
@@ -122,7 +111,7 @@ sieve xs = sieve' xs Map.empty
 
 sieve' :: (Integral a) => [a] -> Map.Map a [a] -> [a]
 sieve' []     table = []
-sieve' (x:xs) table = 
+sieve' (x:xs) table =
   case Map.lookup x table of
     -- x is a prime, so insert (x*x, [x]) into the table.
     Nothing      -> x : (sieve' xs newtable)
@@ -140,7 +129,7 @@ sieve' (x:xs) table =
 factor :: (Integral a) => a -> [(a, a)]
 factor n
   | n < 4     = [(n, 1)]
-  | otherwise = 
+  | otherwise =
       if null afterFirstFactor
       then [(n, 1)]
       else include firstFactor rest
@@ -178,7 +167,7 @@ factorizations limit = update prelim
         merge :: [(Int, [(Int, Int)])] -> [(Int, (Int, Int))] -> [(Int, [(Int, Int)])]
         merge [] x = map (\(x1, x2) -> (x1, [x2])) x
         merge x [] = x
-        merge (x:xs) (y:ys) = 
+        merge (x:xs) (y:ys) =
           case compare (fst x) (fst y) of
             EQ -> (fst x, (snd y):(snd x)):(merge xs ys)
             GT -> (fst y, [snd y]):(merge (x:xs) ys)
@@ -198,4 +187,3 @@ factorizations limit = update prelim
                       where newPrime = a `div` (toNum b)
       toNum :: [(Int, Int)] -> Int
       toNum = product . (map (\(a, b) -> a^b))
-
