@@ -2,7 +2,7 @@ module Hilbert.Prime
   ( isPrime
   , trialDivision
   , millerRabin
-  , lucasLehmer
+  , lucas
   , bailliePSW
   , primes
   , factor
@@ -12,7 +12,7 @@ import Data.List  (find, foldl', intercalate)
 import Data.Maybe (fromJust)
 
 import Hilbert.Prime.MillerRabin   (millerRabin)
-import Hilbert.Prime.LucasLehmer   (lucasLehmer)
+import Hilbert.Prime.Lucas         (lucas)
 import Hilbert.Prime.BailliePSW    (bailliePSW)
 import Hilbert.Prime.TrialDivision (trialDivision)
 
