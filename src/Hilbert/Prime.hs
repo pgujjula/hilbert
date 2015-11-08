@@ -1,11 +1,20 @@
-module Hilbert.Prime (isPrime, primes, factor, factorizations) where
+module Hilbert.Prime
+  ( isPrime
+  , trialDivision
+  , millerRabin
+  , lucasLehmer
+  , bailliePSW
+  , primes
+  , factor
+  , factorizations) where
 
-import Data.List (find, foldl', intercalate)
+import Data.List  (find, foldl', intercalate)
 import Data.Maybe (fromJust)
 
-import Hilbert.Prime.MillerRabin (millerRabin)
-import Hilbert.Prime.Lucas (isPrimeLucas)
-import Hilbert.Prime.BailliePSW (bailliePSW)
+import Hilbert.Prime.MillerRabin   (millerRabin)
+import Hilbert.Prime.LucasLehmer   (lucasLehmer)
+import Hilbert.Prime.BailliePSW    (bailliePSW)
+import Hilbert.Prime.TrialDivision (trialDivision)
 
 import Hilbert.Legendre (jacobi)
 import Hilbert.Square (isSquare)
@@ -17,15 +26,8 @@ import qualified Data.Map as Map
 
 isPrime :: (Integral a) => a -> Bool
 isPrime n
-  | n <= 100 = isPrimeTrial n
+  | n <= 100 = trialDivision n
   | otherwise = isPrime1 n
-
-isPrimeTrial :: (Integral a) => a -> Bool
-isPrimeTrial n | n <= 1 = False
-isPrimeTrial n | n <= 3 = True
-isPrimeTrial n = all (\a -> n `rem` a /= 0) testFactors
-         where testFactors = 2:[3, 5..upperLimit]
-               upperLimit = floor $ sqrt $ fromIntegral n
 
 genvsch n = zip (map (\n -> ((u_seq 1 (-1)) !! n) `rem` 101) (path n))
                 (map (\n -> ((v_seq 1 (-1)) !! n) `rem` 101) (path n))

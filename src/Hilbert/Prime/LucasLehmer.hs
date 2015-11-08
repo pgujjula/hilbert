@@ -1,4 +1,4 @@
-module Hilbert.Prime.Lucas (isPrimeLucas) where
+module Hilbert.Prime.LucasLehmer (lucasLehmer) where
 
 import Data.Maybe (fromJust)
 import Data.List (find)
@@ -10,8 +10,8 @@ import Hilbert.Lucas (lucasu, path, collapseMap')
 
 -- Lucas probabilistic prime test
 -- precondition :: n >= 3
-isPrimeLucas :: (Integral a) => a -> Bool
-isPrimeLucas n = n == 2 || precondition && condition
+lucasLehmer :: (Integral a) => a -> Bool
+lucasLehmer n = n == 2 || precondition && condition
    where d = findd n
          p = 1
          q = (1 - d) `div` 4

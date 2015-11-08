@@ -7,7 +7,11 @@ import System.Random
 main = do
   c <- cases
   let success = filter (not . test) c
-  if null success then exitSuccess else putStrLn $ show $ success
+  if null success
+  then exitSuccess
+  else do
+    putStrLn $ show $ success
+    exitFailure
 
 -- Generate small test cases (0 < b, e, m < 100)
 cases :: IO [(Integer, Integer, Integer)]
