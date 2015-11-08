@@ -5,6 +5,7 @@ import Data.Maybe (fromJust)
 
 import Hilbert.Prime.MillerRabin (millerRabin)
 import Hilbert.Prime.Lucas (isPrimeLucas)
+import Hilbert.Prime.BailliePSW (bailliePSW)
 
 import Hilbert.Legendre (jacobi)
 import Hilbert.Square (isSquare)
@@ -41,12 +42,6 @@ isPrime1 :: (Integral a) => a -> Bool
 isPrime1 n = (not $ any (\r -> n `rem` r == 0)
                        primesUnder100)
           && bailliePSW n
-
-
--- Baillie-PSW primality test
--- Precondition: n >= 3
-bailliePSW :: (Integral a) => a -> Bool
-bailliePSW n = (millerRabin n [2]) && (isPrimeLucas n)
 
 primes :: (Integral a) => [a]
 primes = sieve [2..]
