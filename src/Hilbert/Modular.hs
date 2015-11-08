@@ -1,4 +1,4 @@
-module Hilbert.Modular where
+module Hilbert.Modular (modPow) where
 
 -- Computes b^e (mod m)
 -- Precondition: e >= 0, m > 0
