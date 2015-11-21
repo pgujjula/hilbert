@@ -23,7 +23,7 @@ minimalSolution d = (denom, numer)
           | otherwise = convergent cfrac ((fromIntegral l))
         l = period d
         genSolutions = undefined
-        cfrac = (\(a, b) -> a ++ (cycle b)) $ fromJust $ continuedFrac d
+        cfrac = (\(a, b) -> a:(cycle b)) $ fromJust $ continuedFrac d
 
-expand (Just (a, b)) = a ++ (cycle b)
+expand (Just (a, b)) = a:(cycle b)
 period d = length $ snd $ fromJust $ continuedFrac d

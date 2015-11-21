@@ -33,7 +33,7 @@ library
   other-modules: Hilbert.Prime.MillerRabin, Hilbert.Prime.BailliePSW,
                  Hilbert.Prime.LucasLehmer, Hilbert.Prime.TrialDivision
   -- other-extensions:
-  build-depends:       random,
+  build-depends:       random >= 1.1,
                        containers,
                        base >= 4.4
   hs-source-dirs:      src
@@ -49,6 +49,13 @@ Test-Suite t-modular
 Test-Suite t-prime-trialDivision
   type:       exitcode-stdio-1.0
   main-is: t-prime-trialDivision.hs
+  build-depends: base, hilbert, random >= 1.1
+  hs-source-dirs: tests
+  default-language: Haskell2010
+
+Test-Suite t-continued-frac
+  type:       exitcode-stdio-1.0
+  main-is: t-continued-frac.hs
   build-depends: base, hilbert, random >= 1.1
   hs-source-dirs: tests
   default-language: Haskell2010
