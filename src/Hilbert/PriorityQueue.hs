@@ -1,31 +1,37 @@
-module Hilbert.PriorityQueue (insert, deleteMin, empty,
-                      peekMin, PriorityQueue, Hilbert.PriorityQueue.null) where
-import qualified Data.Map as Map
+module Hilbert.PriorityQueue
+        (insert
+        , deleteMin
+        , empty
+        , peekMin
+        , PriorityQueue
+        , Hilbert.PriorityQueue.null) where
 
-data PriorityQueue e p = PriorityQueue (Map.Map p [e])
-  deriving (Show)
+import qualified Hilbert.BinomialQueue as BQ
 
-null :: PriorityQueue e p -> Bool
-null queue@(PriorityQueue m) = Map.null m
-
--- Inserts "element" into "queue" with the given "priority"
 insert :: (Ord p) => e -> p -> PriorityQueue e p -> PriorityQueue e p
-insert element priority queue@(PriorityQueue m)
- = PriorityQueue 
-  $ Map.insertWith (++) priority [element] m
+insert elem priority (PriorityQueue binomialQueue) =
+    PriorityQueue $ BQ.insert (Pair elem priority) binomialQueue
 
 deleteMin :: (Ord p) => PriorityQueue e p -> (e, PriorityQueue e p)
-deleteMin queue@(PriorityQueue m) = (minElem, newQueue)
-  where minNode = Map.findMin m
-        (minPriority, minElem:otherElems) = minNode
-        newQueue = PriorityQueue 
-                 $ if Prelude.null otherElems
-                   then Map.delete minPriority m
-                   else Map.insert minPriority otherElems m
+deleteMin (PriorityQueue binomialQueue) = (elem, PriorityQueue newQueue)
+  where elem = (\(Pair a b) -> a) pair
+        (pair, newQueue) = BQ.deleteMin binomialQueue
 
-empty :: (Ord p) => PriorityQueue e p
-empty = PriorityQueue $ Map.empty
+empty = PriorityQueue (BQ.empty)
 
 peekMin :: (Ord p) => PriorityQueue e p -> e
-peekMin queue@(PriorityQueue m)
-  = head $ snd $ Map.findMin m
+peekMin (PriorityQueue binomialQueue) = 
+  (\(Pair a b) -> a) $ BQ.peekMin binomialQueue
+
+null :: PriorityQueue e p -> Bool
+null (PriorityQueue binomialQueue) = Prelude.null binomialQueue
+
+data Pair e p = Pair e p
+
+newtype PriorityQueue e p = PriorityQueue (BQ.BinomialQueue (Pair e p))
+
+instance (Eq p) => Eq (Pair e p) where
+  (Pair e1 p1) == (Pair e2 p2) = p1 == p2
+
+instance (Ord p) => Ord (Pair e p) where
+  compare (Pair e1 p1) (Pair e2 p2) = compare p1 p2

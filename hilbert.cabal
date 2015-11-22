@@ -29,6 +29,7 @@ library
                  , Hilbert.Graph
                  , Hilbert.Poly
                  , Hilbert.List
+                 , Hilbert.BinomialQueue
                  
   other-modules: Hilbert.Prime.MillerRabin, Hilbert.Prime.BailliePSW,
                  Hilbert.Prime.LucasLehmer, Hilbert.Prime.TrialDivision
