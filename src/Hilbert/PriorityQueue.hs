@@ -1,37 +1,40 @@
-module Hilbert.PriorityQueue
-        (insert
-        , deleteMin
-        , empty
-        , peekMin
-        , PriorityQueue
-        , Hilbert.PriorityQueue.null) where
+module Hilbert.PriorityQueue where
 
-import qualified Hilbert.BinomialQueue as BQ
+import Data.List (foldl')
 
-insert :: (Ord p) => e -> p -> PriorityQueue e p -> PriorityQueue e p
-insert elem priority (PriorityQueue binomialQueue) =
-    PriorityQueue $ BQ.insert (Pair elem priority) binomialQueue
+class PriorityQueue q where
+  -- Minimal complete definition
+  --   insert
+  --   peekMinWithPriority
+  --   deleteMinWithPriority
+  --   empty
+  --   size
+  -- Highly recommended to implement 'meld' and 'null' as well
+  insert                :: (Ord p) => e -> p -> q e p -> q e p
+  peekMin               :: (Ord p) => q e p -> e
+  peekMinWithPriority   :: (Ord p) => q e p -> (e, p)
+  deleteMin             :: (Ord p) => q e p -> (e, q e p)
+  deleteMinWithPriority :: (Ord p) => q e p -> (e, p, q e p)
+  meld                  :: (Ord p) => q e p -> q e p -> q e p
+  fromList              :: (Ord p) => [(e, p)] -> q e p
+  empty                 :: (Ord p) => q e p
+  null                  ::            q e p -> Bool
+  size                  ::            q e p -> Int
 
-deleteMin :: (Ord p) => PriorityQueue e p -> (e, PriorityQueue e p)
-deleteMin (PriorityQueue binomialQueue) = (elem, PriorityQueue newQueue)
-  where elem = (\(Pair a b) -> a) pair
-        (pair, newQueue) = BQ.deleteMin binomialQueue
+  -- Default implementations
+  peekMin = fst . peekMinWithPriority
 
-empty = PriorityQueue (BQ.empty)
+  deleteMin = (\(a, b, c) -> (a, c)) . deleteMinWithPriority
 
-peekMin :: (Ord p) => PriorityQueue e p -> e
-peekMin (PriorityQueue binomialQueue) = 
-  (\(Pair a b) -> a) $ BQ.peekMin binomialQueue
+  meld queue1 queue2 =
+    if Hilbert.PriorityQueue.null queue1
+    then queue2
+    else let (element, priority, queue1') = deleteMinWithPriority queue1
+             queue2' = insert element priority queue2
+          in meld queue1' queue2'
 
-null :: PriorityQueue e p -> Bool
-null (PriorityQueue binomialQueue) = Prelude.null binomialQueue
+  fromList = foldl' (\queue (element, priority)
+                        -> insert element priority queue)
+                    Hilbert.PriorityQueue.empty
 
-data Pair e p = Pair e p
-
-newtype PriorityQueue e p = PriorityQueue (BQ.BinomialQueue (Pair e p))
-
-instance (Eq p) => Eq (Pair e p) where
-  (Pair e1 p1) == (Pair e2 p2) = p1 == p2
-
-instance (Ord p) => Ord (Pair e p) where
-  compare (Pair e1 p1) (Pair e2 p2) = compare p1 p2
+  null = (== 0) . size

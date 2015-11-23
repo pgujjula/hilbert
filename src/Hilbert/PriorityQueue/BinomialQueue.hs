@@ -1,13 +1,4 @@
-module Hilbert.BinomialQueue
-        (empty
-        , fromList
-        , peekMin
-        , deleteMin
-        , insert
-        , meld
-        , printQueue
-        , BinomialQueue)
-  where
+module Hilbert.PriorityQueue.BinomialQueue where
 
 import Data.Maybe (isJust, fromJust)
 import Data.List (null)
