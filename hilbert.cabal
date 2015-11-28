@@ -16,23 +16,27 @@ build-type:          Simple
 cabal-version:       >=1.22
 
 library
-  exposed-modules: Hilbert.Prime
-                 , Hilbert.Modular
-                 , Hilbert.Lucas
-                 , Hilbert.Legendre
+  exposed-modules: Hilbert.ContinuedFrac
                  , Hilbert.Digit
-                 , Hilbert.Square
-                 , Hilbert.ContinuedFrac
+             --  , Hilbert.Graph
+                 , Hilbert.Legendre
+                 , Hilbert.List
+                 , Hilbert.Lucas
+                 , Hilbert.Modular
                  , Hilbert.Pell
                  , Hilbert.Permutations
-                 , Hilbert.PriorityQueue
-                 , Hilbert.Graph
                  , Hilbert.Poly
-                 , Hilbert.List
+                 , Hilbert.PriorityQueue
+                 , Hilbert.PriorityQueue.ADT
+                 , Hilbert.PriorityQueue.MapQueue
+                 , Hilbert.Prime
+                 , Hilbert.Square
                  
-  other-modules: Hilbert.Prime.MillerRabin, Hilbert.Prime.BailliePSW,
-                 Hilbert.Prime.LucasLehmer, Hilbert.Prime.TrialDivision,
-                 Hilbert.PriorityQueue.BinomialQueue
+  other-modules: Hilbert.Prime.MillerRabin
+               , Hilbert.Prime.BailliePSW
+               , Hilbert.Prime.LucasLehmer
+               , Hilbert.Prime.TrialDivision
+
   -- other-extensions:
   build-depends:       random >= 1.1,
                        containers,
