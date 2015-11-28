@@ -1,8 +1,11 @@
-module Hilbert.PriorityQueue.BinomialQueue (BinomialQueue) where
+module Hilbert.PriorityQueue.BinomialQueue
+  ( BinomialQueue
+  , empty) where
 
 import Hilbert.PriorityQueue.BinomialQueue.BinomialTree (BinomialTree)
 
 newtype BinomialQueue v p = BinomialQueue [Maybe (BinomialTree v p)]
+  deriving (Show)
 
 empty :: BinomialQueue v p
 empty = undefined
