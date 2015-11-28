@@ -29,6 +29,7 @@ library
                  , Hilbert.PriorityQueue
                  , Hilbert.PriorityQueue.ADT
                  , Hilbert.PriorityQueue.MapQueue
+                 , Hilbert.PriorityQueue.BinomialQueue
                  , Hilbert.Prime
                  , Hilbert.Square
                  
@@ -36,6 +37,7 @@ library
                , Hilbert.Prime.BailliePSW
                , Hilbert.Prime.LucasLehmer
                , Hilbert.Prime.TrialDivision
+               , Hilbert.PriorityQueue.BinomialQueue.BinomialTree
 
   -- other-extensions:
   build-depends:       random >= 1.1,

@@ -11,9 +11,11 @@ module Hilbert.PriorityQueue
   , meld
   , fromList
   , MapQueue
+  , BinomialQueue
   , PriorityQueue) where
 
 import Hilbert.PriorityQueue.ADT
 import Hilbert.PriorityQueue.MapQueue
+import Hilbert.PriorityQueue.BinomialQueue
 
 type PriorityQueue = MapQueue
