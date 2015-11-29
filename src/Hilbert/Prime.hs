@@ -8,9 +8,6 @@ module Hilbert.Prime
   , factor
   , factorizations) where
 
-import Data.List  (find, foldl', intercalate)
-import Data.Maybe (fromJust)
-
 import Hilbert.Prime.MillerRabin   (millerRabin)
 import Hilbert.Prime.LucasLehmer   (lucasLehmer)
 import Hilbert.Prime.BailliePSW    (bailliePSW)
