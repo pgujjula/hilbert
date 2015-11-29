@@ -5,13 +5,15 @@ module Hilbert.PriorityQueue.BinomialQueue.BinomialTree
   , rank
   , singleton
   , link
-  , debugPrintTree) where
+  , debugPrintTree
+  , fromList) where
 
 data BinomialTree v p = BinomialTree
                           { root :: (v, p),
                             children :: [BinomialTree v p]}
     deriving (Show)
 
+-- Finding the rank of a binomial tree with rank n is O(n) time
 rank :: BinomialTree v p -> Int
 rank = length . children
 
@@ -37,3 +39,10 @@ debugPrintTree = putStr . concat . debugStringTree
                               $ map debugStringTree
                               $ children tree)
 
+fromList :: (Ord p) => [(v, p)] -> BinomialTree v p
+fromList = collapseTrees . (map (\(v, p) -> singleton v p))
+  where collapseOnce (x1:x2:xs) = (link x1 x2):(collapseOnce xs)
+        collapseOnce _ = []
+
+        collapseTrees [x] = x
+        collapseTrees xs = collapseTrees $ collapseOnce xs
