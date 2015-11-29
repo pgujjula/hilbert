@@ -18,10 +18,10 @@ class PriorityQueueADT q where
   null                  ::            q v p -> Bool
   size                  ::            q v p -> Int
   insert                :: (Ord p) => v -> p -> q v p -> q v p
-  peekMin               ::            q v p -> v
-  peekMinWithPriority   ::            q v p -> (v, p)
-  deleteMin             ::            q v p -> (v, q v p)
-  deleteMinWithPriority ::            q v p -> ((v, p), q v p)
+  peekMin               :: (Ord p) => q v p -> v
+  peekMinWithPriority   :: (Ord p) => q v p -> (v, p)
+  deleteMin             :: (Ord p) => q v p -> (v, q v p)
+  deleteMinWithPriority :: (Ord p) => q v p -> ((v, p), q v p)
   meld                  :: (Ord p) => q v p -> q v p -> q v p
   fromList              :: (Ord p) => [(v, p)] -> q v p
 
