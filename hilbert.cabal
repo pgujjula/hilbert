@@ -37,33 +37,43 @@ library
                , Hilbert.Prime.BailliePSW
                , Hilbert.Prime.LucasLehmer
                , Hilbert.Prime.TrialDivision
+               , Hilbert.Prime.Factor
+               , Hilbert.Prime.List
                , Hilbert.PriorityQueue.BinomialQueue.BinomialTree
 
   -- other-extensions:
-  build-depends:       random >= 1.1,
+  build-depends:       random >= 1.0,
                        containers,
-                       base >= 4.4
+                       base >= 4.4,
+                       QuickCheck >= 2.7
   hs-source-dirs:      src
   default-language:    Haskell2010
+
+Test-Suite t-continued-frac
+  type:       exitcode-stdio-1.0
+  main-is: t-continued-frac.hs
+  build-depends: base, hilbert, random >= 1.0
+  hs-source-dirs: tests
+  default-language: Haskell2010
+
+Test-Suite t-digit
+  type: exitcode-stdio-1.0
+  main-is: t-digit.hs
+  build-depends: base, hilbert, random >= 1.0, QuickCheck 
+  hs-source-dirs: tests
+  default-language: Haskell2010
 
 Test-Suite t-modular
   type:       exitcode-stdio-1.0
   main-is: t-modular.hs
-  build-depends: base, hilbert, random >= 1.1
+  build-depends: base, hilbert, random >= 1.0
   hs-source-dirs: tests
   default-language: Haskell2010
 
 Test-Suite t-prime-trialDivision
   type:       exitcode-stdio-1.0
   main-is: t-prime-trialDivision.hs
-  build-depends: base, hilbert, random >= 1.1
-  hs-source-dirs: tests
-  default-language: Haskell2010
-
-Test-Suite t-continued-frac
-  type:       exitcode-stdio-1.0
-  main-is: t-continued-frac.hs
-  build-depends: base, hilbert, random >= 1.1
+  build-depends: base, hilbert, random >= 1.0
   hs-source-dirs: tests
   default-language: Haskell2010
 

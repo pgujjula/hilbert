@@ -1,4 +1,7 @@
-module Hilbert.Digit where
+module Hilbert.Digit
+  ( ndigits
+  , sumDigits
+  , digits) where
 
 ndigits :: (Integral a) => a -> Int
 ndigits n | abs n < 10 = 1
