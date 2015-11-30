@@ -1,25 +1,58 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 module Hilbert.Prime.List (primes) where
 
-import Data.Map as Map
+import Debug.Trace (trace)
+import Hilbert.PriorityQueue
+  (PriorityQueueADT
+  , BinomialQueue
+  , MapQueue
+  , deleteMinWithPriority
+  , fromList
+  , meld
+  , insert
+  , deleteMin
+  , empty)
+
+import qualified Hilbert.PriorityQueue as PQ (null)
 
 primes :: (Integral a) => [a]
 primes = sieve [2..]
 
+emptyQueue :: (Integral a) => BinomialQueue a a
+emptyQueue = empty
+
 sieve :: (Integral a) => [a] -> [a]
-sieve xs = sieve' xs Map.empty
+sieve = sieve' emptyQueue
 
-sieve' :: (Integral a) => [a] -> Map.Map a [a] -> [a]
-sieve' []     table = []
-sieve' (x:xs) table =
-  case Map.lookup x table of
-    -- x is a prime, so insert (x*x, [x]) into the table.
-    Nothing      -> x : (sieve' xs newtable)
-                      where newtable = Map.insert (x*x) [x] table
+sieve' :: (Integral a, PriorityQueueADT q) => q a a -> [a] -> [a]
+sieve' queue (x:xs) = 
+  let (list, newQueue) = deleteWhile (\v p -> p == x) queue
+      updatedList = map (\(v, p) -> (v, p + v)) list
+      updatedQueue = meld (fromList updatedList) newQueue
+  in case list of
+      [] -> x:(sieve' (insert x (2*x) updatedQueue) xs)
+      otherwise -> sieve' updatedQueue xs
 
-    -- x is not a prime, and we are returned a list of primes that
-    -- have x as the next number to cross out
-    Just factors -> sieve' xs (reinsert tableWithoutX factors)
-                      where reinsert table [] = table
-                            reinsert table (prime:rest) = reinsert newTable rest
-                                                          where newTable = (Map.insertWith (++) (x+prime) [prime] table)
-                            tableWithoutX = Map.delete x table
+deleteWhile :: forall q v p. (PriorityQueueADT q, Ord p)
+                          => (v -> p -> Bool)
+                          -> q v p
+                          -> ([(v, p)], q v p)
+deleteWhile _ queue
+  | PQ.null queue = ([], queue)
+deleteWhile func queue = 
+  let (potentialDelete, newQueue) = deleteMinWithPriority queue
+      (val, pty) = potentialDelete
+   in if func val pty
+      then let (restList, finalQueue) = deleteWhile func newQueue
+            in ((val, pty):restList, finalQueue)
+      else ([], queue)
+
+list :: [Int]
+list = [1..10]
+
+pairs = zip list (reverse list)
+
+queue :: MapQueue Int Int
+queue = fromList pairs
+
+func v p = p <= 4
