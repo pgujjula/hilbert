@@ -35,7 +35,7 @@ library
                  
   other-modules: Hilbert.Prime.MillerRabin
                , Hilbert.Prime.BailliePSW
-               , Hilbert.Prime.LucasLehmer
+               , Hilbert.Prime.Lucas
                , Hilbert.Prime.TrialDivision
                , Hilbert.Prime.Factor
                , Hilbert.Prime.List
@@ -73,6 +73,13 @@ Test-Suite t-modular
 Test-Suite t-prime-trialDivision
   type:       exitcode-stdio-1.0
   main-is: t-prime-trialDivision.hs
+  build-depends: base, hilbert, random >= 1.0
+  hs-source-dirs: tests
+  default-language: Haskell2010
+
+Test-Suite t-prime-millerRabin
+  type: exitcode-stdio-1.0
+  main-is: t-prime-millerRabin.hs
   build-depends: base, hilbert, random >= 1.0
   hs-source-dirs: tests
   default-language: Haskell2010

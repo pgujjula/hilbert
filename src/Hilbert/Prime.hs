@@ -2,14 +2,14 @@ module Hilbert.Prime
   ( isPrime
   , trialDivision
   , millerRabin
-  , lucasLehmer
+  , lucas
   , bailliePSW
   , primes
   , factor
   , factorizations) where
 
 import Hilbert.Prime.MillerRabin   (millerRabin)
-import Hilbert.Prime.LucasLehmer   (lucasLehmer)
+import Hilbert.Prime.Lucas         (lucas)
 import Hilbert.Prime.BailliePSW    (bailliePSW)
 import Hilbert.Prime.TrialDivision (trialDivision)
 import Hilbert.Prime.List          (primes)
