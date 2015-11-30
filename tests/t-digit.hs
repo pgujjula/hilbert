@@ -1,46 +1,41 @@
 module Main where
 
 import System.Exit (exitFailure, exitSuccess)
-import Hilbert.Digit
 import System.Random
+import Data.List (sort)
 
--- Produce a random positive integer with n digits.
-integerWithDigits :: (RandomGen g) => Int -> g -> (Integer, g)
-integerWithDigits n = randomR (low, high)
-  where low = 10^(n - 1)
-        high = (10^n) - 1
-
--- Produce random positive integers with the given numbers of digits.
-integersWithDigits :: (RandomGen g) => [Int] -> g -> [Integer]
-integersWithDigits [] g = []
-integersWithDigits (x:xs) gen = 
-  let (r, gen') = integerWithDigits x gen
-      rs = integersWithDigits xs gen'
-   in r:rs
-
--- A random infinite list of small positive integers (<= 100), 
--- representing the number of digits in other numbers. This is
--- the input to integersWithDigits.
-digitList :: (RandomGen g) => g -> [Int]
-digitList = randomRs (1, 100)
-
+import Hilbert.Digit
+import Hilbert.List (rmDups)
 -- The number of tests to run
-ntests = 1000
+ntests = 10000
 
 -- An list of test cases of the form (d, *number with d digits*)
-genTests :: (RandomGen g) => g -> [(Int, Integer)] 
-genTests gen = take ntests $ zip dlist integers
-  where (gen1, gen2) = split gen
-        dlist = digitList gen1
-        integers = integersWithDigits dlist gen2
+genTests :: (RandomGen g) => g -> [(Int, Integer)]
+genTests gen = (digits, num):rest
+  where (digits, gen1) = randomR (1, 100) gen
+        (num,    gen2) = randomR (10^(digits - 1), 10^digits - 1) gen1
+        rest = genTests gen2
 
-testAll :: [(Int, Integer)] -> [Bool]
-testAll tests = map (\(ans, n) -> (ndigits n) == ans) tests
+testAll :: (RandomGen g) => g -> [(Integer, Int, Int)]
+testAll = (map testFunc) . (take ntests) . genTests
+  where testFunc (answer, number) = (number, answer, result)
+          where result = ndigits number
+
+wrongAnswers :: (RandomGen g) => g -> [(Integer, Int, Int)]
+wrongAnswers = rmDups . sort . (filter filterFunc) . testAll
+  where filterFunc (input, expected, actual) = expected /= actual
+
+errorMsgs :: (RandomGen g) => g -> [String]
+errorMsgs = (map errorMsg) . wrongAnswers
+  where errorMsg (input, expected, actual) = 
+            "expected: ndigits " ++ (show input) ++ " == " ++ (show expected) ++ "\n"
+         ++ "but got : ndigits " ++ (show input) ++ " == " ++ (show actual)   ++ "\n"
 
 main = do
   g <- getStdGen
-  let tests = genTests g
-  let results = testAll tests
-  if and results
+  let errors = errorMsgs g
+  if null errors
   then exitSuccess
-  else exitFailure
+  else do
+    sequence_ $ map putStrLn errors
+    exitFailure
