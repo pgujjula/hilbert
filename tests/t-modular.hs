@@ -1,8 +1,9 @@
 module Main where
 
 import System.Exit (exitFailure, exitSuccess)
-import Hilbert.Modular
 import System.Random
+
+import Hilbert.Modular
 
 main = do
   c <- cases
