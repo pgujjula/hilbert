@@ -36,7 +36,8 @@ minus (Irrational a b c d) n = Irrational (newa `div` g)
 
 convergent :: (Integral a) => [a] -> a -> Ratio a
 convergent _ 0 = 0
-convergent (x:xs) n = 1 / ((fromIntegral x) + (convergent xs (n - 1)))
+convergent (x:xs) 1 = fromIntegral x
+convergent (x:xs) n = (fromIntegral x) + (1/(convergent xs (n - 1)))
 
 continuedFrac :: (Integral a) => a -> Maybe (a, [a])
 continuedFrac x | isSquare x = Nothing
