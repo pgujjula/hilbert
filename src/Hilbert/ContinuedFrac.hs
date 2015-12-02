@@ -1,4 +1,6 @@
-module Hilbert.ContinuedFrac (convergent, continuedFrac) where
+module Hilbert.ContinuedFrac
+  ( convergent
+  , continuedFrac) where
 
 import Data.Maybe (fromJust)
 import Data.List (find, findIndices)
@@ -34,10 +36,39 @@ minus (Irrational a b c d) n = Irrational (newa `div` g)
         newd = d
         g = gcd (gcd newa newc) newd
 
+-- |/convergent xs n/ computes the nth convergent of the continued
+--  fraction represented by xs
+--
+-- >>> convergent [1, 2, 2, 2..] 1
+-- 1 % 1
+-- >>> convergent [1, 2, 2, 2..] 3
+-- 7 % 5
 convergent :: (Integral a) => [a] -> a -> Ratio a
 convergent _ 0 = 0
 convergent (x:xs) 1 = fromIntegral x
 convergent (x:xs) n = (fromIntegral x) + (1/(convergent xs (n - 1)))
+
+{- |@continuedFrac x@ returns @'Nothing'@ if @x@ is a square. Otherwise, it
+  returns @'Just' (n, xs)@, which represents the continued fraction representation
+  of @sqrt x@.
+
+    [@n@] is the non-repeating first term of the continued fraction,
+    [@xs@] represents a single cycle of the repeating part of the continued fraction.
+
+  >>> continuedFrac 41
+  Just (6, [2, 2, 12])
+  >>> continuedFrac 4
+  Nothing
+
+  For example, to compute a good approximation for @sqrt 2@
+
+  @
+  approx = fromRational $ convergent (n:(repeat xs)) 30
+           where Just (n, xs) = continuedFrac 2
+  >>> approx - (sqrt 2)
+  0.0
+  @
+-}
 
 continuedFrac :: (Integral a) => a -> Maybe (a, [a])
 continuedFrac x | isSquare x = Nothing

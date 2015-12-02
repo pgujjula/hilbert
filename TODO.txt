@@ -64,4 +64,20 @@ Add benchmarks for
   [ ] PriorityQueue
   [ ] Square
 
-Convert tests from exitcode[ ]stdio to detailed
+Convert tests from exitcode-stdio to detailed
+
+Add documentation for
+  [ ] ContinuedFrac 
+  [ ] Digit
+  [ ] Graph
+  [ ] Legendre
+  [ ] List
+  [ ] Lucas
+  [ ] Modular
+  [ ] Pell
+  [ ] Permutations
+  [ ] Poly
+  [ ] Prime
+  [ ] PriorityQueue
+  [ ] Square
+
