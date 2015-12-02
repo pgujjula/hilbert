@@ -1,67 +1,67 @@
 Add tests for
-  - ContinuedFrac 
-    - convergent
+  [x] ContinuedFrac 
+    [x] convergent
     [x] continuedFrac
-  - Digit
-    - ndigits
-    - sumDigits
-    - digits
-  - Graph
-    - need to overhaul before adding tests
-  - Legendre
-    - legendre
-    - jacobi
-  - List
-    - rmDups
-  - Lucas
-    - need to cleanup/document before tests
-  - Pell
-    - pellSolve
-    - minimalSolution
-  - Permutations
-    - Can probably delete this because of Data.List.Permutations
-  - Poly
-    - Document/cleanup before tests
-  - Prime
-    - isPrime
-    - trialDivision
-    - millerRabin
-    - lucas
-    - bailliePSW
-    - primes
-    - factor
-    - factorizations
-  - PriorityQueue
-    - PriorityQueueADT
-    - empty
-    - null
-    - size
-    - insert
-    - peekMin
-    - peekMinWithPriority
-    - deleteMin
-    - deleteMinWithPriority
-    - meld
-    - fromList
-    - MapQueue
-    - BinomialQueue
-    - PriorityQueue
-  - Square
-    - isSquare
+  [ ] Digit
+    [ ] ndigits
+    [ ] sumDigits
+    [ ] digits
+  [ ] Graph
+    [ ] need to overhaul before adding tests
+  [ ] Legendre
+    [ ] legendre
+    [ ] jacobi
+  [ ] List
+    [ ] rmDups
+  [ ] Lucas
+    [ ] need to cleanup/document before tests
+  [ ] Pell
+    [ ] pellSolve
+    [ ] minimalSolution
+  [ ] Permutations
+    [ ] Can probably delete this because of Data.List.Permutations
+  [ ] Poly
+    [ ] Document/cleanup before tests
+  [ ] Prime
+    [ ] isPrime
+    [ ] trialDivision
+    [ ] millerRabin
+    [ ] lucas
+    [ ] bailliePSW
+    [ ] primes
+    [ ] factor
+    [ ] factorizations
+  [ ] PriorityQueue
+    [ ] PriorityQueueADT
+    [ ] empty
+    [ ] null
+    [ ] size
+    [ ] insert
+    [ ] peekMin
+    [ ] peekMinWithPriority
+    [ ] deleteMin
+    [ ] deleteMinWithPriority
+    [ ] meld
+    [ ] fromList
+    [ ] MapQueue
+    [ ] BinomialQueue
+    [ ] PriorityQueue
+  [ ] Square
+    [ ] isSquare
 
 Add benchmarks for 
-  - ContinuedFrac 
-  - Digit
-  - Graph
-  - Legendre
-  - List
-  - Lucas
-  - Modular
-  - Pell
-  - Permutations
-  - Poly
-  - Prime
-  - PriorityQueue
-  - Square
+  [ ] ContinuedFrac 
+  [ ] Digit
+  [ ] Graph
+  [ ] Legendre
+  [ ] List
+  [ ] Lucas
+  [ ] Modular
+  [ ] Pell
+  [ ] Permutations
+  [ ] Poly
+  [ ] Prime
+  [ ] PriorityQueue
+  [ ] Square
 
-Convert tests from exitcode-stdio to detailed
+Convert tests from exitcode[ ]stdio to detailed
