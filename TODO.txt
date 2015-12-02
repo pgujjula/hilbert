@@ -1,7 +1,7 @@
 Add tests for
   - ContinuedFrac 
     - convergent
-    - continuedFrac
+    [x] continuedFrac
   - Digit
     - ndigits
     - sumDigits
