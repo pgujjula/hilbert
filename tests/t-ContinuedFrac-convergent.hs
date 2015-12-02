@@ -3,7 +3,7 @@ module Main where
 import System.Exit (exitFailure, exitSuccess)
 import System.Random
 
-import Data.List (sortBy)
+import Data.List (sort)
 
 import Hilbert.ContinuedFrac (convergent, continuedFrac)
 import Hilbert.Square (isSquare)
@@ -12,15 +12,15 @@ toInfinite :: (Integral a) => a -> [a]
 toInfinite n = a:(cycle b)
   where Just (a, b) = continuedFrac n
 
-test :: Integer -> Bool
-test n = (reverse $ sortBy cmp list) == list
+test n = (reverse $ sort approximations) == approximations
  where
-  cmp :: Integer -> Integer -> Ordering
-  cmp x y = compare (f x) (f y)
-    where f x = abs $ (sqrt $ fromIntegral n) - (fromRational (convergent cfrac x))
-          cfrac = toInfinite n
-  list = take limit $ toInfinite n
+  list = [1..limit]
   limit = 5
+  Just (a, b) = continuedFrac n
+  cfrac = a:(cycle b)
+  approximations = map (abs . ((sqrt (fromIntegral n)) - ) . fromRational
+                          . (convergent cfrac)) list
+
 
 cases :: [Integer]
 cases = filter (not . isSquare) [1..10]
