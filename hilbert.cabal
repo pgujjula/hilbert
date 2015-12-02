@@ -56,6 +56,13 @@ Test-Suite t-ContinuedFrac-continuedFrac
   hs-source-dirs: tests
   default-language: Haskell2010
 
+Test-Suite t-ContinuedFrac-convergent
+  type:       exitcode-stdio-1.0
+  main-is: t-ContinuedFrac-convergent.hs
+  build-depends: base, hilbert, random >= 1.0
+  hs-source-dirs: tests
+  default-language: Haskell2010
+
 Test-Suite t-digit
   type: exitcode-stdio-1.0
   main-is: t-digit.hs
