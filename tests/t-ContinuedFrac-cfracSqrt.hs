@@ -18,9 +18,9 @@ rightAnswers = [Nothing,
                 Just (3, [6])]
 
 -- The continued fractions of sqrt(1), sqrt(2), ..., sqrt(10)
--- according to Hilbert.ContinuedFrac.continuedFrac
+-- according to Hilbert.ContinuedFrac.cfracSqrt
 testAnswers :: [Maybe (Int, [Int])]
-testAnswers = map continuedFrac [1..10]
+testAnswers = map cfracSqrt [1..10]
 
 wrongAnswers :: [(Int, Maybe (Int, [Int]), Maybe (Int, [Int]))]
 wrongAnswers = filter (\(a, b, c) -> b /= c)
@@ -28,7 +28,7 @@ wrongAnswers = filter (\(a, b, c) -> b /= c)
 
 errorMsg :: (Int, Maybe (Int, [Int]), Maybe (Int, [Int])) -> String
 errorMsg (n, exp, res) = 
-     "ERROR: in computing continuedFrac " ++ (show n) ++ "\n"
+     "ERROR: in computing cfracSqrt " ++ (show n) ++ "\n"
   ++ "  expected: " ++ (show exp) ++ "\n"
   ++ "  but got : " ++ (show res) ++ "\n"
 
