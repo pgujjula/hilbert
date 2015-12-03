@@ -4,10 +4,10 @@ import System.Exit (exitFailure, exitSuccess)
 import System.Random
 import Data.Char (ord)
 
-import Hilbert.Digit (sumDigits)
+import qualified Hilbert.Digit as Digit (digits)
 
 -- The number of tests to run.
-ntests = 1000
+ntests = 10
 
 -- Note that this is *not* the digits from Hilbert.Digit
 digits n = map ((\x -> x - (ord '0')) . ord) $ show n
@@ -15,15 +15,15 @@ digits n = map ((\x -> x - (ord '0')) . ord) $ show n
 range = (0, 10^500)
 
 test :: Integer -> Bool
-test n = (sumDigits n) == (fromIntegral $ sum $ digits n)
+test n = (digits n) == (Digit.digits n)
 
 genCases :: (RandomGen g) => g -> [Integer]
 genCases gen = [0..100] ++ (take ntests $ randomRs range gen)
 
 errorMsg :: Integer -> String
-errorMsg n = "ERROR: In computing sumDigits " ++ (show n) ++ "\n"
-          ++ "  expected: " ++ (show $ sum $ digits n) ++ "\n"
-          ++ "  but got : " ++ (show $ sumDigits n) ++ "\n"
+errorMsg n = "ERROR: In computing digits " ++ (show n) ++ "\n"
+          ++ "  expected: " ++ (show $ digits n) ++ "\n"
+          ++ "  but got : " ++ (show $ Digit.digits n) ++ "\n"
 
 main = do
   gen <- getStdGen
@@ -34,4 +34,3 @@ main = do
   else do
     sequence_ $ map (putStrLn . errorMsg) wrongs
     exitFailure
-
