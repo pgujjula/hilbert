@@ -63,9 +63,16 @@ Test-Suite t-ContinuedFrac-convergent
   hs-source-dirs: tests
   default-language: Haskell2010
 
-Test-Suite t-digit
+Test-Suite t-Digit-numDigits
   type: exitcode-stdio-1.0
-  main-is: t-digit.hs
+  main-is: t-Digit-numDigits.hs
+  build-depends: base, hilbert, random >= 1.0, QuickCheck 
+  hs-source-dirs: tests
+  default-language: Haskell2010
+
+Test-Suite t-Digit-sumDigits
+  type: exitcode-stdio-1.0
+  main-is: t-Digit-sumDigits.hs
   build-depends: base, hilbert, random >= 1.0, QuickCheck 
   hs-source-dirs: tests
   default-language: Haskell2010
