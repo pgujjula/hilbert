@@ -38,6 +38,10 @@ sumDigits n = (n `rem` 10) + sumDigits (n `div` 10)
 -}
 digits :: (Integral a) => a -> [Int]
 digits = reverse . digits'
-  where digits' :: (Integral a) => a -> [Int]
-        digits' n | n < 10 = [fromIntegral n]
-        digits' n = ((fromIntegral n) `rem` 10):(digits' (n `div` 10))
+  where
+  -- Generate the digits in reverse order, which is easier.
+    digits' :: (Integral a) => a -> [Int]
+    digits' n | n < 10 = [fromIntegral n]
+    digits' n = first:rest
+      where first = fromIntegral $ n `rem` 10
+            rest = digits' (n `div` 10)
