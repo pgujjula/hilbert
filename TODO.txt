@@ -49,21 +49,6 @@ Add tests for
   [ ] Square
     [ ] isSquare
 
-Add benchmarks for 
-  [ ] ContinuedFrac 
-  [ ] Digit
-  [ ] Graph
-  [ ] Legendre
-  [ ] List
-  [ ] Lucas
-  [ ] Modular
-  [ ] Pell
-  [ ] Permutations
-  [ ] Poly
-  [ ] Prime
-  [ ] PriorityQueue
-  [ ] Square
-
 Convert tests from exitcode-stdio to detailed
 
 Add documentation for
