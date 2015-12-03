@@ -18,8 +18,10 @@ cabal-version:       >=1.22
 library
   exposed-modules: Hilbert.ContinuedFrac
                  , Hilbert.Digit
+             -- Graph modules
              --  , Hilbert.Graph
                  , Hilbert.Graph.ADT
+                 , Hilbert.Graph.EdgeList
                  , Hilbert.Legendre
                  , Hilbert.List
                  , Hilbert.Lucas
