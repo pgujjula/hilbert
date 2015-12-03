@@ -1,6 +1,6 @@
 module Hilbert.Square where
 
-import Hilbert.Digit (ndigits)
+import Hilbert.Digit (numDigits)
 import Data.Maybe (fromJust)
 import Data.List (find)
 
@@ -11,7 +11,7 @@ import Data.List (find)
 -- a better approximation.
 isSquare n =
   let -- The initial approximation
-      initial = 10^((ndigits n) `div` 2)
+      initial = 10^((numDigits n) `div` 2)
 
       -- A list of improving approximations
       list = iterate initial
