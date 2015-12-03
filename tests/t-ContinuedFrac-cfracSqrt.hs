@@ -1,3 +1,4 @@
+-- Check that ContinuedFrac.continuedFrac matches answers from Wolfram Alpha
 module Main where
 
 import System.Exit (exitFailure, exitSuccess)

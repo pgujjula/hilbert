@@ -8,9 +8,12 @@ import Data.List (find, findIndices)
 import Hilbert.Square (isSquare)
 import Data.Ratio
 
+-- Data type to represent quadratic surds
+-- Irrational a b c d corresponds to (a sqrt(b) + c)/d
 data Irrational a = Irrational a a a a
                 deriving (Show, Eq)
 
+-- Take the reciprocal of a quadritic surd
 reciprocal :: (Integral a) => Irrational a -> Irrational a
 reciprocal (Irrational a b c d) =
           Irrational
@@ -23,10 +26,12 @@ reciprocal (Irrational a b c d) =
         newc = -c*d
         newd = (a^2)*b - (c^2)
 
+-- Compute the floor of a quadratic surd
 flr :: (Integral a) => Irrational a -> a
 flr (Irrational a b c d) = floor $ ((f a)*sqrt(f b) + (f c)) / (f d)
   where f = fromIntegral
 
+-- Subtract an integer from a quadratic surd
 minus :: (Integral a) => Irrational a -> a -> Irrational a
 minus (Irrational a b c d) n = Irrational (newa `div` g)
                                           b
@@ -49,7 +54,6 @@ minus (Irrational a b c d) n = Irrational (newa `div` g)
    >>> (fromRational $ convergent cfrac 21) == (exp 1)
    True
 -}
-
 convergent :: (Integral a) => [a] -> a -> Ratio a
 convergent _ 0 = 0
 convergent (x:xs) 1 = fromIntegral x
@@ -76,7 +80,6 @@ convergent (x:xs) n = (fromIntegral x) + (1/(convergent xs (n - 1)))
   0.0
   @
 -}
-
 cfracSqrt :: (Integral a) => a -> Maybe (a, [a])
 cfracSqrt x | isSquare x = Nothing
 cfracSqrt x = Just $ (first, periodic)
