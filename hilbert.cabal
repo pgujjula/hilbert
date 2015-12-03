@@ -19,6 +19,7 @@ library
   exposed-modules: Hilbert.ContinuedFrac
                  , Hilbert.Digit
              --  , Hilbert.Graph
+                 , Hilbert.Graph.ADT
                  , Hilbert.Legendre
                  , Hilbert.List
                  , Hilbert.Lucas
