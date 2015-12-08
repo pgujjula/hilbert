@@ -18,7 +18,10 @@ cabal-version:       >=1.22
 library
   exposed-modules: Hilbert.ContinuedFrac
                  , Hilbert.Digit
+             -- Graph modules
              --  , Hilbert.Graph
+                 , Hilbert.Graph.ADT
+                 , Hilbert.Graph.EdgeList
                  , Hilbert.Legendre
                  , Hilbert.List
                  , Hilbert.Lucas
@@ -81,6 +84,13 @@ Test-Suite t-Digit-digits
   type: exitcode-stdio-1.0
   main-is: t-Digit-digits.hs
   build-depends: base, hilbert, random >= 1.0, QuickCheck 
+  hs-source-dirs: tests
+  default-language: Haskell2010
+
+Test-Suite t-Graph-EdgeList-emptyUndirected
+  type:       exitcode-stdio-1.0
+  main-is: t-Graph-EdgeList-emptyUndirected.hs
+  build-depends: base, hilbert, random >= 1.0
   hs-source-dirs: tests
   default-language: Haskell2010
 
