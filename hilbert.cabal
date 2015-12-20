@@ -35,6 +35,7 @@ library
                  , Hilbert.PriorityQueue.BinomialQueue
                  , Hilbert.Prime
                  , Hilbert.Square
+                 , Hilbert.Test
                  
   other-modules: Hilbert.Prime.MillerRabin
                , Hilbert.Prime.BailliePSW
@@ -94,9 +95,9 @@ Test-Suite t-Graph-EdgeList-emptyUndirected
   hs-source-dirs: tests
   default-language: Haskell2010
 
-Test-Suite t-modular
+Test-Suite t-Modular-modPow
   type:       exitcode-stdio-1.0
-  main-is: t-modular.hs
+  main-is: t-Modular-modPow.hs
   build-depends: base, hilbert, random >= 1.0
   hs-source-dirs: tests
   default-language: Haskell2010
