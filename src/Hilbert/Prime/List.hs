@@ -1,58 +1,38 @@
-{-# LANGUAGE ScopedTypeVariables #-}
 module Hilbert.Prime.List (primes) where
 
-import Debug.Trace (trace)
-import Hilbert.PriorityQueue
-  (PriorityQueueADT
-  , BinomialQueue
-  , MapQueue
-  , deleteMinWithPriority
-  , fromList
-  , meld
-  , insert
-  , deleteMin
-  , empty)
+import Hilbert.PriorityQueue as PQ
 
-import qualified Hilbert.PriorityQueue as PQ (null)
+primes :: [Int]
+primes = primesFrom [2..] e
+  where primesFrom :: [Int] -> MapQueue Int Int -> [Int]
+        primesFrom xs mq = case step xs mq of
+                             (Just p, rest, mq') -> p:(primesFrom rest mq')
+                             (Nothing, rest, mq') -> primesFrom rest mq'
 
-primes :: (Integral a) => [a]
-primes = sieve [2..]
+        takeEvery :: Int -> [a] -> [a]
+        takeEvery n (x:xs) = x:(takeEvery n (drop (n - 1) xs))
 
-emptyQueue :: (Integral a) => BinomialQueue a a
-emptyQueue = empty
+        e :: MapQueue Int Int
+        e = empty
 
-sieve :: (Integral a) => [a] -> [a]
-sieve = sieve' emptyQueue
+        step :: [Int] -> MapQueue Int Int -> (Maybe Int, [Int], MapQueue Int Int)
+        step (x:xs) mq
+          | (PQ.null mq) || (Prelude.null facs) = (Just x, xs, insert x (x*x) mq)
+          | otherwise = (Nothing, xs, insertAll facs' mq')
+            where (facs, mq') = deleteWhile (\(v, p) -> p == x) mq
+                  facs' = map (\(v, p) -> (v, v + p)) facs
 
-sieve' :: (Integral a, PriorityQueueADT q) => q a a -> [a] -> [a]
-sieve' queue (x:xs) = 
-  let (list, newQueue) = deleteWhile (\v p -> p == x) queue
-      updatedList = map (\(v, p) -> (v, p + v)) list
-      updatedQueue = meld (fromList updatedList) newQueue
-  in case list of
-      [] -> x:(sieve' (insert x (2*x) updatedQueue) xs)
-      otherwise -> sieve' updatedQueue xs
+        deleteWhile :: (Ord p) => ((v, p) -> Bool) -> (MapQueue v p) -> 
+                       ([(v, p)], MapQueue v p)
+        deleteWhile func mq
+          | PQ.null mq = ([], mq)
+          | func pair  = (pair:pairs, finalQueue)
+          | otherwise = ([], mq)
+              where (pair, mq') = deleteMinWithPriority mq
+                    (pairs, finalQueue) = deleteWhile func mq'
 
-deleteWhile :: forall q v p. (PriorityQueueADT q, Ord p)
-                          => (v -> p -> Bool)
-                          -> q v p
-                          -> ([(v, p)], q v p)
-deleteWhile _ queue
-  | PQ.null queue = ([], queue)
-deleteWhile func queue = 
-  let (potentialDelete, newQueue) = deleteMinWithPriority queue
-      (val, pty) = potentialDelete
-   in if func val pty
-      then let (restList, finalQueue) = deleteWhile func newQueue
-            in ((val, pty):restList, finalQueue)
-      else ([], queue)
+        insertAll :: (Ord p) => [(v, p)] -> MapQueue v p -> MapQueue v p
+        insertAll [] mq = mq
+        insertAll ((v, p):xs) mq = insertAll xs (insert v p mq)
 
-list :: [Int]
-list = [1..10]
 
-pairs = zip list (reverse list)
-
-queue :: MapQueue Int Int
-queue = fromList pairs
-
-func v p = p <= 4
