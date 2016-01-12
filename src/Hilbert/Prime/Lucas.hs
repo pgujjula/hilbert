@@ -7,7 +7,6 @@ import Hilbert.Legendre (jacobi)
 import Hilbert.Square (isSquare)
 import Hilbert.Lucas (lucasu, path, collapseMap')
 
-
 -- Lucas probabilistic prime test
 -- precondition :: n >= 3
 lucas :: (Integral a) => a -> Bool
