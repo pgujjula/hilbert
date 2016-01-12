@@ -1,8 +1,6 @@
 module Hilbert.Modular (modPow) where
 
--- Computes b^e (mod m)
--- Precondition: e >= 0, m > 0
--- modPow 0 0 _ = 1
+{-| @modPow b e m @ computes @b^e (mod m)@. -}
 modPow :: (Integral a) => a -> a -> a -> a
 modPow b e m
 -- Corner case
