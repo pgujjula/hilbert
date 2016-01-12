@@ -1,7 +1,16 @@
-module Hilbert.Lucas where
+module Hilbert.Lucas
+  ( u_seq
+  , v_seq
+  , u
+  , v
+  , lucasu -- what does this do?
+  , path -- what does this do?
+  , collapseMap' -- what does this do?
+  ) where
 
 import Hilbert.Modular (modPow) 
 
+{-| u_seq p q returns the Lucas sequence U_pq -}
 u_seq :: (Integral a) => a -> a -> [a]
 u_seq p q = list
   where list = [0, 1]
@@ -10,6 +19,7 @@ u_seq p q = list
                            (map (q*) list)
                   )
 
+{-| v_seq p q returns the Lucas sequence V_pq -}
 v_seq :: (Integral a) => a -> a -> [a]
 v_seq p q = list
   where list = [2, p]
@@ -18,6 +28,7 @@ v_seq p q = list
                            (map (q*) list)
                   )
 
+{-| u p q n returns the nth Lucas number U_pq(n) -}
 u :: (Integral a) => a -> a -> a -> a
 u _ _ 0 = 0
 u _ _ 1 = 1
@@ -28,6 +39,7 @@ u p q n | odd n
   = (u p q (k + 1))^2 - q*(u p q k)^2
     where k = (n - 1) `div` 2
 
+{-| v p q n returns the nth Lucas number V_pq(n) -}
 v :: (Integral a) => a -> a -> a -> a
 v _ _ 0 = 2
 v p _ 1 = p

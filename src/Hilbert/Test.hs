@@ -16,8 +16,8 @@ runtest test@(Single _ _ _) =
   if (expected test) == (actual test)
   then Nothing
   else Just $ "ERROR! In computing: " ++ (expression test) ++ "\n"
-    ++ "  expected: " ++ (expected test) ++ "\n"
-    ++ "  but got : " ++ (actual test) ++ "\n"
+           ++ "  expected: " ++ (expected test) ++ "\n"
+           ++ "  but got : " ++ (actual test) ++ "\n"
 
 runtest test@(Chain ts) = if null errors
                           then Nothing
