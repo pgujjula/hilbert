@@ -4,8 +4,7 @@ import Hilbert.Digit (numDigits)
 import Data.Maybe (fromJust)
 import Data.List (find)
 
--- Returns true if n is a square.
-
+{-| Returns true if the input is a perfect square. -}
 -- Algorithm: Create better approximations for sqrt(n) using Newton's method.
 -- If x is an approximation for sqrt(n), then (x*x + n)/(2*x) is
 -- a better approximation.

@@ -27,7 +27,6 @@ library
                  , Hilbert.Lucas
                  , Hilbert.Modular
                  , Hilbert.Pell
-                 , Hilbert.Permutations
                  , Hilbert.Poly
                  , Hilbert.PriorityQueue
                  , Hilbert.PriorityQueue.ADT
