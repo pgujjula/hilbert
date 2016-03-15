@@ -9,26 +9,25 @@ Stability   : experimental
 Functions to perform modular arithmetic.
 -}
 
-module Hilbert.Modular (modPow) where
+module Hilbert.Modular
+  (modPow) where
 
-{-|
-  @modPow a b m @ efficiently computes @mod (a^b) m@.
+{- | @modPow a b m @ efficiently computes @mod (a^b) m@.
 
-> Preconditions: 
->   a >= 0
->   b >= 0
->   m > 0
+   > Preconditions: 
+   >   a >= 0
+   >   b >= 0
+   >   m > 0
 
->>> modPow 3 4 7
-4
->>> modPow 0 10 12
-0
->>> modPow 13 0 23
-1
->>> modPow 0 0 19
-1
+   >>> modPow 3 4 7
+   4
+   >>> modPow 0 10 12
+   0
+   >>> modPow 13 0 23
+   1
+   >>> modPow 0 0 19
+   1
 -}
- 
 modPow :: (Integral a) => a -> a -> a -> a
 modPow a b m
 -- Corner case
