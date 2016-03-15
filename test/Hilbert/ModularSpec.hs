@@ -16,9 +16,12 @@ testSizeLimit = 10000 :: Integer
 numberOfTests = 1000 :: Int
 
 -- Generates only positive test cases
+positiveGen :: Gen Integer
 positiveGen = choose (1, testSizeLimit)
 
+spec :: SpecWith()
 spec = modifyMaxSuccess (\_ -> numberOfTests) $ 
+  describe "Modular" $ do 
   describe "modPow" $ do
     it "modPow 0 0 m == 1 for all m > 0" $ do
       forAll positiveGen $ \m -> 

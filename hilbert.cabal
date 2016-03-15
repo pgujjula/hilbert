@@ -16,7 +16,7 @@ build-type:          Simple
 cabal-version:       >=1.18
 
 library
-  exposed-modules: Hilbert.Modular
+  exposed-modules: Hilbert.Modular, Hilbert.Digit
                  
   -- other-modules:
 
