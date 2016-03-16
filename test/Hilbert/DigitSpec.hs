@@ -1,6 +1,6 @@
 module Hilbert.DigitSpec (main, spec) where
 
-import Hilbert.Digit (numDigits, sumDigits, toDigits)
+import Hilbert.Digit (numDigits, sumDigits, toDigits, fromDigits)
 import Test.Hspec
 import Test.Hspec.QuickCheck
 import Test.QuickCheck
@@ -23,10 +23,23 @@ numDigitsGen = choose (1, maxNumDigits)
 digitsGen :: Gen Int
 digitsGen = choose (0, 9)
 
+-- Numbers with and without leading zeros
+withLeadingZero :: Gen [Int]
+withLeadingZero = suchThat numbersGen ((== 0) . head) 
+
+withoutLeadingZero :: Gen [Int]
+withoutLeadingZero = suchThat numbersGen ((/= 0) . head)
+
+-- Only zeros
+zeroList :: Gen [Int]
+zeroList = do
+    caseLength <- numDigitsGen
+    vectorOf caseLength (return 0)
+
 -- The generator to create the actual test cases
 numbersGen :: Gen [Int]
-numbersGen = suchThat (numDigitsGen >>= (\x -> vectorOf x digitsGen))
-                      ((/= 0) . head)
+numbersGen = numDigitsGen >>= (\x ->
+             vectorOf x digitsGen)
 
 -- Convert a list of ints to an integer
 listToInteger :: [Int] -> Integer
@@ -40,7 +53,7 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
                 (numDigits x) `shouldBe` 1
 
             it "numDigits works on arbitrarily large positive integers" $ do
-              forAll numbersGen $ \x -> 
+              forAll withoutLeadingZero $ \x -> 
                 (numDigits (listToInteger x)) `shouldBe` (length x)
 
           describe "sumDigits" $ do
@@ -49,7 +62,7 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
                 (sumDigits x) `shouldBe` x
 
             it "sumDigits works on arbitrarily large positive integers" $ do
-              forAll numbersGen $ \x -> 
+              forAll withoutLeadingZero $ \x -> 
                 (sumDigits (listToInteger x)) `shouldBe` (fromIntegral $ sum x)
 
           describe "toDigits" $ do 
@@ -58,5 +71,21 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
                 (toDigits x) `shouldBe` [x]
 
             it "toDigits works on arbitrarily large positive integers" $ do
-              forAll numbersGen $ \x -> 
+              forAll withoutLeadingZero $ \x -> 
                 (toDigits (listToInteger x)) `shouldBe` x
+
+          describe "fromDigits" $ do
+            it "fromDigits [] == 0" $ do
+              (fromDigits []) `shouldBe` 0
+
+            it "fromDigits works on lists starting with zero" $ do
+              forAll withLeadingZero $ \xs ->
+                (fromDigits xs) `shouldBe` (listToInteger xs)
+
+            it "fromDigits works on lists of only zeros" $ do
+              forAll zeroList $ \xs -> 
+                (fromDigits xs) `shouldBe` 0
+
+            it "fromDigits works on arbitrary lists" $ do
+              forAll numbersGen $ \xs -> 
+                (fromDigits xs) `shouldBe` (listToInteger xs)
