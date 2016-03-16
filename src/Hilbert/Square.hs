@@ -1,3 +1,14 @@
+{-|
+Module      : Hilbert.Modular
+Description : Functions to perform modular arithmetic.
+Copyright   : (c) Preetham Gujjula, 2016
+License     : GPL-3
+Maintainer  : preetham.gujjula@gmail.com
+Stability   : experimental
+
+Functions related to squaring.
+-}
+
 module Hilbert.Square where
 
 import Hilbert.Digit (numDigits)
