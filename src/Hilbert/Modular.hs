@@ -28,6 +28,7 @@ module Hilbert.Modular
    >>> modPow 0 0 19
    1
 -}
+
 modPow :: (Integral a) => a -> a -> a -> a
 modPow a b m
 -- Corner case
