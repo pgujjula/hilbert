@@ -30,22 +30,11 @@ rmDups (x1:x2:xs) = if x1 == x2
                     else x1:(rmDups (x2:xs))
 rmDups xs = xs
 
-{-| @rmDupsWith f xs@ removes all duplicate elements in @xs@ using
-    a custom comparison function @f@.
-    
-    > Precondition: xs is already sorted by f, so (sortBy f xs) == xs
--}
-rmDupsWith :: (a -> a -> Bool) -> [a] -> [a]
-rmDupsWith func (x1:x2:xs) = if func x1 x2
-                             then rmDupsWith func (x1:xs)
-                             else x1:(rmDupsWith func (x2:xs))
-rmDupsWith func xs = xs
-
 {-| Group elements of a list using a comparison function.
  
     >>> groupBy compare [4, 3, 5, 6, 7, 8, 3, 6, 8, 5, 3]
     [[3,3,3],[4],[5,5],[6,6],[7],[8,8]]
- -}
+-}
 groupBy :: (a -> a -> Ordering) -> [a] -> [[a]]
 groupBy func list = groupAscending func $ sortBy func list
   where
