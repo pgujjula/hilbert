@@ -1,6 +1,6 @@
 module Hilbert.DigitSpec (main, spec) where
 
-import Hilbert.Digit (numDigits, sumDigits, digits)
+import Hilbert.Digit (numDigits, sumDigits, toDigits)
 import Test.Hspec
 import Test.Hspec.QuickCheck
 import Test.QuickCheck
@@ -52,11 +52,11 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
               forAll numbersGen $ \x -> 
                 (sumDigits (listToInteger x)) `shouldBe` (fromIntegral $ sum x)
 
-          describe "digits" $ do 
-            it "digits works on numbers close to 0" $ do
+          describe "toDigits" $ do 
+            it "toDigits works on numbers close to 0" $ do
               forAll digitsGen $ \x -> 
-                (digits x) `shouldBe` [x]
+                (toDigits x) `shouldBe` [x]
 
-            it "digits works on arbitrarily large positive integers" $ do
+            it "toDigits works on arbitrarily large positive integers" $ do
               forAll numbersGen $ \x -> 
-                (digits (listToInteger x)) `shouldBe` x
+                (toDigits (listToInteger x)) `shouldBe` x

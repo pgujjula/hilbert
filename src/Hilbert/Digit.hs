@@ -12,7 +12,7 @@ Functions to perform handle the digits of integers.
 module Hilbert.Digit
   ( numDigits
   , sumDigits
-  , digits) where
+  , toDigits) where
 
 {- | @numDigits n@ is the number of digits in @n@.
 
@@ -23,6 +23,7 @@ module Hilbert.Digit
    >>> numDigits 0
    1
 -}
+
 numDigits :: (Integral a) => a -> Int
 numDigits n | abs n < 10 = 1
 numDigits n = 1 + (numDigits $ n `div` 10)
@@ -36,6 +37,7 @@ numDigits n = 1 + (numDigits $ n `div` 10)
    >>> sumDigits 0
    0
 -}
+
 sumDigits :: (Integral a) => a -> a
 sumDigits n | n < 10 = n
 sumDigits n = (n `rem` 10) + sumDigits (n `div` 10)
@@ -49,12 +51,13 @@ sumDigits n = (n `rem` 10) + sumDigits (n `div` 10)
    >>> digits 0
    [0]
 -}
-digits :: (Integral a) => a -> [Int]
-digits = reverse . digits'
+
+toDigits :: (Integral a) => a -> [Int]
+toDigits = reverse . toDigits'
   where
   -- Generate the digits in reverse order, which is easier.
-    digits' :: (Integral a) => a -> [Int]
-    digits' n | n < 10 = [fromIntegral n]
-    digits' n = first:rest
+    toDigits' :: (Integral a) => a -> [Int]
+    toDigits' n | n < 10 = [fromIntegral n]
+    toDigits' n = first:rest
       where first = fromIntegral $ n `rem` 10
-            rest = digits' (n `div` 10)
+            rest = toDigits' (n `div` 10)
