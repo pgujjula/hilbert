@@ -12,7 +12,8 @@ Functions to perform handle the digits of integers.
 module Hilbert.Digit
   ( numDigits
   , sumDigits
-  , toDigits) where
+  , toDigits
+  , fromDigits) where
 
 {- | @numDigits n@ is the number of digits in @n@.
 
@@ -42,13 +43,13 @@ sumDigits :: (Integral a) => a -> a
 sumDigits n | n < 10 = n
 sumDigits n = (n `rem` 10) + sumDigits (n `div` 10)
 
-{- | @digits n@ is a list of all the digits in @n@. 
+{- | @toDigits n@ is a list of all the digits in @n@. 
 
    > Precondition: n >= 0
 
-   >>> digits 2938475
+   >>> toDigits 2938475
    [2, 9, 3, 8, 4, 7, 5]
-   >>> digits 0
+   >>> toDigits 0
    [0]
 -}
 
@@ -61,3 +62,27 @@ toDigits = reverse . toDigits'
     toDigits' n = first:rest
       where first = fromIntegral $ n `rem` 10
             rest = toDigits' (n `div` 10)
+
+{- | @fromDigits xs@ is converts a list of digits @xs@ to an integer.
+
+   > Preconditions: All elements of @xs@ are in [0..9]
+
+   >>> fromDigits [1, 7, 2, 9]
+   1729
+   >>> fromDigits []
+   0
+   >>> fromDigits [0, 0, 0]
+   0
+   >>> fromDigits [0, 4, 2]
+   42
+-}
+
+fromDigits :: (Integral a) => [a] -> Integer
+fromDigits = fromDigits' . reverse
+  where
+  -- Computing the number is easier if the digits are given in reverse
+  fromDigits' [] = 0
+  fromDigits' (x:xs) = if (x < 0) || (x > 9)
+                       then error $ (show (toInteger x))
+                                    ++ " must be between 0 and 9 inclusive"
+                       else 10*(fromDigits' xs) + (fromIntegral x)
