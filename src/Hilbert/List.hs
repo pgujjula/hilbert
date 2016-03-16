@@ -1,3 +1,14 @@
+{-|
+Module      : Hilbert.List
+Description : Functions to perform modular arithmetic.
+Copyright   : (c) Preetham Gujjula, 2016
+License     : GPL-3
+Maintainer  : preetham.gujjula@gmail.com
+Stability   : experimental
+
+Utility functions to handle lists.
+-}
+
 module Hilbert.List
   ( rmDups
   , rmDupsWith
@@ -6,11 +17,12 @@ module Hilbert.List
 
 import Data.List (sortBy)
 
-{-| Removes duplicates from a sorted list.
-    Undefined behavior on nonsorted lists.
+{- | @rmDups xs@ removes the duplicates from a list @xs@.
 
-  >>> rmDups [1, 1, 2, 4, 6, 6, 6, 6, 10]
-  [1, 2, 4, 6, 10]
+   > Precondition: xs must be sorted
+
+   >>> rmDups [1, 1, 2, 4, 6, 6, 6, 6, 10]
+   [1, 2, 4, 6, 10]
 -}
 rmDups :: (Eq a) => [a] -> [a]
 rmDups (x1:x2:xs) = if x1 == x2
@@ -18,9 +30,11 @@ rmDups (x1:x2:xs) = if x1 == x2
                     else x1:(rmDups (x2:xs))
 rmDups xs = xs
 
-{-| Removes duplicates from a sorted list,
-    using a custom comparison function. Undefined
-    behavior on nonsorted lists. -}
+{-| @rmDupsWith f xs@ removes all duplicate elements in @xs@ using
+    a custom comparison function @f@.
+    
+    > Precondition: xs is already sorted by f, so (sortBy f xs) == xs
+-}
 rmDupsWith :: (a -> a -> Bool) -> [a] -> [a]
 rmDupsWith func (x1:x2:xs) = if func x1 x2
                              then rmDupsWith func (x1:xs)
@@ -29,8 +43,8 @@ rmDupsWith func xs = xs
 
 {-| Group elements of a list using a comparison function.
  
->>> groupBy compare [4, 3, 5, 6, 7, 8, 3, 6, 8, 5, 3]
-[[3,3,3],[4],[5,5],[6,6],[7],[8,8]]
+    >>> groupBy compare [4, 3, 5, 6, 7, 8, 3, 6, 8, 5, 3]
+    [[3,3,3],[4],[5,5],[6,6],[7],[8,8]]
  -}
 groupBy :: (a -> a -> Ordering) -> [a] -> [[a]]
 groupBy func list = groupAscending func $ sortBy func list

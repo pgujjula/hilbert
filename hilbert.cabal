@@ -17,7 +17,7 @@ cabal-version:       >=1.18
 
 library
   exposed-modules: Hilbert.Modular, Hilbert.Digit,
-                   Hilbert.Square
+                   Hilbert.Square, Hilbert.List
                  
   -- other-modules:
 
