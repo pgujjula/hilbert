@@ -1,5 +1,5 @@
 {-|
-Module      : Hilbert.Modular
+Module      : Hilbert.Square
 Description : Functions to perform modular arithmetic.
 Copyright   : (c) Preetham Gujjula, 2016
 License     : GPL-3
@@ -15,16 +15,16 @@ import Hilbert.Digit (numDigits)
 import Data.Maybe (fromJust)
 import Data.List (find)
 
-{- | @isSquare n$ returns whether the @n@ is a perfect square.
+{-| @isSquare n@ returns whether the @n@ is a perfect square.
 
-   > Preconditions: none
+    > Preconditions: none
 
-   >>> isSquare 4
-   True
-   >>> isSquare 11
-   False
-   >>> isSquare 0
-   True
+    >>> isSquare 4
+    True
+    >>> isSquare 11
+    False
+    >>> isSquare 0
+    True
 -}
 
 {- Algorithm: Create better approximations for sqrt(n) using Newton's method.
