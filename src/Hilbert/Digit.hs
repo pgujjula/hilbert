@@ -1,5 +1,5 @@
 {-|
-Module      : Hilbert.Modular
+Module      : Hilbert.Digit
 Description : Functions to perform modular arithmetic.
 Copyright   : (c) Preetham Gujjula, 2016
 License     : GPL-3
@@ -15,42 +15,42 @@ module Hilbert.Digit
   , toDigits
   , fromDigits) where
 
-{- | @numDigits n@ is the number of digits in @n@.
+{-| @numDigits n@ is the number of digits in @n@.
 
-   > Precondition: n >= 0
+    > Precondition: n >= 0
 
-   >>> numDigits 2938475
-   7
-   >>> numDigits 0
-   1
+    >>> numDigits 2938475
+    7
+    >>> numDigits 0
+    1
 -}
 
 numDigits :: (Integral a) => a -> Int
 numDigits n | abs n < 10 = 1
 numDigits n = 1 + (numDigits $ n `div` 10)
 
-{- | @sumDigits n@ is the sum of the digits in @n@.
+{-| @sumDigits n@ is the sum of the digits in @n@.
 
-   > Precondition: n >= 0
+    > Precondition: n >= 0
 
-   >>> sumDigits 2938475
-   38
-   >>> sumDigits 0
-   0
+    >>> sumDigits 2938475
+    38
+    >>> sumDigits 0
+    0
 -}
 
 sumDigits :: (Integral a) => a -> a
 sumDigits n | n < 10 = n
 sumDigits n = (n `rem` 10) + sumDigits (n `div` 10)
 
-{- | @toDigits n@ is a list of all the digits in @n@. 
+{-| @toDigits n@ is a list of all the digits in @n@. 
 
-   > Precondition: n >= 0
+    > Precondition: n >= 0
 
-   >>> toDigits 2938475
-   [2, 9, 3, 8, 4, 7, 5]
-   >>> toDigits 0
-   [0]
+    >>> toDigits 2938475
+    [2, 9, 3, 8, 4, 7, 5]
+    >>> toDigits 0
+    [0]
 -}
 
 toDigits :: (Integral a) => a -> [Int]
@@ -63,18 +63,18 @@ toDigits = reverse . toDigits'
       where first = fromIntegral $ n `rem` 10
             rest = toDigits' (n `div` 10)
 
-{- | @fromDigits xs@ is converts a list of digits @xs@ to an integer.
+{-| @fromDigits xs@ is converts a list of digits @xs@ to an integer.
 
-   > Preconditions: All elements of @xs@ are in [0..9]
+    > Precondition: All elements of @xs@ are in [0..9]
 
-   >>> fromDigits [1, 7, 2, 9]
-   1729
-   >>> fromDigits []
-   0
-   >>> fromDigits [0, 0, 0]
-   0
-   >>> fromDigits [0, 4, 2]
-   42
+    >>> fromDigits [1, 7, 2, 9]
+    1729
+    >>> fromDigits []
+    0
+    >>> fromDigits [0, 0, 0]
+    0
+    >>> fromDigits [0, 4, 2]
+    42
 -}
 
 fromDigits :: (Integral a) => [a] -> Integer
