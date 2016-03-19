@@ -1,0 +1,7 @@
+This is a list of known bugs that need to be addressed in the future.
+
+* Some functions return incorrect results when called on fixed precision 
+  integer types, such as Int/Int32/Int64, because some internal operations
+  result in unchecked overflow.
+
+  Current fix: Use Integer or (Integral a) => a for now.
