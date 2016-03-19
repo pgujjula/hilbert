@@ -1,6 +1,6 @@
 {-|
 Module      : Hilbert.Square
-Description : Functions to perform modular arithmetic.
+Description : Functions related to squaring.
 Copyright   : (c) Preetham Gujjula, 2016
 License     : GPL-3
 Maintainer  : preetham.gujjula@gmail.com

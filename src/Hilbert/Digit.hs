@@ -1,12 +1,12 @@
 {-|
 Module      : Hilbert.Digit
-Description : Functions to perform modular arithmetic.
+Description : Functions to handle the digits of integers.
 Copyright   : (c) Preetham Gujjula, 2016
 License     : GPL-3
 Maintainer  : preetham.gujjula@gmail.com
 Stability   : experimental
 
-Functions to perform handle the digits of integers.
+Functions to handle the digits of integers.
 -}
 
 module Hilbert.Digit
