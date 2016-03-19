@@ -1,8 +1,19 @@
+{-|
+Module      : Hilbert.Digit
+Description : Functions to perform modular arithmetic.
+Copyright   : (c) Preetham Gujjula, 2016
+License     : GPL-3
+Maintainer  : preetham.gujjula@gmail.com
+Stability   : experimental
+
+Functions to compute the primality of a number using trial division.
+-}
+
 module Hilbert.Prime.TrialDivision (trialDivision) where
 
--- Determines whether n is prime by testing
--- potential factors up to the square root of n.
--- Skips even factors except for 2, a small optimization.
+{-| Determines whether n is prime by testing
+    potential factors up to the square root of n.
+-}
 trialDivision :: (Integral a) => a -> Bool
 trialDivision n
   | n < 2 = False -- Anything less than 2 is not prime.
