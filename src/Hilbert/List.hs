@@ -1,6 +1,6 @@
 {-|
 Module      : Hilbert.List
-Description : Functions to perform modular arithmetic.
+Description : Utility functions to handle lists.
 Copyright   : (c) Preetham Gujjula, 2016
 License     : GPL-3
 Maintainer  : preetham.gujjula@gmail.com

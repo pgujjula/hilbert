@@ -1,6 +1,6 @@
 {-|
 Module      : Hilbert.Digit
-Description : Functions to perform modular arithmetic.
+Description : Functions to compute the primality of a number using trial division.
 Copyright   : (c) Preetham Gujjula, 2016
 License     : GPL-3
 Maintainer  : preetham.gujjula@gmail.com
