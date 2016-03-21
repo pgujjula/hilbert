@@ -1,6 +1,7 @@
 module Hilbert.ModularSpec (main, spec) where
 
 import Hilbert.Modular (modPow)
+import Data.Int (Int8)
 import Test.Hspec
 import Test.QuickCheck
 import Test.Hspec.QuickCheck
@@ -18,6 +19,9 @@ numberOfTests = 1000 :: Int
 -- Generates only positive test cases
 positiveGen :: Gen Integer
 positiveGen = choose (1, testSizeLimit)
+
+smallGen :: Gen Integer
+smallGen = choose (1, fromIntegral (maxBound :: Int8))
 
 spec :: SpecWith()
 spec = modifyMaxSuccess (\_ -> numberOfTests) $ 
@@ -42,3 +46,11 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
       forAll positiveGen $ \b -> 
       forAll positiveGen $ \m -> 
         (modPow a b m) == ((a^b) `mod` m)
+
+    it "doesn't overflow if we use a fixed-precision Integral type" $ 
+      forAll smallGen $ \a -> 
+      forAll smallGen $ \b -> 
+      forAll smallGen $ \m -> 
+        (toInteger (modPow ((fromIntegral a) :: Int8)
+                           ((fromIntegral b) :: Int8)
+                           ((fromIntegral m) :: Int8))) == (modPow a b m)
