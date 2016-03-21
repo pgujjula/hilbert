@@ -30,7 +30,10 @@ module Hilbert.Modular
 -}
 
 modPow :: (Integral a) => a -> a -> a -> a
-modPow a b m
+modPow a b m = fromIntegral $ modPow_low_level (toInteger a) (toInteger b) (toInteger m)
+
+modPow_low_level :: Integer -> Integer -> Integer -> Integer
+modPow_low_level a b m
 -- Corner case
   | b == 0                = 1
 -- Ensure 0 <= a < m

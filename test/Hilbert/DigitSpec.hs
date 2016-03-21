@@ -5,6 +5,7 @@ import Test.Hspec
 import Test.Hspec.QuickCheck
 import Test.QuickCheck
 import Control.Applicative (liftA)
+import Data.Int (Int16)
 
 main :: IO ()
 main = hspec spec
@@ -18,6 +19,9 @@ numberOfTests = 1000 :: Int
 -- The generator for the number of digits in the test case
 numDigitsGen :: Gen Int
 numDigitsGen = choose (1, maxNumDigits)
+
+smallGen :: Gen Int16
+smallGen = choose (1, maxBound :: Int16)
 
 -- The generator for the digits to use in the tests
 digitsGen :: Gen Int
@@ -56,6 +60,11 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
               forAll withoutLeadingZero $ \x -> 
                 (numDigits (listToInteger x)) `shouldBe` (length x)
 
+            it "has no overflow issues" $ do
+              forAll smallGen $ \x -> 
+                (numDigits ((fromIntegral x) :: Int16))
+                  == (numDigits ((fromIntegral x) :: Integer))
+
           describe "sumDigits" $ do
             it "sumDigits works on numbers close to 0" $ do 
               forAll digitsGen $ \x -> 
@@ -65,6 +74,11 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
               forAll withoutLeadingZero $ \x -> 
                 (sumDigits (listToInteger x)) `shouldBe` (fromIntegral $ sum x)
 
+            it "has no overflow issues" $ do
+              forAll smallGen $ \x -> 
+                (toInteger (sumDigits ((fromIntegral x) :: Int16)))
+                  == (sumDigits ((fromIntegral x) :: Integer))
+
           describe "toDigits" $ do 
             it "toDigits works on numbers close to 0" $ do
               forAll digitsGen $ \x -> 
@@ -73,6 +87,11 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
             it "toDigits works on arbitrarily large positive integers" $ do
               forAll withoutLeadingZero $ \x -> 
                 (toDigits (listToInteger x)) `shouldBe` x
+
+            it "has no overflow issues" $ do
+              forAll smallGen $ \x -> 
+                (toDigits ((fromIntegral x) :: Int16))
+                  == (toDigits ((fromIntegral x) :: Integer))
 
           describe "fromDigits" $ do
             it "fromDigits [] == 0" $ do

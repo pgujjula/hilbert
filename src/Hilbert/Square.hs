@@ -33,8 +33,12 @@ import Data.List (find)
 -}
 
 isSquare :: Integral a => a -> Bool
-isSquare n =
-  let -- The initial approximation
+isSquare m =
+  let -- To deal with fixed precision integers, we need to convert to
+      -- Integer first.
+      n = fromIntegral m
+
+      -- The initial approximation
       initial = 10^((numDigits n) `div` 2)
 
       -- A list of improving approximations

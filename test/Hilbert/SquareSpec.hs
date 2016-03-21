@@ -5,6 +5,7 @@ import Hilbert.Digit (fromDigits)
 import Test.Hspec
 import Test.QuickCheck
 import Test.Hspec.QuickCheck
+import Data.Int (Int16)
 
 main :: IO ()
 main = hspec spec
@@ -46,3 +47,10 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
                       [(isSquare (x^2 - 1)), (isSquare (x^2 + 1))]
                         `shouldBe`
                       [False, False]
+
+           it "works on fixed precision integers" $ do
+             let bound = maxBound :: Int16
+             let list1 = filter isSquare [1..bound]
+             let list2 = map fromIntegral $ takeWhile (<= (fromIntegral bound))
+                                          $ map (^2) [(1 :: Integer)..]
+             list1 `shouldBe` list2

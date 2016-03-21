@@ -18,7 +18,8 @@ cabal-version:       >=1.18
 library
   exposed-modules: Hilbert.Modular, Hilbert.Digit,
                    Hilbert.Square, Hilbert.List, 
-                   Hilbert.Prime.TrialDivision
+                   Hilbert.Prime.TrialDivision,
+                   Hilbert.Prime.MillerRabin
                  
   -- other-modules:
 
