@@ -12,6 +12,8 @@ The abstract interface for priority queues.
 module Hilbert.PriorityQueue.ADT 
   ( PriorityQueueADT(..)) where
 
+import Data.List (foldl')
+
 {-| The abstract interface for priority queue. All the priority queues
     included in Hilbert implement this typeclass.
 -}
@@ -42,7 +44,21 @@ class PriorityQueueADT q where
   meld                  :: (Ord p) => q v p -> q v p -> q v p
   fromList              :: (Ord p) => [(v, p)] -> q v p
 
-  -- Default implementations
+  {-
+   - Default implementations
+   -}
+  null = (== 0) . size
   peekMin = fst . peekMinWithPriority
-
+  peekMinWithPriority = fst . deleteMinWithPriority
   deleteMin = (\((a, b), c) -> (a, c)) . deleteMinWithPriority
+
+  -- Keep removing elements from one queue and add to the other
+  meld q1 q2 = if Hilbert.PriorityQueue.ADT.null q1
+               then q2
+               else meld q1' q2'
+        where ((v, p), q1') = deleteMinWithPriority q1
+              q2' = insert v p q2 
+
+  -- Build up a queue by adding elements to an empty list
+  fromList = foldl' insert' empty
+    where insert' queue (v, p) = insert v p queue
