@@ -19,11 +19,13 @@ library
   exposed-modules: Hilbert.Modular, Hilbert.Digit,
                    Hilbert.Square, Hilbert.List, 
                    Hilbert.Prime.TrialDivision,
-                   Hilbert.Prime.MillerRabin
+                   Hilbert.Prime.MillerRabin,
+                   Hilbert.PriorityQueue
                  
-  -- other-modules:
-
+  other-modules: Hilbert.PriorityQueue.Map,
+                 Hilbert.PriorityQueue.ADT
   -- other-extensions:
-  build-depends:       base >= 4.4
+  build-depends:       base >= 4.4,
+                       containers >= 0.4
   hs-source-dirs:      src
   default-language:    Haskell2010
