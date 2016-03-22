@@ -23,7 +23,8 @@ library
                    Hilbert.PriorityQueue
                  
   other-modules: Hilbert.PriorityQueue.Map,
-                 Hilbert.PriorityQueue.ADT
+                 Hilbert.PriorityQueue.ADT,
+                 Hilbert.PriorityQueue.Naive
   -- other-extensions:
   build-depends:       base >= 4.4,
                        containers >= 0.4
