@@ -11,12 +11,13 @@ Pure priority queue implementations.
 
 module Hilbert.PriorityQueue
   ( PriorityQueueADT(..)
+  , PriorityQueue
   , MapQueue
-  , getMap
-  , PriorityQueue) where
+  , NaiveQueue) where
 
 import Hilbert.PriorityQueue.ADT
 import Hilbert.PriorityQueue.Map
+import Hilbert.PriorityQueue.Naive
 
 {-| The default priority queue implementation is MapQueue -}
 type PriorityQueue = MapQueue
