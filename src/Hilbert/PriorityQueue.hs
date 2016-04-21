@@ -1,21 +1,23 @@
+{-|
+Module      : Hilbert.PriorityQueue
+Description : Pure priority queue implementations
+Copyright   : (c) Preetham Gujjula, 2016
+License     : GPL-3
+Maintainer  : preetham.gujjula@gmail.com
+Stability   : experimental
+
+Pure priority queue implementations.
+-}
+
 module Hilbert.PriorityQueue
-  ( PriorityQueueADT
-  , empty
-  , Hilbert.PriorityQueue.ADT.null -- So as not to conflict with Prelude.null
-  , size
-  , insert
-  , peekMin
-  , peekMinWithPriority
-  , deleteMin
-  , deleteMinWithPriority
-  , meld
-  , fromList
+  ( PriorityQueueADT(..)
+  , PriorityQueue
   , MapQueue
-  , BinomialQueue
-  , PriorityQueue) where
+  , NaiveQueue) where
 
 import Hilbert.PriorityQueue.ADT
-import Hilbert.PriorityQueue.MapQueue
-import Hilbert.PriorityQueue.BinomialQueue
+import Hilbert.PriorityQueue.Map
+import Hilbert.PriorityQueue.Naive
 
+{-| The default priority queue implementation is MapQueue -}
 type PriorityQueue = MapQueue

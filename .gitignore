@@ -2,3 +2,7 @@ dist/*
 .cabal-sandbox/*
 *.swp
 cabal.sandbox.config
+*.hi
+*.o
+*temp*
+test/Spec
