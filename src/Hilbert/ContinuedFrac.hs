@@ -1,4 +1,13 @@
-{- | Functions for handling continued fractions. -}
+{-|
+Module      : Hilbert.Digit
+Description : Functions to handle continued fractions.
+Copyright   : (c) Preetham Gujjula, 2016
+License     : GPL-3
+Maintainer  : preetham.gujjula@gmail.com
+Stability   : experimental
+
+Functions to handle continued fractions.
+-}
 module Hilbert.ContinuedFrac
   ( convergent
   , cfracSqrt) where
@@ -42,22 +51,22 @@ minus (Irrational a b c d) n = Irrational (newa `div` g)
         newd = d
         g = gcd (gcd newa newc) newd
 
-{- |@convergent xs n@ computes the nth convergent of the continued
-    fraction represented by @xs@
+{- |@convergent xs@ computes the rational number equal to the continued
+   fraction represented by @xs@.
    
    For example, to compute convergents of /e/, whose continued fraction
    expansion is @[2, 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, 1...]@
    
    >>> let cfrac = (2:) $ concat $ map (\x -> [1, x, 1]) [2, 4..]
-   >>> convergent cfrac 10
+   >>> convergent (take 10 cfrac)
    1457 % 536
-   >>> (fromRational $ convergent cfrac 21) == (exp 1)
+   >>> (fromRational $ convergent (take 21 cfrac)) == (exp 1)
    True
 -}
-convergent :: (Integral a) => [a] -> a -> Ratio a
-convergent _ 0 = 0
-convergent (x:xs) 1 = fromIntegral x
-convergent (x:xs) n = (fromIntegral x) + (1/(convergent xs (n - 1)))
+convergent :: (Integral a) => [a] -> Ratio a
+convergent []     = 0
+convergent [x]    = fromIntegral x
+convergent (x:xs) = (fromIntegral x) + (1/(convergent xs))
 
 {- |@cfracSqrt x@ returns @'Nothing'@ if @x@ is a square. Otherwise, it
   returns @'Just' (n, xs)@, which represents the continued fraction representation
@@ -65,6 +74,9 @@ convergent (x:xs) n = (fromIntegral x) + (1/(convergent xs (n - 1)))
 
     [@n@] is the non-repeating first term of the continued fraction,
     [@xs@] represents a single cycle of the repeating part of the continued fraction.
+
+  KNOWN ISSUE: Does not work with integers larger than about 100, due to floating point 
+  errors. Will be fixed soon.
 
   >>> cfracSqrt 41
   Just (6, [2, 2, 12])
@@ -76,9 +88,9 @@ convergent (x:xs) n = (fromIntegral x) + (1/(convergent xs (n - 1)))
   @
   approx = fromRational $ convergent (n:(repeat xs)) 30
            where Just (n, xs) = cfracSqrt 2
+  @
   >>> approx - (sqrt 2)
   0.0
-  @
 -}
 cfracSqrt :: (Integral a) => a -> Maybe (a, [a])
 cfracSqrt x | isSquare x = Nothing
@@ -93,6 +105,6 @@ cfracSqrt x = Just $ (first, periodic)
                                     else x1:(takeUntil proc xs)
         takeUntil _ xs = xs
         cfracSqrtUntruncated x = map fst $ generate (a0, b0)
-          where a0 = floor $ sqrt $ fromIntegral x
+          where a0 = floor $ sqrt $ fromIntegral x -- DANGEROUS OPERATION, FIX USING INTEGRAL SQRT
                 b0 = reciprocal (Irrational 1 x (-a0) 1)
                 generate (a, b) = (a, b):(generate (flr b, reciprocal(b `minus` flr(b))))
