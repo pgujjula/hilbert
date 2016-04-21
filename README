@@ -3,7 +3,13 @@ is on number theory algorithms. I use this library to help me solve
 Project Euler problems (www.projecteuler.net). I have implemented the
 following algorithms and structures:
   
-  * Modular exponentiation.
+  * Continued fractions
+  * Handling digits of integers
+  * Legendre and Jacobi symbols
+  * Modular exponentiation
+  * Miller-Rabin primality test
+  * Priority queues
+  * Computing whether a number is a square
 
 This project is still in a very early stage and has many bugs. I will
 be expanding documentation, benchmarks, and tests. To build and try out
@@ -19,7 +25,7 @@ $ cabal install --only-dependencies
 
 Configure and build:
 
-$ cabal configure --enable-tests --enable-benchmarks
+$ cabal configure
 $ cabal build
 
 Run the tests if you like:
@@ -33,6 +39,6 @@ $ cabal install
 
 To build the documentation, use
 
-$ cabal haddock
+$ cabal haddock --hyperlink-source
 
 Report any problems or comments to preetham.gujjula@gmail.com
