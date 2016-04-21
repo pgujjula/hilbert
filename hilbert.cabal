@@ -20,7 +20,8 @@ library
                    Hilbert.Square, Hilbert.List, 
                    Hilbert.Prime.TrialDivision,
                    Hilbert.Prime.MillerRabin,
-                   Hilbert.PriorityQueue
+                   Hilbert.PriorityQueue,
+                   Hilbert.ContinuedFrac
                  
   other-modules: Hilbert.PriorityQueue.Map,
                  Hilbert.PriorityQueue.ADT,
@@ -30,3 +31,21 @@ library
                        containers >= 0.4
   hs-source-dirs:      src
   default-language:    Haskell2010
+
+test-suite spec
+  type: 
+    exitcode-stdio-1.0
+  ghc-options:
+    -O2
+  hs-source-dirs:
+    test, src
+  main-is:
+    Spec.hs
+  default-language: Haskell2010
+  build-depends:
+    base >= 4.4,
+    hilbert,
+    hspec >= 2.0,
+    QuickCheck,
+    containers >= 0.4,
+    random >= 1.0
