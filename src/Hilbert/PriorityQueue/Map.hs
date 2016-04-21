@@ -1,16 +1,28 @@
 {-# LANGUAGE TypeSynonymInstances #-}
--- A priority queue implemention as a wrapper over
--- Data.Map
-module Hilbert.PriorityQueue.MapQueue (MapQueue, getMap) where
+
+{-|
+Module      : Hilbert.PriorityQueue.Map
+Description : A priority queue implemention as a wrapper over 'Data.Map.Map'
+Copyright   : (c) Preetham Gujjula, 2016
+License     : GPL-3
+Maintainer  : preetham.gujjula@gmail.com
+Stability   : experimental
+
+A priority queue implemention as a wrapper over 'Data.Map.Map'
+-}
+
+module Hilbert.PriorityQueue.Map (MapQueue, getMap) where
 
 import Data.List (sortBy)
 import qualified Data.Map as Map
 
 import Hilbert.PriorityQueue.ADT
 
+{-| A priority queue implemention as a wrapper over 'Data.Map.Map' -}
 newtype MapQueue v p = MapQueue (Map.Map p [v])
   deriving (Show)
 
+{-| Get the underlying mapping from priorities to lists of values -}
 getMap :: MapQueue v p -> Map.Map p [v]
 getMap (MapQueue m) = m
 

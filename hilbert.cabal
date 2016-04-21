@@ -13,118 +13,39 @@ maintainer:          preetham.gujjula@gmail.com
 category:            Math
 build-type:          Simple
 -- extra-source-files:
-cabal-version:       >=1.22
+cabal-version:       >=1.18
 
 library
-  exposed-modules: Hilbert.ContinuedFrac
-                 , Hilbert.Digit
-             -- Graph modules
-             --  , Hilbert.Graph
-                 , Hilbert.Graph.ADT
-                 , Hilbert.Graph.EdgeList
-                 , Hilbert.Legendre
-                 , Hilbert.List
-                 , Hilbert.Lucas
-                 , Hilbert.Modular
-                 , Hilbert.Pell
-                 , Hilbert.Poly
-                 , Hilbert.PriorityQueue
-                 , Hilbert.PriorityQueue.ADT
-                 , Hilbert.PriorityQueue.MapQueue
-                 , Hilbert.PriorityQueue.BinomialQueue
-                 , Hilbert.Prime
-                 , Hilbert.Square
-                 , Hilbert.Test
+  exposed-modules: Hilbert.Modular, Hilbert.Digit,
+                   Hilbert.Square, Hilbert.List, 
+                   Hilbert.Prime.TrialDivision,
+                   Hilbert.Prime.MillerRabin,
+                   Hilbert.PriorityQueue,
+                   Hilbert.ContinuedFrac
                  
-  other-modules: Hilbert.Prime.MillerRabin
-               , Hilbert.Prime.BailliePSW
-               , Hilbert.Prime.Lucas
-               , Hilbert.Prime.TrialDivision
-               , Hilbert.Prime.Factor
-               , Hilbert.Prime.List
-               , Hilbert.PriorityQueue.BinomialQueue.BinomialTree
-
+  other-modules: Hilbert.PriorityQueue.Map,
+                 Hilbert.PriorityQueue.ADT,
+                 Hilbert.PriorityQueue.Naive
   -- other-extensions:
-  build-depends:       random >= 1.0,
-                       containers,
-                       base >= 4.4,
-                       QuickCheck >= 2.7
+  build-depends:       base >= 4.4,
+                       containers >= 0.4
   hs-source-dirs:      src
   default-language:    Haskell2010
 
-Test-Suite t-ContinuedFrac-cfracSqrt
-  type:       exitcode-stdio-1.0
-  main-is: t-ContinuedFrac-cfracSqrt.hs
-  build-depends: base, hilbert, random >= 1.0
-  hs-source-dirs: tests
+test-suite spec
+  type: 
+    exitcode-stdio-1.0
+  ghc-options:
+    -O2
+  hs-source-dirs:
+    test, src
+  main-is:
+    Spec.hs
   default-language: Haskell2010
-
-Test-Suite t-ContinuedFrac-convergent
-  type:       exitcode-stdio-1.0
-  main-is: t-ContinuedFrac-convergent.hs
-  build-depends: base, hilbert, random >= 1.0
-  hs-source-dirs: tests
-  default-language: Haskell2010
-
-Test-Suite t-Digit-numDigits
-  type: exitcode-stdio-1.0
-  main-is: t-Digit-numDigits.hs
-  build-depends: base, hilbert, random >= 1.0, QuickCheck 
-  hs-source-dirs: tests
-  default-language: Haskell2010
-
-Test-Suite t-Digit-sumDigits
-  type: exitcode-stdio-1.0
-  main-is: t-Digit-sumDigits.hs
-  build-depends: base, hilbert, random >= 1.0, QuickCheck 
-  hs-source-dirs: tests
-  default-language: Haskell2010
-
-Test-Suite t-Digit-digits
-  type: exitcode-stdio-1.0
-  main-is: t-Digit-digits.hs
-  build-depends: base, hilbert, random >= 1.0, QuickCheck 
-  hs-source-dirs: tests
-  default-language: Haskell2010
-
-Test-Suite t-Graph-EdgeList-emptyUndirected
-  type:       exitcode-stdio-1.0
-  main-is: t-Graph-EdgeList-emptyUndirected.hs
-  build-depends: base, hilbert, random >= 1.0
-  hs-source-dirs: tests
-  default-language: Haskell2010
-
-Test-Suite t-Modular-modPow
-  type:       exitcode-stdio-1.0
-  main-is: t-Modular-modPow.hs
-  build-depends: base, hilbert, random >= 1.0
-  hs-source-dirs: tests
-  default-language: Haskell2010
-
-Test-Suite t-PriorityQueue-MapQueue
-  type:       exitcode-stdio-1.0
-  main-is: t-PriorityQueue-MapQueue.hs
-  build-depends: base, hilbert, random >= 1.0
-  hs-source-dirs: tests
-  default-language: Haskell2010
-
-Test-Suite t-prime-trialDivision
-  type:       exitcode-stdio-1.0
-  main-is: t-prime-trialDivision.hs
-  build-depends: base, hilbert, random >= 1.0
-  hs-source-dirs: tests
-  default-language: Haskell2010
-
-Test-Suite t-prime-millerRabin
-  type: exitcode-stdio-1.0
-  main-is: t-prime-millerRabin.hs
-  build-depends: base, hilbert, random >= 1.0
-  hs-source-dirs: tests
-  default-language: Haskell2010
-
-Benchmark bench-foo
-  type:       exitcode-stdio-1.0
-  main-is:    bench-foo.hs
-  build-depends: base, time
-  hs-source-dirs: benchmarks
-  default-language: Haskell2010
+  build-depends:
+    base >= 4.4,
+    hilbert,
+    hspec >= 2.0,
+    QuickCheck,
+    containers >= 0.4,
+    random >= 1.0
