@@ -9,7 +9,10 @@ Stability   : experimental
 Functions related to squaring.
 -}
 
-module Hilbert.Square where
+module Hilbert.Square
+     ( integralSqrt
+     , isSquare
+     ) where
 
 import Hilbert.Digit (numDigits)
 import Data.Maybe (fromJust)
@@ -27,16 +30,15 @@ import Data.List (find)
     True
 -}
 
-{- Algorithm: Create better approximations for sqrt(n) using Newton's method.
+{- Generate potential square roots using Newton's method. 
    If x is an approximation for sqrt(n), then (x*x + n)/(2*x) is
    a better approximation.
 -}
-
-isSquare :: Integral a => a -> Bool
-isSquare m =
+potentialRoots :: Integral a => a -> [a]
+potentialRoots m = 
   let -- To deal with fixed precision integers, we need to convert to
       -- Integer first.
-      n = fromIntegral m
+      n = toInteger m
 
       -- The initial approximation
       initial = 10^((numDigits n) `div` 2)
@@ -50,10 +52,20 @@ isSquare m =
       -- a better approximation, call it potentialroot.
       differences = zipWith (\a b -> abs (a - b)) approximations (tail approximations)
       approxWithDiffs = zip approximations differences
-      potentialroot = fst $ fromJust $ find (\(a, b) -> b <= 1) approxWithDiffs
+      potentialRoot = fst $ fromJust $ find (\(a, b) -> b <= 1) approxWithDiffs
 
-      -- potentialroot must be at most 1 off from the actual square
-      -- root, if it exists.
-   in (potentialroot^2 == n)
-      || (potentialroot + 1)^2 == n
-      || (potentialroot - 1)^2 == n
+      -- The actual square root must be at most 1 off from the actual square
+   in map fromIntegral
+        [potentialRoot - 1, potentialRoot, potentialRoot + 1]
+
+isSquare :: Integral a => a -> Bool
+isSquare n = any (== n) $ map (^2) $ potentialRoots n
+
+{-| @integralSqrt n@ computes the largest integer less than
+    the square root of @n@.
+-}
+integralSqrt :: Integral a => a -> a
+integralSqrt n =
+  let pr = potentialRoots n
+      potentialRoots' = reverse $ [(head pr) - 1] ++ pr ++ [(last pr) + 1]
+   in fromJust $ find (\x -> (x^2) <= n) potentialRoots'
