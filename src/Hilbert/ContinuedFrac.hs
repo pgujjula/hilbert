@@ -14,7 +14,7 @@ module Hilbert.ContinuedFrac
 
 import Data.Maybe (fromJust)
 import Data.List (find, findIndices)
-import Hilbert.Square (isSquare)
+import Hilbert.Square (isSquare, integralSqrt)
 import Data.Ratio
 
 -- Data type to represent quadratic surds
@@ -105,6 +105,6 @@ cfracSqrt x = Just $ (first, periodic)
                                     else x1:(takeUntil proc xs)
         takeUntil _ xs = xs
         cfracSqrtUntruncated x = map fst $ generate (a0, b0)
-          where a0 = floor $ sqrt $ fromIntegral x -- DANGEROUS OPERATION, FIX USING INTEGRAL SQRT
+          where a0 = integralSqrt x
                 b0 = reciprocal (Irrational 1 x (-a0) 1)
                 generate (a, b) = (a, b):(generate (flr b, reciprocal(b `minus` flr(b))))

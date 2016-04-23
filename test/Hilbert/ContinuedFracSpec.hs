@@ -13,7 +13,7 @@ import Data.Maybe (fromJust)
 main = hspec spec
 
 numberOfTests :: Int
-numberOfTests = 10000
+numberOfTests = 1000
 
 spec = modifyMaxSuccess (\_ -> numberOfTests) 
      $ describe "ContinuedFrac" $ do
@@ -84,20 +84,21 @@ rationalApprox n = map convergent lists
    rational numbers. We stop computing errors once the approximation
    equals the actual value of sqrt n, up to machine precision.
 
-   (rationalError n) !! i == abs $ (sqrt n) - ((rationalApprox n) !! i)
+   (rationalError n) !! i == abs $ n - ((rationalApprox n) !! i)^2
 -}
-rationalError :: (Integral a) => a -> [Double]
-rationalError n = takeWhile (/= 0.0) $ map computeError (rationalApprox n)
-  where computeError rat = abs $ (fromRational $ toRational rat) - actual
-        actual = (sqrt $ fromIntegral n) :: Double
+rationalError :: (Integral a) => a -> [Ratio a]
+rationalError n = take termsLimit $ map computeError (rationalApprox n)
+  where computeError rat = abs $ (rat^2) - (n % 1)
 
-nonSquareGen :: Gen Int
+nonSquareGen :: Gen Integer
 nonSquareGen = elements $ filter (not . isSquare) [1..convergentLimit]
 
-convergentLimit = 100
+convergentLimit = 1000000
+termsLimit = 10
 
 isSorted :: (Ord a) => [a] -> Bool
 isSorted xs = (sort xs) == xs
 
-testConvergent :: (Integral a) => a -> Expectation
-testConvergent n = (isSorted $ reverse $ rationalError n) `shouldBe` True
+testConvergent :: (Integral a, Show a) => a -> Expectation
+testConvergent n = (reverse list) `shouldBe` (sort list)
+  where list = rationalError n
