@@ -15,7 +15,6 @@ Handle continued fractions. This module uses mathematics described in
     * Myerson, Gerry. "How to Detect When Continued Fractions Period
       Terminates." Mathematics Stack Exchange. Stack Exchange, 11 Dec. 2011.
       Web. 24 Apr. 2016. <http://math.stackexchange.com/a/90432>.
-
 -}
 module Hilbert.ContinuedFrac
   ( convergent
