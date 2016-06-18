@@ -1,0 +1,75 @@
+A style guide for this project
+==============================
+
+**** All source files should begin with a module header. Here is an example from
+  Hilbert.ContinuedFrac
+
+{-|
+Module      : Hilbert.Digit
+Description : Handle continued fractions.
+Copyright   : (c) Preetham Gujjula, 2016
+License     : GPL-3
+Maintainer  : preetham.gujjula@gmail.com
+Stability   : experimental
+
+Handle continued fractions. This module uses mathematics described in
+
+    * Beceanu, Marius. "Period of the Continued Fraction of √n." Thesis.
+      Princeton University, 2003. Web.
+      <http://web.math.princeton.edu/mathlab/jr02fall/Periodicity/mariusjp.pdf>.
+      Junior Thesis
+    * Myerson, Gerry. "How to Detect When Continued Fractions Period
+      Terminates." Mathematics Stack Exchange. Stack Exchange, 11 Dec. 2011.
+      Web. 24 Apr. 2016. <http://math.stackexchange.com/a/90432>.
+-}
+
+All the fields should be in exactly this order. All the formatting should look
+exactly like this. If there is nothing to add in the longer description, then the longer description should be the same as the Description field.
+
+**** After the module header comes a newline
+**** Then comes any LANGUAGE pragmas. For example, in Hilbert.PriorityQueue.Map:
+{-|
+Module      : Hilbert.PriorityQueue.Map
+Description : A priority queue implemention as a wrapper over 'Data.Map.Map'
+Copyright   : (c) Preetham Gujjula, 2016
+License     : GPL-3
+Maintainer  : preetham.gujjula@gmail.com
+Stability   : experimental
+
+A priority queue implemention as a wrapper over 'Data.Map.Map'
+-}
+
+**** There should be another newline after any LANGUAGE pragmas.
+**** Then comes the module name. The exported functions should be listed as so:
+module Hilbert.Digit
+  ( numDigits
+  , sumDigits
+  , toDigits
+  , fromDigits) where
+**** Then comes another newline
+**** Then comes the imports. Imports should not have any newlines between them.
+     Put standard library imports before Hilbert imports. Example:
+import Data.Maybe (fromJust)
+import Data.List (find, findIndices)
+import Data.Ratio
+import Hilbert.Square (isSquare, integralSqrt)
+**** After any imports comes another newline.
+
+********************
+COMMENTS
+********************
+ * All functions except the most basic should have a comment describing what
+   they do.
+ * One line function header comments should look like:
+   -- This is a comment
+ * Multiline function header comments should look like:
+   {- This is a multline comment.
+      Line 2.
+   -}
+ * One line Haddock comments should look like
+   -- | This is a comment
+ * Multiline Haddock comments should look like
+   {- | This is a Haddock comment.
+      Line 2.
+      Line 3.
+   -}
