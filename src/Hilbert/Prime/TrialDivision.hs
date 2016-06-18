@@ -9,7 +9,9 @@
 
     Functions to compute the primality of a number using trial division.
 -}
-module Hilbert.Prime.TrialDivision (trialDivision) where
+module Hilbert.Prime.TrialDivision
+  ( trialDivision
+  ) where
 
 {-|
     Determines whether n is prime by testing

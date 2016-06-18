@@ -12,7 +12,8 @@ module Hilbert.Digit
   ( numDigits
   , sumDigits
   , toDigits
-  , fromDigits) where
+  , fromDigits
+  ) where
 
 {-|
     @numDigits n@ is the number of digits in @n@.

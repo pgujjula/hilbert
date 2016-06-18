@@ -9,7 +9,8 @@
     The abstract interface for priority queues.
 -}
 module Hilbert.PriorityQueue.ADT
-  ( PriorityQueueADT(..)) where
+  ( PriorityQueueADT(..)
+  ) where
 
 import Data.List (foldl')
 
