@@ -1,14 +1,13 @@
 {-|
-Module      : Hilbert.List
-Description : Utility functions to handle lists.
-Copyright   : (c) Preetham Gujjula, 2016
-License     : GPL-3
-Maintainer  : preetham.gujjula@gmail.com
-Stability   : experimental
+    Module      : Hilbert.List
+    Description : Utility functions to handle lists.
+    Copyright   : (c) Preetham Gujjula, 2016
+    License     : GPL-3
+    Maintainer  : preetham.gujjula@gmail.com
+    Stability   : experimental
 
-Utility functions to handle lists.
+    Utility functions to handle lists.
 -}
-
 module Hilbert.List
   ( rmDups
   , groupBy
@@ -16,7 +15,8 @@ module Hilbert.List
 
 import Data.List (sortBy)
 
-{-| @rmDups xs@ removes the duplicates from a list @xs@.
+{-|
+    @rmDups xs@ removes the duplicates from a list @xs@.
 
     > Precondition: xs must be sorted
 
@@ -29,9 +29,8 @@ rmDups (x1:x2:xs) = if x1 == x2
                     else x1:(rmDups (x2:xs))
 rmDups xs = xs
 
-{-| Group elements of a list using a comparison function.
- 
-    > Preconditions: none
+{-|
+    Group elements of a list using a comparison function.
 
     >>> groupBy compare [4, 3, 5, 6, 7, 8, 3, 6, 8, 5, 3]
     [[3,3,3],[4],[5,5],[6,6],[7],[8,8]]

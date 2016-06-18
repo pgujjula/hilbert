@@ -1,28 +1,27 @@
-{-# LANGUAGE TypeSynonymInstances #-}
-
 {-|
-Module      : Hilbert.PriorityQueue.Map
-Description : A priority queue implemention as a wrapper over 'Data.Map.Map'
-Copyright   : (c) Preetham Gujjula, 2016
-License     : GPL-3
-Maintainer  : preetham.gujjula@gmail.com
-Stability   : experimental
+    Module      : Hilbert.PriorityQueue.Map
+    Description : A priority queue implemention as a wrapper over 'Data.Map.Map'
+    Copyright   : (c) Preetham Gujjula, 2016
+    License     : GPL-3
+    Maintainer  : preetham.gujjula@gmail.com
+    Stability   : experimental
 
-A priority queue implemention as a wrapper over 'Data.Map.Map'
+    A priority queue implemention as a wrapper over 'Data.Map.Map'
 -}
+
+{-# LANGUAGE TypeSynonymInstances #-}
 
 module Hilbert.PriorityQueue.Map (MapQueue, getMap) where
 
 import Data.List (sortBy)
 import qualified Data.Map as Map
-
 import Hilbert.PriorityQueue.ADT
 
-{-| A priority queue implemention as a wrapper over 'Data.Map.Map' -}
+-- | A priority queue implemention as a wrapper over 'Data.Map.Map'
 newtype MapQueue v p = MapQueue (Map.Map p [v])
   deriving (Show)
 
-{-| Get the underlying mapping from priorities to lists of values -}
+-- | Get the underlying mapping from priorities to lists of values.
 getMap :: MapQueue v p -> Map.Map p [v]
 getMap (MapQueue m) = m
 
@@ -33,7 +32,7 @@ instance PriorityQueueADT MapQueue where
 
   size = Map.size . getMap
 
-  insert val pty (MapQueue map) = 
+  insert val pty (MapQueue map) =
     MapQueue $ Map.insertWith (++) pty [val] map
 
   peekMinWithPriority (MapQueue map) = (val, pty)
@@ -48,7 +47,7 @@ instance PriorityQueueADT MapQueue where
                                  then Nothing
                                  else Just rest
 
-  meld (MapQueue map1) (MapQueue map2) = 
+  meld (MapQueue map1) (MapQueue map2) =
     MapQueue $ Map.unionWith (++) map1 map2
 
   fromList = MapQueue

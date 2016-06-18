@@ -1,14 +1,13 @@
 {-|
-Module      : Hilbert.Square
-Description : Functions related to squaring.
-Copyright   : (c) Preetham Gujjula, 2016
-License     : GPL-3
-Maintainer  : preetham.gujjula@gmail.com
-Stability   : experimental
+    Module      : Hilbert.Square
+    Description : Functions related to squaring.
+    Copyright   : (c) Preetham Gujjula, 2016
+    License     : GPL-3
+    Maintainer  : preetham.gujjula@gmail.com
+    Stability   : experimental
 
-Functions related to squaring.
+    Functions related to squaring.
 -}
-
 module Hilbert.Square
      ( integralSqrt
      , isSquare
@@ -18,24 +17,13 @@ import Hilbert.Digit (numDigits)
 import Data.Maybe (fromJust)
 import Data.List (find)
 
-{-| @isSquare n@ returns whether the @n@ is a perfect square.
-
-    > Preconditions: none
-
-    >>> isSquare 4
-    True
-    >>> isSquare 11
-    False
-    >>> isSquare 0
-    True
--}
-
-{- Generate potential square roots using Newton's method. 
+{-
+   Generate potential square roots using Newton's method.
    If x is an approximation for sqrt(n), then (x*x + n)/(2*x) is
    a better approximation.
 -}
 potentialRoots :: Integral a => a -> [a]
-potentialRoots m = 
+potentialRoots m =
   let -- To deal with fixed precision integers, we need to convert to
       -- Integer first.
       n = toInteger m
@@ -58,10 +46,23 @@ potentialRoots m =
    in map fromIntegral
         [potentialRoot - 1, potentialRoot, potentialRoot + 1]
 
+{-|
+    @isSquare n@ returns whether the @n@ is a perfect square.
+
+    > Preconditions: none
+
+    >>> isSquare 4
+    True
+    >>> isSquare 11
+    False
+    >>> isSquare 0
+    True
+-}
 isSquare :: Integral a => a -> Bool
 isSquare n = any (== n) $ map (^2) $ potentialRoots n
 
-{-| @integralSqrt n@ computes the largest integer less than
+{-|
+    @integralSqrt n@ computes the largest integer less than
     the square root of @n@.
 -}
 integralSqrt :: Integral a => a -> a
