@@ -11,7 +11,8 @@
 -}
 
 module Hilbert.PriorityQueue.Naive
-  (NaiveQueue) where
+  ( NaiveQueue
+  ) where
 
 import Hilbert.PriorityQueue.ADT as PQ
 import Data.Function (on)

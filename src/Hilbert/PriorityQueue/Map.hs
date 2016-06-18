@@ -11,7 +11,10 @@
 
 {-# LANGUAGE TypeSynonymInstances #-}
 
-module Hilbert.PriorityQueue.Map (MapQueue, getMap) where
+module Hilbert.PriorityQueue.Map
+  ( MapQueue
+  , getMap
+  ) where
 
 import Data.List (sortBy)
 import qualified Data.Map as Map
