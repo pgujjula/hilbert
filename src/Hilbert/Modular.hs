@@ -1,20 +1,21 @@
 {-|
-Module      : Hilbert.Modular
-Description : Functions to perform modular arithmetic.
-Copyright   : (c) Preetham Gujjula, 2016
-License     : GPL-3
-Maintainer  : preetham.gujjula@gmail.com
-Stability   : experimental
+    Module      : Hilbert.Modular
+    Description : Functions to perform modular arithmetic.
+    Copyright   : (c) Preetham Gujjula, 2016
+    License     : GPL-3
+    Maintainer  : preetham.gujjula@gmail.com
+    Stability   : experimental
 
-Functions to perform modular arithmetic.
+    Functions to perform modular arithmetic.
 -}
-
 module Hilbert.Modular
-  (modPow) where
+    ( modPow
+    ) where
 
-{-| @modPow a b m @ efficiently computes @mod (a^b) m@.
+{-|
+    @modPow a b m @ efficiently computes @mod (a^b) m@.
 
-    > Preconditions: 
+    > Preconditions:
     >   a >= 0
     >   b >= 0
     >   m > 0
@@ -28,7 +29,6 @@ module Hilbert.Modular
     >>> modPow 0 0 19
     1
 -}
-
 modPow :: (Integral a) => a -> a -> a -> a
 modPow a b m = fromIntegral $ modPow_low_level (toInteger a) (toInteger b) (toInteger m)
 

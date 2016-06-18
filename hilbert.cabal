@@ -16,7 +16,7 @@ build-type:          Simple
 cabal-version:       >=1.18
 
 library
-   exposed-modules: Hilbert.ContinuedFrac,
+   exposed-modules: Hilbert.ContinuedFraction,
                     Hilbert.Digit,
                     Hilbert.Legendre,
                     Hilbert.List,
@@ -25,7 +25,9 @@ library
                     Hilbert.PriorityQueue,
                     Hilbert.Square
                  
-  other-modules: Hilbert.Prime.MillerRabin,
+  other-modules: Hilbert.ContinuedFraction.Core,
+                 Hilbert.ContinuedFraction.Sqrt,
+                 Hilbert.Prime.MillerRabin,
                  Hilbert.Prime.TrialDivision,
                  Hilbert.PriorityQueue.ADT,
                  Hilbert.PriorityQueue.Map,
