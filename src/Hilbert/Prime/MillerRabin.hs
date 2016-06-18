@@ -1,25 +1,28 @@
 {-|
-Module      : Hilbert.Prime.MillerRabin
-Description : The Miller-Rabin probabilistic primality test.
-Copyright   : (c) Preetham Gujjula, 2016
-License     : GPL-3
-Maintainer  : preetham.gujjula@gmail.com
-Stability   : experimental
+    Module      : Hilbert.Prime.MillerRabin
+    Description : The Miller-Rabin probabilistic primality test.
+    Copyright   : (c) Preetham Gujjula, 2016
+    License     : GPL-3
+    Maintainer  : preetham.gujjula@gmail.com
+    Stability   : experimental
 
-The Miller-Rabin probabilistic primality test.
-
+    The Miller-Rabin probabilistic primality test.
 -}
-
-module Hilbert.Prime.MillerRabin (millerRabin, millerRabinWith) where
+module Hilbert.Prime.MillerRabin
+  ( millerRabin
+  , millerRabinWith
+  ) where
 
 import Hilbert.Modular (modPow)
 
+-- The default bases used by the Miller Rabin test.
 defaultBases :: (Integral a) => [a]
 defaultBases = [2, 3, 5]
 
-{-| @millerRabin n@ performs the Miller-Rabin test on @n@ with a
+{-|
+    @millerRabin n@ performs the Miller-Rabin test on @n@ with a
     default list of bases. Use @millerRabinWith@ to specify a different
-    set of bases. This is a probabilistic prime test, so correctness is not 
+    set of bases. This is a probabilistic prime test, so correctness is not
     guaranteed.
 
     > Precondition: n >= 3
@@ -27,7 +30,8 @@ defaultBases = [2, 3, 5]
 millerRabin :: (Integral a) => a -> Bool
 millerRabin n = millerRabinWith defaultBases n
 
-{-| @millerRabinWith n testBases@ performs the Miller-Rabin test on
+{-|
+    @millerRabinWith n testBases@ performs the Miller-Rabin test on
     @n@ with the bases @testBases@
 
     > Precondition: n >= 3

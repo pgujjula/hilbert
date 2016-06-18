@@ -1,21 +1,21 @@
 {-|
-Module      : Hilbert.Digit
-Description : Functions to handle the digits of integers.
-Copyright   : (c) Preetham Gujjula, 2016
-License     : GPL-3
-Maintainer  : preetham.gujjula@gmail.com
-Stability   : experimental
+    Module      : Hilbert.Digit
+    Description : Functions to handle the digits of integers.
+    Copyright   : (c) Preetham Gujjula, 2016
+    License     : GPL-3
+    Maintainer  : preetham.gujjula@gmail.com
+    Stability   : experimental
 
-Functions to handle the digits of integers.
+    Functions to handle the digits of integers.
 -}
-
 module Hilbert.Digit
   ( numDigits
   , sumDigits
   , toDigits
   , fromDigits) where
 
-{-| @numDigits n@ is the number of digits in @n@.
+{-|
+    @numDigits n@ is the number of digits in @n@.
 
     > Precondition: n >= 0
 
@@ -24,12 +24,12 @@ module Hilbert.Digit
     >>> numDigits 0
     1
 -}
-
 numDigits :: (Integral a) => a -> Int
 numDigits n | abs n < 10 = 1
 numDigits n = 1 + (numDigits $ n `div` 10)
 
-{-| @sumDigits n@ is the sum of the digits in @n@.
+{-|
+    @sumDigits n@ is the sum of the digits in @n@.
 
     > Precondition: n >= 0
 
@@ -38,12 +38,12 @@ numDigits n = 1 + (numDigits $ n `div` 10)
     >>> sumDigits 0
     0
 -}
-
 sumDigits :: (Integral a) => a -> a
 sumDigits n | n < 10 = n
 sumDigits n = (n `rem` 10) + sumDigits (n `div` 10)
 
-{-| @toDigits n@ is a list of all the digits in @n@. 
+{-|
+    @toDigits n@ is a list of all the digits in @n@.
 
     > Precondition: n >= 0
 
@@ -52,7 +52,6 @@ sumDigits n = (n `rem` 10) + sumDigits (n `div` 10)
     >>> toDigits 0
     [0]
 -}
-
 toDigits :: (Integral a) => a -> [Int]
 toDigits = reverse . toDigits'
   where
@@ -63,7 +62,8 @@ toDigits = reverse . toDigits'
       where first = fromIntegral $ n `rem` 10
             rest = toDigits' (n `div` 10)
 
-{-| @fromDigits xs@ is converts a list of digits @xs@ to an integer.
+{-|
+    @fromDigits xs@ is converts a list of digits @xs@ to an integer.
 
     > Precondition: All elements of @xs@ are in [0..9]
 
@@ -76,7 +76,6 @@ toDigits = reverse . toDigits'
     >>> fromDigits [0, 4, 2]
     42
 -}
-
 fromDigits :: (Integral a) => [a] -> Integer
 fromDigits = fromDigits' . reverse
   where
