@@ -66,7 +66,10 @@ isSquare n = any (== n) $ map (^2) $ potentialRoots n
     the square root of @n@.
 -}
 integralSqrt :: Integral a => a -> a
-integralSqrt n =
-  let pr = potentialRoots n
+integralSqrt m =
+  let -- To deal with fixed precision integers, we need to convert to
+      -- Integer first.
+      n = toInteger m
+      pr = potentialRoots n
       potentialRoots' = reverse $ [(head pr) - 1] ++ pr ++ [(last pr) + 1]
-   in fromJust $ find (\x -> (x^2) <= n) potentialRoots'
+   in fromIntegral $ fromJust $ find (\x -> (x^2) <= n) potentialRoots'
