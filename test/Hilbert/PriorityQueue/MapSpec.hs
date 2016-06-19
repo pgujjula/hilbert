@@ -1,4 +1,7 @@
-module Hilbert.PriorityQueue.MapSpec (main, spec) where
+module Hilbert.PriorityQueue.MapSpec
+  ( main
+  , spec
+  ) where
 
 import Hilbert.PriorityQueue.ADT
 import Hilbert.PriorityQueue.Map

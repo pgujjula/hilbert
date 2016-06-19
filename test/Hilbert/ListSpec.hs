@@ -1,4 +1,7 @@
-module Hilbert.ListSpec (main, spec) where
+module Hilbert.ListSpec
+  ( main
+  , spec
+  ) where
 
 import Hilbert.List (rmDups, groupBy)
 import Test.Hspec (shouldBe, describe, hspec, it)

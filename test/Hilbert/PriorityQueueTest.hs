@@ -1,5 +1,10 @@
-module Hilbert.PriorityQueueTest (genMutations, testQueue, applyMutations,
-                                  deleteAllMinWithPriority, deleteAllMin) where
+module Hilbert.PriorityQueueTest
+  ( genMutations
+  , testQueue
+  , applyMutations
+  , deleteAllMinWithPriority
+  , deleteAllMin
+  ) where
 
 import Hilbert.PriorityQueue as PQ
 import Hilbert.List

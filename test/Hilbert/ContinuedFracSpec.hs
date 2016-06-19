@@ -1,4 +1,7 @@
-module Hilbert.ContinuedFracSpec (main, spec) where
+module Hilbert.ContinuedFracSpec
+  ( main
+  , spec
+  ) where
 
 import Hilbert.ContinuedFrac (convergent, cfracSqrt)
 
