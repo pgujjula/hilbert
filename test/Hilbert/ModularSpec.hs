@@ -1,4 +1,7 @@
-module Hilbert.ModularSpec (main, spec) where
+module Hilbert.ModularSpec
+  ( main
+  , spec
+  ) where
 
 import Hilbert.Modular (modPow)
 import Data.Int (Int8)

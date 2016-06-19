@@ -1,4 +1,7 @@
-module Hilbert.DigitSpec (main, spec) where
+module Hilbert.DigitSpec
+  ( main
+  , spec
+  ) where
 
 import Hilbert.Digit (numDigits, sumDigits, toDigits, fromDigits)
 import Test.Hspec

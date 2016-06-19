@@ -1,11 +1,14 @@
-module Hilbert.Prime.TrialDivisionSpec (main, spec) where
+module Hilbert.Prime.TrialDivisionSpec
+  ( main
+  , spec
+  ) where
 
 import Hilbert.Prime.TrialDivision (trialDivision)
-import Test.Hspec;
-import Test.QuickCheck;
-import Test.Hspec.QuickCheck;
+import Test.Hspec
+import Test.QuickCheck
+import Test.Hspec.QuickCheck
 
-import Data.Int (Int8);
+import Data.Int (Int8)
 
 main = hspec spec
 

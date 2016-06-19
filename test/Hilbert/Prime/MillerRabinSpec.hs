@@ -1,4 +1,7 @@
-module Hilbert.Prime.MillerRabinSpec (main, spec) where
+module Hilbert.Prime.MillerRabinSpec
+  ( main
+  , spec
+  ) where
 
 import Hilbert.Prime.MillerRabin (millerRabin, millerRabinWith)
 import Hilbert.Prime.TrialDivision (trialDivision)
