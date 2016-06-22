@@ -54,4 +54,5 @@ test-suite spec
     hspec >= 2.0,
     QuickCheck,
     containers >= 0.4,
-    random >= 1.0
+    random >= 1.0,
+    HUnit >= 1.2

@@ -13,6 +13,19 @@ import System.Random
 main :: IO ()
 main = hspec spec
 
+spec :: SpecWith()
+spec = modifyMaxSuccess (\_ -> numberOfTests) $ 
+  describe "Modular" $ do 
+    describe "modPow" $ do
+      edgeCase1_modPow
+      edgeCase2_modPow
+      edgeCase3_modPow
+      fixedPrecision_modPow
+      generalCase_modPow
+
+{-
+   Supplementary data
+-}
 -- The maximum size of any argument in these tests
 testSizeLimit = 10000 :: Integer
 
@@ -26,30 +39,27 @@ positiveGen = choose (1, testSizeLimit)
 smallGen :: Gen Integer
 smallGen = choose (1, fromIntegral (maxBound :: Int8))
 
-spec :: SpecWith()
-spec = modifyMaxSuccess (\_ -> numberOfTests) $ 
-  describe "Modular" $ do 
-  describe "modPow" $ do
+{-
+   modPow functions
+-}
+edgeCase1_modPow =
     it "modPow 0 0 m == 1 for all m > 0" $ do
       forAll positiveGen $ \m -> 
         (modPow 0 0 m) == 1
 
+edgeCase2_modPow = 
     it "modPow a 0 m == 1 for all a, m > 0" $
       forAll positiveGen $ \a -> 
       forAll positiveGen $ \m -> 
         (modPow a 0 m) == 1
 
+edgeCase3_modPow = 
     it "modPow 0 b m == 0 for all b, m > 0" $
       forAll positiveGen $ \b ->
       forAll positiveGen $ \m ->
         (modPow 0 b m) == 0
 
-    it "modPow a b m == (a^b) (mod m) if a, b, m > 0" $
-      forAll positiveGen $ \a -> 
-      forAll positiveGen $ \b -> 
-      forAll positiveGen $ \m -> 
-        (modPow a b m) == ((a^b) `mod` m)
-
+fixedPrecision_modPow = 
     it "doesn't overflow if we use a fixed-precision Integral type" $ 
       forAll smallGen $ \a -> 
       forAll smallGen $ \b -> 
@@ -57,3 +67,10 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
         (toInteger (modPow ((fromIntegral a) :: Int8)
                            ((fromIntegral b) :: Int8)
                            ((fromIntegral m) :: Int8))) == (modPow a b m)
+
+generalCase_modPow = 
+    it "modPow a b m == (a^b) (mod m) if a, b, m > 0" $
+      forAll positiveGen $ \a -> 
+      forAll positiveGen $ \b -> 
+      forAll positiveGen $ \m -> 
+        (modPow a b m) == ((a^b) `mod` m)

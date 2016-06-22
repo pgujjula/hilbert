@@ -1,3 +1,4 @@
+-- This module lays out a testing framework for all priority queue.
 module Hilbert.PriorityQueueTest
   ( genMutations
   , testQueue
@@ -18,7 +19,8 @@ import Data.List (foldl', sort)
 import Data.Function (on)
 
 {-
-   Delete all minimum elements with the same priority.
+   Delete all minimum elements with the same priority. Returns the deleted
+   (value, priority) pairs and the new queue.
 -}
 deleteAllMinWithPriority :: (PriorityQueueADT q, Ord p)
                          => (q v p) -> ([(v, p)], q v p)
@@ -32,6 +34,10 @@ deleteAllMinWithPriority queue = deleteWhilePriority minPty queue
                   currPty         = snd first
         minPty = snd $ peekMinWithPriority queue
 
+{-
+   Delete all minimum elements with the same priority. Returns the deleted
+   values and the new queue.
+-}
 deleteAllMin :: (PriorityQueueADT q, Ord p) => q v p -> ([v], q v p)
 deleteAllMin = clean . deleteAllMinWithPriority
   where clean (xs, q) = (map fst xs, q)
@@ -121,10 +127,6 @@ genMutations :: Int -> Int -> Gen v -> Gen p -> Gen ([Mutation v p])
 genMutations size insertRatio valueGen ptyGen =
   vectorOf size $ genMutation insertRatio valueGen ptyGen
 
-{- Generators for random Ints and Strings -}
-intGen :: Gen Int
-intGen = choose (1, 10)
-
 {- 
    randomQueueGen mutationGen n generates a random queue
    by applying n random mutations obtained from mutationGen.
@@ -140,14 +142,6 @@ randomQueueGen = randomQueueGenWith empty
               let queue' = applyMutation mutation queue
               randomQueueGenWith queue' mutationGen (numMutations - 1)
 
-{- The ratio of inserts to deletes. -}
-insertRatio :: Int
-insertRatio = 200000000
-
-{- The number of mutations to perform. -}
-numMutations :: Int
-numMutations = 100
-
 {- Convert a queue to a list by removing the elements in order -}
 toList :: (PriorityQueueADT q, Ord p) => q v p -> [(v, p)]
 toList queue
@@ -156,12 +150,20 @@ toList queue
       where (first, queue') = deleteMinWithPriority queue
             rest = toList queue'
 
+{-
+   Test the "test" priority queue type against the "control" type, using the given
+   list of mutations
+-}
 testQueue :: (PriorityQueueADT control, PriorityQueueADT test, Ord p, Ord v, Show p, Show v)
           => control v p -> test v p -> [Mutation v p] -> Expectation
 testQueue control test mutations = list2 `shouldBe` list1
   where list1 = collapse control 
         list2 = collapse test
-        collapse queue = map sort
-                       $ groupBy (compare `on` snd)
-                       $ toList
-                       $ applyMutations mutations queue
+        collapse queue = -- Sort each group of values
+                         map sort
+                         -- Group values by priority
+                         $ groupBy (compare `on` snd)
+                         -- A sorted list of (value, priority) pairs, sorted 
+                         -- by priority
+                         $ toList
+                         $ applyMutations mutations queue

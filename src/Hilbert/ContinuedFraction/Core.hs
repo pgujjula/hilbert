@@ -33,6 +33,7 @@ import Data.Ratio
 -}
 data ContinuedFraction a = Periodic [a] [a]
                          | APeriodic [a]
+  deriving (Eq)
 
 instance (Show a) => (Show (ContinuedFraction a)) where
    show (Periodic xs ys) = "mkPeriodic "  ++ (show xs) ++ " " ++ (show ys)
