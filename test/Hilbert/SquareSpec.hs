@@ -91,10 +91,12 @@ fixedPrecision_integralSqrt =
     let bound = maxBound :: Int16
     let list1 = map (\y -> (integralSqrt y, y)) [1..bound]
     let list2 = take (fromIntegral bound) $ concat $ map correctAnswer [1..]
-          -- correctAnswer x is a list of all (x, y) such that
-          -- integralSqrt y should equal x
-          where correctAnswer :: Int16 -> [(Int16, Int16)]
-                correctAnswer x = zip (repeat x) [x^2 .. (x + 1)^2 - 1]          
+           -- correctAnswer x is a list of all (x, y) such that
+           -- integralSqrt y should equal x
+           where correctAnswer :: Int16 -> [(Int16, Int16)]
+                 correctAnswer y = map (\(a, b) -> (fromIntegral a, fromIntegral b))
+                                 $ zip (repeat x) [x^2 .. (x + 1)^2 - 1]          
+                    where x = toInteger y
     sequence_ $ zipWith shouldBe list1 list2
     
 arbitraryPrecision_integralSqrt = 
