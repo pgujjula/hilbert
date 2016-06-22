@@ -14,6 +14,18 @@ import Test.QuickCheck
 main :: IO ()
 main = hspec spec
 
+spec = modifyMaxSuccess (\_ -> numberOfTests) $ 
+         describe "MapQueue" $ do
+           test 1   2
+           test 5   2
+           test 100 2
+           test 1   200
+           test 5   200
+           test 100 200
+
+{-
+   Supplementary data
+-}
 numberOfTests :: Int
 numberOfTests = 500
 
@@ -34,9 +46,16 @@ intGen = choose (1, 100)
 emptyNaiveQueue = empty :: NaiveQueue String Int
 emptyMapQueue   = empty :: MapQueue String Int
 
-mutationGen = genMutations numMutations insertRatio stringGen intGen
-
-spec = modifyMaxSuccess (\_ -> numberOfTests) $ 
-           it "Random mutations have the same effect on MapQueue as on NaiveQueue" $ do
-             forAll mutationGen $ \mutations ->
-               testQueue emptyNaiveQueue emptyMapQueue mutations
+{-
+   MapQueue test: Compare MapQueue and NaiveQueue using the given insert
+   ratio and number of mutations.
+-}
+test insertRatio numMutations = 
+   it ("Comparing MapQueue and NaiveQueue with insertRatio = "
+          ++ (show insertRatio)
+          ++ " and numMutations = "
+          ++ (show numMutations)
+      ) $ do
+      forAll mutationGen  $ \mutations ->
+        testQueue emptyNaiveQueue emptyMapQueue mutations
+  where mutationGen = genMutations numMutations insertRatio stringGen intGen

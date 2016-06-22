@@ -89,8 +89,8 @@ smallCases_integralSqrt =
 fixedPrecision_integralSqrt = 
   it "Works on fixed precision integers" $ do
     let bound = maxBound :: Int16
-    let list1 = take 32700 $ map (\y -> (integralSqrt y, y)) [1..bound]
-    let list2 = take 32700 $ concat $ map correctAnswer [1..]
+    let list1 = map (\y -> (integralSqrt y, y)) [1..bound]
+    let list2 = take (fromIntegral bound) $ concat $ map correctAnswer [1..]
           -- correctAnswer x is a list of all (x, y) such that
           -- integralSqrt y should equal x
           where correctAnswer :: Int16 -> [(Int16, Int16)]
@@ -103,6 +103,6 @@ arbitraryPrecision_integralSqrt =
 
 -- Checks the definition of integralSqrt n, ensuring that it returns
 -- the largest integer less than the square root of n. This function is
--- used in the other tests
+-- used in the actual integralSqrt tests.
 integralSqrt_def x = let s = integralSqrt x
                       in (s^2 <= x) && ((s + 1)^2 > x)

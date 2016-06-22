@@ -13,6 +13,30 @@ import Data.Int (Int16)
 main :: IO ()
 main = hspec spec
 
+spec = modifyMaxSuccess (\_ -> numberOfTests) $
+        describe "Digit" $ do
+          describe "numDigits" $ do
+            smallCases_numDigits
+            fixedPrecision_numDigits
+            arbitraryPrecision_numDigits
+          describe "sumDigits" $ do
+            smallCases_sumDigits
+            fixedPrecision_sumDigits
+            arbitraryPrecision_sumDigits
+          describe "toDigits" $ do 
+            smallCases_toDigits
+            fixedPrecision_toDigits
+            arbitraryPrecision_toDigits
+          describe "fromDigits" $ do
+            emptyListTest_fromDigits
+            leadingZero_fromDigits 
+            onlyZeros_fromDigits
+            arbitraryPrecision_fromDigits
+            fixedPrecision_fromDigits
+
+{-
+   Parameters
+-}
 -- The maximum size of the number of digits in these tests
 maxNumDigits = 100 :: Int
 
@@ -52,62 +76,88 @@ numbersGen = numDigitsGen >>= (\x ->
 listToInteger :: [Int] -> Integer
 listToInteger = read . concat . (map show)
 
-spec = modifyMaxSuccess (\_ -> numberOfTests) $
-        describe "Digit" $ do
-          describe "numDigits" $ do
-            it "numDigits works on numbers close to 0" $ do
-              forAll digitsGen $ \x -> 
-                (numDigits x) `shouldBe` 1
+{-
+   numDigits tests
+-}
+smallCases_numDigits = 
+  it "Works on single digit numbers" $ do
+    forAll digitsGen $ \x -> 
+      (numDigits x) `shouldBe` 1
 
-            it "numDigits works on arbitrarily large positive integers" $ do
-              forAll withoutLeadingZero $ \x -> 
-                (numDigits (listToInteger x)) `shouldBe` (length x)
+fixedPrecision_numDigits = 
+  it "Works on fixed precision integers" $ do
+    forAll smallGen $ \x -> 
+           (numDigits ((fromIntegral x) :: Int16))
+        == (numDigits ((fromIntegral x) :: Integer))
 
-            it "has no overflow issues" $ do
-              forAll smallGen $ \x -> 
-                (numDigits ((fromIntegral x) :: Int16))
-                  == (numDigits ((fromIntegral x) :: Integer))
+arbitraryPrecision_numDigits = 
+  it "Works on arbitrarily large positive integers" $ do
+    forAll withoutLeadingZero $ \x -> 
+      (numDigits (listToInteger x)) `shouldBe` (length x)
 
-          describe "sumDigits" $ do
-            it "sumDigits works on numbers close to 0" $ do 
-              forAll digitsGen $ \x -> 
-                (sumDigits x) `shouldBe` x
+{-
+   sumDigits tests
+-}
+smallCases_sumDigits = 
+  it "sumDigits works on numbers close to 0" $ do 
+    forAll digitsGen $ \x -> 
+      (sumDigits x) `shouldBe` x
 
-            it "sumDigits works on arbitrarily large positive integers" $ do
-              forAll withoutLeadingZero $ \x -> 
-                (sumDigits (listToInteger x)) `shouldBe` (fromIntegral $ sum x)
+arbitraryPrecision_sumDigits = 
+  it "sumDigits works on arbitrarily large positive integers" $ do
+    forAll withoutLeadingZero $ \x -> 
+      (sumDigits (listToInteger x)) `shouldBe` (fromIntegral $ sum x)
 
-            it "has no overflow issues" $ do
-              forAll smallGen $ \x -> 
-                (toInteger (sumDigits ((fromIntegral x) :: Int16)))
-                  == (sumDigits ((fromIntegral x) :: Integer))
+fixedPrecision_sumDigits = 
+  it "has no overflow issues" $ do
+    forAll smallGen $ \x -> 
+      (toInteger (sumDigits ((fromIntegral x) :: Int16)))
+        == (sumDigits ((fromIntegral x) :: Integer))
 
-          describe "toDigits" $ do 
-            it "toDigits works on numbers close to 0" $ do
-              forAll digitsGen $ \x -> 
-                (toDigits x) `shouldBe` [x]
+{-
+   toDigits tests
+-}
+smallCases_toDigits = 
+  it "toDigits works on numbers close to 0" $ do
+    forAll digitsGen $ \x -> 
+      (toDigits x) `shouldBe` [x]
 
-            it "toDigits works on arbitrarily large positive integers" $ do
-              forAll withoutLeadingZero $ \x -> 
-                (toDigits (listToInteger x)) `shouldBe` x
+arbitraryPrecision_toDigits = 
+  it "toDigits works on arbitrarily large positive integers" $ do
+    forAll withoutLeadingZero $ \x -> 
+      (toDigits (listToInteger x)) `shouldBe` x
 
-            it "has no overflow issues" $ do
-              forAll smallGen $ \x -> 
-                (toDigits ((fromIntegral x) :: Int16))
-                  == (toDigits ((fromIntegral x) :: Integer))
+fixedPrecision_toDigits = 
+  it "has no overflow issues" $ do
+    forAll smallGen $ \x -> 
+      (toDigits ((fromIntegral x) :: Int16))
+        == (toDigits ((fromIntegral x) :: Integer))
 
-          describe "fromDigits" $ do
-            it "fromDigits [] == 0" $ do
-              (fromDigits []) `shouldBe` 0
+{- 
+   fromDigits tests
+-}
+emptyListTest_fromDigits = 
+  it "fromDigits [] == 0" $ do
+    (fromDigits []) `shouldBe` 0
 
-            it "fromDigits works on lists starting with zero" $ do
-              forAll withLeadingZero $ \xs ->
-                (fromDigits xs) `shouldBe` (listToInteger xs)
+leadingZero_fromDigits = 
+  it "fromDigits works on lists starting with zero" $ do
+    forAll withLeadingZero $ \xs ->
+      (fromDigits xs) `shouldBe` (listToInteger xs)
 
-            it "fromDigits works on lists of only zeros" $ do
-              forAll zeroList $ \xs -> 
-                (fromDigits xs) `shouldBe` 0
+onlyZeros_fromDigits = 
+  it "fromDigits works on lists of only zeros" $ do
+    forAll zeroList $ \xs -> 
+      (fromDigits xs) `shouldBe` 0
 
-            it "fromDigits works on arbitrary lists" $ do
-              forAll numbersGen $ \xs -> 
-                (fromDigits xs) `shouldBe` (listToInteger xs)
+fixedPrecision_fromDigits =
+  it "Works with fixed precision integers" $ do
+    let bound = maxBound :: Int16
+    let actual = (map (fromIntegral . fromDigits . toDigits) [1..bound]) :: [Int16]
+    let expected = [1..bound]
+    sequence_ $ zipWith shouldBe actual expected
+
+arbitraryPrecision_fromDigits = 
+  it "fromDigits works on arbitrary lists" $ do
+    forAll numbersGen $ \xs -> 
+      (fromDigits xs) `shouldBe` (listToInteger xs)
