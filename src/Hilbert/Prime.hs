@@ -11,6 +11,9 @@
 module Hilbert.Prime
   ( trialDivision
   , millerRabin
+  , primes
   ) where
+
 import Hilbert.Prime.MillerRabin   (millerRabin)
 import Hilbert.Prime.TrialDivision (trialDivision)
+import Hilbert.Prime.List          (primes)
