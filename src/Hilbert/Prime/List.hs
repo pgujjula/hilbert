@@ -12,11 +12,18 @@
           Functional Programming 19.1 (2009): 95-106. Cambridge University
           Press. Web.
 -}
+{-# LANGUAGE FlexibleContexts #-}
 module Hilbert.Prime.List
   ( primes
+  , primesLessThan
   ) where
 
 import Hilbert.PriorityQueue as PQ
+import Hilbert.Square (integralSqrt)
+import Data.Array.ST
+import Data.Array.IArray (assocs)
+import Control.Monad.ST
+import Control.Monad (forM_)
 
 {-|
    A lazy, infinite list of primes. The algorithm used is described in
@@ -103,3 +110,41 @@ deleteAllWithPriority pty queue
       where ((minVal, minPty), queue') = deleteMinWithPriority queue
             (values', newQueue)  = deleteAllWithPriority pty queue'
             values = minVal:values'
+
+{-|
+    Get a list of all the primes below the given limit. Much faster than
+    @takeWhile (<= n) primes@.
+
+    >>> primesLessThan 15
+    [2, 3, 5, 7, 11, 13]
+-}
+primesLessThan :: Int -> [Int]
+primesLessThan n | n < 2 = []
+primesLessThan n = map fst $ filter snd $ assocs $ runSTUArray $ do
+  array <- newArray (1, n - 1) True :: ST s (STUArray s Int Bool)
+  writeArray array 1 False
+  sieveAll array 2 (integralSqrt (n - 1)) (n - 1)
+  return array
+
+{-
+   Sieve all the primes between 'p' and 'limit' inclusive. The upper bound
+   of the array is also passed in as 'n'.
+-}
+sieveAll :: (MArray a Bool m) => a Int Bool -> Int -> Int -> Int -> m ()
+sieveAll array p limit n | p > limit = return ()
+sieveAll array p limit n = do
+  writeAllFalse array [2*p, 3*p..n]
+  p <- findTrue array (p + 1)
+  sieveAll array p limit n
+
+-- Return the first true index starting from 'n'
+findTrue :: (MArray a Bool m) => a Int Bool -> Int -> m Int
+findTrue array n = do
+  b <- readArray array n
+  if b
+  then return n
+  else findTrue array (n + 1) 
+
+-- Write False at all the given indices
+writeAllFalse :: (MArray a Bool m) => a Int Bool -> [Int] -> m ()
+writeAllFalse array xs = forM_ xs (\x -> writeArray array x False)
