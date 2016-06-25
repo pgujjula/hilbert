@@ -21,15 +21,17 @@ library
                     Hilbert.Legendre,
                     Hilbert.List,
                     Hilbert.Modular,
+                    Hilbert.Pell,
                     Hilbert.Prime,
                     Hilbert.PriorityQueue,
                     Hilbert.Square
                  
   other-modules: Hilbert.ContinuedFraction.Core,
                  Hilbert.ContinuedFraction.Sqrt,
+                 Hilbert.Prime.Factor,
+                 Hilbert.Prime.List,
                  Hilbert.Prime.MillerRabin,
                  Hilbert.Prime.TrialDivision,
-                 Hilbert.Prime.List,
                  Hilbert.PriorityQueue.ADT,
                  Hilbert.PriorityQueue.Map,
                  Hilbert.PriorityQueue.Naive
