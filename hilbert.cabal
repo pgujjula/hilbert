@@ -28,16 +28,21 @@ library
                  
   other-modules: Hilbert.ContinuedFraction.Core,
                  Hilbert.ContinuedFraction.Sqrt,
-                 Hilbert.Prime.Factor,
-                 Hilbert.Prime.List,
+                 Hilbert.Prime.Factor.List.Lazy,
+                 Hilbert.Prime.Factor.List.Strict,
+                 Hilbert.Prime.Factor.Single,
+                 Hilbert.Prime.List.Lazy,
+                 Hilbert.Prime.List.Strict,
                  Hilbert.Prime.MillerRabin,
                  Hilbert.Prime.TrialDivision,
                  Hilbert.PriorityQueue.ADT,
                  Hilbert.PriorityQueue.Map,
                  Hilbert.PriorityQueue.Naive
+
   -- other-extensions:
   build-depends:       base >= 4.4,
-                       containers >= 0.4
+                       containers >= 0.4,
+                       array >= 0.5
   hs-source-dirs:      src
   default-language:    Haskell2010
 

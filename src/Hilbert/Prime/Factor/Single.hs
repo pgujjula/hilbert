@@ -1,21 +1,19 @@
 {-|
-    Module      : Hilbert.Prime.Factor
-    Description : Prime factorization
+    Module      : Hilbert.Prime.Factor.List.Lazy
+    Description : Factor the positive integers lazily
     Copyright   : (c) Preetham Gujjula, 2016
     License     : GPL-3
     Maintainer  : preetham.gujjula@gmail.com
     Stability   : experimental
 
-    Prime factorization.
+    Factor the positive integers lazily
 -}
-module Hilbert.Prime.Factor
+module Hilbert.Prime.Factor.Single
   ( factor
   ) where
 
-import Data.List (find)
-
-import Hilbert.Prime.List (primes)
 import Hilbert.Square (integralSqrt)
+import Hilbert.Prime.List.Lazy (primes)
 
 {-|
     Factor a nonzero integer.
@@ -31,10 +29,6 @@ factor :: (Integral a) => a -> [(a, a)]
 factor x | x < 0 = (-1, 1):(factor (-x))
 factor 0 = error "Can't factor 0"
 factor x = factorFromList x (takeWhile (<= (integralSqrt x)) (map fromIntegral primes))
-
--- Find a factor of n in the list, if it exists
-findFactor :: (Integral a) => a -> [a] -> Maybe a
-findFactor n = find (\f -> n `rem` f == 0)
 
 {-
    divideOut k n = (e, n'), where
@@ -60,8 +54,10 @@ divideFirst n (k:ks) =
       then Just ((k, e), n', ks)
       else divideFirst n ks
 
--- factorFromList n list computes the prime factorization of n using the
--- primes in list
+{-
+   factorFromList n list computes the prime factorization of n using the
+   primes in list.
+-}
 factorFromList :: (Integral a) => a -> [a] -> [(a, a)]
 factorFromList 1 _ = []
 factorFromList n list =
