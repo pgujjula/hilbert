@@ -33,22 +33,26 @@ instance PriorityQueueADT MapQueue where
 
   null = Map.null . getMap
 
-  size = Map.size . getMap
+  size = (Map.foldr (+) 0) . (Map.map length) . getMap
 
   insert val pty (MapQueue map) =
     MapQueue $ Map.insertWith (++) pty [val] map
 
-  peekMinWithPriority (MapQueue map) = (val, pty)
+  peekMinP (MapQueue map) = (val, pty)
     where (pty, minList) = Map.findMin map
           val = head minList
 
-  deleteMinWithPriority queue@(MapQueue map) = ((val, pty), queue')
+  deleteMinP queue@(MapQueue map) = ((val, pty), queue')
     where (pty, minList) = Map.findMin map
           (val:rest) = minList
           queue' = MapQueue $ Map.updateMin updateFunc map
             where updateFunc _ = if Prelude.null rest
                                  then Nothing
                                  else Just rest
+
+  deleteAllMinP queue@(MapQueue map) = ((vals, pty), queue')
+    where ((pty, vals), map') = Map.deleteFindMin map
+          queue' = MapQueue map'
 
   meld (MapQueue map1) (MapQueue map2) =
     MapQueue $ Map.unionWith (++) map1 map2

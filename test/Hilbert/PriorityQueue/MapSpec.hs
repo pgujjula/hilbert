@@ -19,9 +19,12 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
            test 1   2
            test 5   2
            test 100 2
-           test 1   200
-           test 5   200
-           test 100 200
+           test 1   5
+           test 5   5
+           test 100 5
+           test 1   100
+           test 5   100
+           test 100 100
 
 {-
    Supplementary data
@@ -41,7 +44,7 @@ stringGen = resize 3
           $ choose ('a', 'z')
 
 intGen :: Gen Int
-intGen = choose (1, 100)
+intGen = choose (1, 10)
 
 emptyNaiveQueue = empty :: NaiveQueue String Int
 emptyMapQueue   = empty :: MapQueue String Int

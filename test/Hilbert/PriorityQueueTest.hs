@@ -3,8 +3,6 @@ module Hilbert.PriorityQueueTest
   ( genMutations
   , testQueue
   , applyMutations
-  , deleteAllMinWithPriority
-  , deleteAllMin
   ) where
 
 import Hilbert.PriorityQueue as PQ
@@ -22,86 +20,63 @@ import Data.Function (on)
    Delete all minimum elements with the same priority. Returns the deleted
    (value, priority) pairs and the new queue.
 -}
-deleteAllMinWithPriority :: (PriorityQueueADT q, Ord p)
-                         => (q v p) -> ([(v, p)], q v p)
-deleteAllMinWithPriority queue = deleteWhilePriority minPty queue
-  where deleteWhilePriority pty queue
-          | PQ.null queue  = ([], queue)
-          | currPty == pty = (first:rest, queue'')
-          | otherwise      = ([], queue)
-            where (first, queue') = deleteMinWithPriority queue
-                  (rest, queue'') = deleteWhilePriority pty queue'
-                  currPty         = snd first
-        minPty = snd $ peekMinWithPriority queue
+deleteWhileP :: (PriorityQueueADT q, Ord p)
+                => (p -> Bool) -> q v p -> ([(v, p)], q v p)
+deleteWhileP func queue
+  | PQ.null queue = ([], queue)
+  | func minP = (vp:vps, restQueue)
+  | otherwise = ([], queue)
+    where (_, minP) = peekMinP queue
+          (vp, queue') = deleteMinP queue
+          (vps, restQueue) = deleteWhileP func queue'
 
 {-
    Delete all minimum elements with the same priority. Returns the deleted
    values and the new queue.
 -}
-deleteAllMin :: (PriorityQueueADT q, Ord p) => q v p -> ([v], q v p)
-deleteAllMin = clean . deleteAllMinWithPriority
-  where clean (xs, q) = (map fst xs, q)
+deleteWhile :: (PriorityQueueADT q, Ord p)
+                => (p -> Bool) -> q v p -> ([v], q v p)
+deleteWhile func queue
+  | PQ.null queue = ([], queue)
+  | func minP = (v:vs, restQueue)
+  | otherwise = ([], queue)
+      where (v, minP) = peekMinP queue
+            (_, queue') = deleteMin queue
+            (vs, restQueue) = deleteWhile func queue'
 
 {-
    Represents the ways to mutate a single priority queue.
 -}
 data Mutation v p = Insert (v, p)
-                | DeleteMinWithPriority 
                 | DeleteMin
+                | DeleteMinP
+                | DeleteAllMin
+                | DeleteAllMinP
     deriving (Show)
 
 {-
    Apply any mutation and return the new priority queue.
 -}
 applyMutation :: (Ord p, PriorityQueueADT q) => 
-                    Mutation v p -> q v p -> q v p
-applyMutation (Insert (v, p))         queue =
-    insert v p queue
-applyMutation (DeleteMinWithPriority) queue
-  | PQ.null queue = queue
-  | otherwise     =  snd $ deleteAllMinWithPriority queue
-applyMutation DeleteMin queue
-  | PQ.null queue = queue
-  | otherwise     = snd $ deleteAllMin queue
+                    q v p -> Mutation v p -> q v p
+
+applyMutation queue (Insert (v, p)) = insert v p queue
+applyMutation queue mutation | PQ.null queue = queue
+applyMutation queue mutation = 
+  case mutation of
+    Insert (v, p) -> insert v p queue
+    DeleteMin     -> snd $ deleteWhile (== minP) queue
+    DeleteMinP    -> snd $ deleteWhileP (== minP) queue
+    DeleteAllMin  -> snd $ deleteAllMin queue
+    DeleteAllMinP -> snd $ deleteAllMinP queue
+  where minP = snd $ peekMinP queue
 
 {-
    Apply a list of mutations and return the new priority queue.
 -}
-applyMutations :: (Ord p, PriorityQueueADT q) =>
-                    [Mutation v p] -> q v p -> q v p
-applyMutations mutationList queue = 
-  foldl' (flip applyMutation) queue mutationList
-
-{-
-   Represents the ways to query a single priority queue.
--}
-data Query v p = Null 
-               | Size
-               | PeekMin
-               | PeekMinWithPriority
-
-               -- Very ugly naming, hopefully haskell 
-               -- record library can fix this.
-               | DeleteMin'
-               | DeleteMinWithPriority'
-
-data QueryResult v p = NullResult Bool
-                     | SizeResult Int
-                     | ValueResult v
-                     | ValuePriorityResult (v, p)
-    deriving (Eq)
-
-applyQuery :: (Ord p, PriorityQueueADT q) =>
-                Query v p -> q v p -> QueryResult v p
-applyQuery Null queue = NullResult (PQ.null queue)        
-applyQuery Size queue = SizeResult (size queue)
-applyQuery PeekMin queue = ValueResult (peekMin queue)
-applyQuery PeekMinWithPriority queue = 
-  ValuePriorityResult (peekMinWithPriority queue)
-applyQuery DeleteMin' queue =
-  ValueResult (fst $ deleteMin queue)
-applyQueue DeleteMinWithPriority' queue =
-  ValuePriorityResult (fst $ deleteMinWithPriority queue)
+applyMutations :: (Ord p, PriorityQueueADT q)
+               => q v p -> [Mutation v p] -> q v p
+applyMutations = foldl' applyMutation 
 
 {-
    Generate a random mutation given generators for the
@@ -110,9 +85,11 @@ applyQueue DeleteMinWithPriority' queue =
 genMutation :: Int -> Gen v -> Gen p -> Gen (Mutation v p)
 genMutation insertRatio valueGen ptyGen =
   frequency
-    [ (2*insertRatio, insertGen)
-    , (1, return DeleteMinWithPriority)
+    [ (4*insertRatio, insertGen)
     , (1, return DeleteMin)
+    , (1, return DeleteMinP)
+    , (1, return DeleteAllMin)
+    , (1, return DeleteAllMinP)
     ]
   where insertGen = do
             v <- valueGen
@@ -127,28 +104,33 @@ genMutations :: Int -> Int -> Gen v -> Gen p -> Gen ([Mutation v p])
 genMutations size insertRatio valueGen ptyGen =
   vectorOf size $ genMutation insertRatio valueGen ptyGen
 
-{- 
-   randomQueueGen mutationGen n generates a random queue
-   by applying n random mutations obtained from mutationGen.
--}
-randomQueueGen :: (Ord p, PriorityQueueADT q)
-               => Gen (Mutation v p) -> Int
-               -> Gen (q v p)
-randomQueueGen = randomQueueGenWith empty
-  where randomQueueGenWith queue mutationGen numMutations
-          | numMutations == 0   = return queue
-          | otherwise = do
-              mutation <- mutationGen
-              let queue' = applyMutation mutation queue
-              randomQueueGenWith queue' mutationGen (numMutations - 1)
-
 {- Convert a queue to a list by removing the elements in order -}
 toList :: (PriorityQueueADT q, Ord p) => q v p -> [(v, p)]
 toList queue
   | PQ.null queue = []
   | otherwise  = first:rest
-      where (first, queue') = deleteMinWithPriority queue
+      where (first, queue') = deleteMinP queue
             rest = toList queue'
+
+-- Compare the queries on the two queues
+compareQueues :: (PriorityQueueADT control, PriorityQueueADT test,
+                  Ord p, Ord v, Show p, Show v)
+              => control v p -> test v p -> Expectation
+compareQueues control test = do
+  (PQ.null control) `shouldBe` (PQ.null test)
+  (size control) `shouldBe` (size test)
+  if not (PQ.null control)
+  then do 
+    (fst $ deleteAllMin test) `shouldContain` [peekMin control]
+    (fst $ deleteAllMin control) `shouldContain` [peekMin test]
+    (mold $ fst $ deleteAllMinP test) `shouldContain` [peekMinP control]
+    (mold $ fst $ deleteAllMinP control) `shouldContain` [peekMinP test]
+    (fst $ deleteMin test) `shouldBe` (fst $ deleteMin control)
+    (fst $ deleteMinP test) `shouldBe` (fst $ deleteMinP control)
+    (fst $ deleteAllMin test) `shouldBe` (fst $ deleteAllMin control)
+    (fst $ deleteAllMinP test) `shouldBe` (fst $ deleteAllMinP control)
+  else return ()
+    where mold (xs, y) = zip xs (repeat y)
 
 {-
    Test the "test" priority queue type against the "control" type, using the given
@@ -156,9 +138,13 @@ toList queue
 -}
 testQueue :: (PriorityQueueADT control, PriorityQueueADT test, Ord p, Ord v, Show p, Show v)
           => control v p -> test v p -> [Mutation v p] -> Expectation
-testQueue control test mutations = list2 `shouldBe` list1
+testQueue control test mutations = do 
+    list2 `shouldBe` list1
+--    compareQueues controlQueue testQueue
   where list1 = collapse control 
         list2 = collapse test
+        controlQueue = applyMutations control mutations
+        testQueue = applyMutations test mutations
         collapse queue = -- Sort each group of values
                          map sort
                          -- Group values by priority
@@ -166,4 +152,4 @@ testQueue control test mutations = list2 `shouldBe` list1
                          -- A sorted list of (value, priority) pairs, sorted 
                          -- by priority
                          $ toList
-                         $ applyMutations mutations queue
+                         $ applyMutations queue mutations
