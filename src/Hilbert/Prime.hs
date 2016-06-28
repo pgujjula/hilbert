@@ -12,10 +12,18 @@ module Hilbert.Prime
   ( trialDivision
   , millerRabin
   , primes
+  , primesTo
+  , primesTo'
   , factor
+  , factorTo
+  , factorTo'
+  , factorToInf
   ) where
 
-import Hilbert.Prime.MillerRabin   (millerRabin)
-import Hilbert.Prime.TrialDivision (trialDivision)
-import Hilbert.Prime.List          (primes)
-import Hilbert.Prime.Factor        (factor)
+import Hilbert.Prime.TrialDivision      (trialDivision)
+import Hilbert.Prime.MillerRabin        (millerRabin)
+import Hilbert.Prime.List.Lazy          (primes, primesTo)
+import Hilbert.Prime.List.Strict        (primesTo')
+import Hilbert.Prime.Factor.List.Lazy   (factorTo, factorToInf)
+import Hilbert.Prime.Factor.List.Strict (factorTo')
+import Hilbert.Prime.Factor.Single      (factor)
