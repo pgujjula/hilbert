@@ -10,14 +10,14 @@
 -}
 module Hilbert.PriorityQueue
   ( PriorityQueueADT(..)
-  , PriorityQueue
+  , DefaultQueue
   , MapQueue
-  , NaiveQueue
+  , ListQueue
   ) where
 
 import Hilbert.PriorityQueue.ADT
 import Hilbert.PriorityQueue.Map
-import Hilbert.PriorityQueue.Naive
+import Hilbert.PriorityQueue.List
 
 -- | The default priority queue implementation is MapQueue.
-type PriorityQueue = MapQueue
+type DefaultQueue = MapQueue

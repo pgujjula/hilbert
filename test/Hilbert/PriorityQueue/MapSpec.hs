@@ -6,7 +6,7 @@ module Hilbert.PriorityQueue.MapSpec
 import Hilbert.PriorityQueue.ADT
 import Hilbert.PriorityQueue.Map
 import Hilbert.PriorityQueueTest
-import Hilbert.PriorityQueue.Naive
+import Hilbert.PriorityQueue.List
 import Test.Hspec
 import Test.Hspec.QuickCheck
 import Test.QuickCheck
@@ -46,19 +46,19 @@ stringGen = resize 3
 intGen :: Gen Int
 intGen = choose (1, 10)
 
-emptyNaiveQueue = empty :: NaiveQueue String Int
+emptyListQueue = empty :: ListQueue String Int
 emptyMapQueue   = empty :: MapQueue String Int
 
 {-
-   MapQueue test: Compare MapQueue and NaiveQueue using the given insert
+   MapQueue test: Compare MapQueue and ListQueue using the given insert
    ratio and number of mutations.
 -}
 test insertRatio numMutations = 
-   it ("Comparing MapQueue and NaiveQueue with insertRatio = "
+   it ("Comparing MapQueue and ListQueue with insertRatio = "
           ++ (show insertRatio)
           ++ " and numMutations = "
           ++ (show numMutations)
       ) $ do
       forAll mutationGen  $ \mutations ->
-        testQueue emptyNaiveQueue emptyMapQueue mutations
+        testQueue emptyListQueue emptyMapQueue mutations
   where mutationGen = genMutations numMutations insertRatio stringGen intGen
