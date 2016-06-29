@@ -1,5 +1,5 @@
 {-|
-    Module      : Hilbert.PriorityQueue.Naive
+    Module      : Hilbert.PriorityQueue.List
     Description : A simple implementation of priority queue
     Copyright   : (c) Preetham Gujjula, 2016
     License     : GPL-3
@@ -10,8 +10,8 @@
     for debugging purposes.
 -}
 
-module Hilbert.PriorityQueue.Naive
-  ( NaiveQueue
+module Hilbert.PriorityQueue.List
+  ( ListQueue
   ) where
 
 import Hilbert.PriorityQueue.ADT as PQ
@@ -19,28 +19,28 @@ import Data.Function (on)
 import Data.List (minimumBy, delete)
 
 {-|
-    A list-based priority queue implementation, only for debugging other
+    A naive list-based priority queue implementation, only for debugging other
     priority queues.
 -}
-newtype NaiveQueue v p = NaiveQueue [(v, p)]
+newtype ListQueue v p = ListQueue [(v, p)]
   deriving (Show)
 
-getList (NaiveQueue list) = list
-instance PriorityQueueADT NaiveQueue where
-  empty = NaiveQueue []
+getList (ListQueue list) = list
+instance PriorityQueueADT ListQueue where
+  empty = ListQueue []
   size = length . getList
-  insert v p queue = NaiveQueue $ (v, p):(getList queue)
+  insert v p queue = ListQueue $ (v, p):(getList queue)
   peekMinP = minimumBy (on compare snd) . getList
 
-  deleteMinP (NaiveQueue [x]) = (x, empty)
-  deleteMinP (NaiveQueue ((v, p):rest)) =
-          let ((v', p'), (NaiveQueue rest')) =
-                      deleteMinP (NaiveQueue rest)
+  deleteMinP (ListQueue [x]) = (x, empty)
+  deleteMinP (ListQueue ((v, p):rest)) =
+          let ((v', p'), (ListQueue rest')) =
+                      deleteMinP (ListQueue rest)
            in if p < p'
-              then ((v, p), (NaiveQueue rest))
-              else ((v', p'), (NaiveQueue ((v, p):rest')))
+              then ((v, p), (ListQueue rest))
+              else ((v', p'), (ListQueue ((v, p):rest')))
 
-  deleteAllMinP queue = ((vals, minP), NaiveQueue newList)
+  deleteAllMinP queue = ((vals, minP), ListQueue newList)
     where (vals, newList) = delete (getList queue) minP
           minP = snd $ peekMinP queue
 
@@ -53,4 +53,4 @@ instance PriorityQueueADT NaiveQueue where
                     then (v:del, remain)
                     else (del, (v, p'):remain)
       
-  fromList = NaiveQueue
+  fromList = ListQueue

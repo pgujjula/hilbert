@@ -37,7 +37,7 @@ library
                  Hilbert.Prime.TrialDivision,
                  Hilbert.PriorityQueue.ADT,
                  Hilbert.PriorityQueue.Map,
-                 Hilbert.PriorityQueue.Naive
+                 Hilbert.PriorityQueue.List
 
   -- other-extensions:
   build-depends:       base >= 4.4,
