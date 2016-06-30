@@ -25,7 +25,8 @@ spec = do
    Supplementary data/functions
 -}
 multiplyOut :: [(Int, Int)] -> Int
-multiplyOut = product . (map (\(p, e) -> p^e))
+multiplyOut = product . (map (uncurry (^)))
+
 
 limit1 :: Int
 limit1 = 100
