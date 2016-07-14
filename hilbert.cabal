@@ -23,6 +23,7 @@ library
                     Hilbert.Modular,
                     Hilbert.Pell,
                     Hilbert.Prime,
+                    Hilbert.Prime.MillerRabin,
                     Hilbert.PriorityQueue,
                     Hilbert.Square
                  
@@ -33,7 +34,6 @@ library
                  Hilbert.Prime.Factor.Single,
                  Hilbert.Prime.List.Lazy,
                  Hilbert.Prime.List.Strict,
-                 Hilbert.Prime.MillerRabin,
                  Hilbert.Prime.TrialDivision,
                  Hilbert.PriorityQueue.ADT,
                  Hilbert.PriorityQueue.Map,

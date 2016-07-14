@@ -8,6 +8,7 @@
 
     Functions related to squaring.
 -}
+
 module Hilbert.Square
      ( integralSqrt
      , isSquare
@@ -49,7 +50,7 @@ potentialRoots m =
 {-|
     @isSquare n@ returns whether the @n@ is a perfect square.
 
-    > Preconditions: none
+    __Preconditions:__ @n@ is nonnegative
 
     >>> isSquare 4
     True

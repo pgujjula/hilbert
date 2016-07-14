@@ -8,6 +8,7 @@
 
     Utility functions to handle lists.
 -}
+
 module Hilbert.List
   ( rmDups
   , groupBy
@@ -18,7 +19,7 @@ import Data.List (sortBy)
 {-|
     @rmDups xs@ removes the duplicates from a list @xs@.
 
-    > Precondition: xs must be sorted
+    __Precondition:__ @xs@ must be sorted.
 
     >>> rmDups [1, 1, 2, 4, 6, 6, 6, 6, 10]
     [1, 2, 4, 6, 10]
@@ -31,9 +32,19 @@ rmDups xs = xs
 
 {-|
     Group elements of a list using a comparison function.
+    
+    __Preconditions:__ None.
+
+    To group equal elements,
 
     >>> groupBy compare [4, 3, 5, 6, 7, 8, 3, 6, 8, 5, 3]
     [[3,3,3],[4],[5,5],[6,6],[7],[8,8]]
+
+    To group elements by their residue modulo 3,
+
+    >>> import Data.Function (on)
+    >>> groupBy (compare `on` (`rem` 3)) [1..10]
+    [[3,6,9],[1,4,7,10],[2,5,8]]
 -}
 groupBy :: (a -> a -> Ordering) -> [a] -> [[a]]
 groupBy func list = groupAscending func $ sortBy func list

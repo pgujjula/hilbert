@@ -8,6 +8,7 @@
 
     Compute Legendre and Jacobi symbols.
 -}
+
 module Hilbert.Legendre
   ( legendre
   , jacobi
@@ -17,7 +18,11 @@ import Hilbert.Modular (modPow)
 
 {-|
     @legendre a p@ computes the Legendre symbol (a/p).
-    Undefined output if @p@ is not prime
+    
+    __Preconditions:__
+
+        * @p@ must be prime.
+        * @a@ must be nonnegative.
 
     >>> legendre 10 7
     -1
@@ -34,7 +39,8 @@ legendre a p = if r == (p - 1)
 
 {-|
     @jacobi a n@ computes the Jacobi symbol (a/n).
-    Undefined output if @n@ is not a positive odd number
+
+    __Precondition:__ @n@ must be a positive odd number.
 
     >>> jacobi 0 3
     0

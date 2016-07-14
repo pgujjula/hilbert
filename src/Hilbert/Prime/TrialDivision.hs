@@ -14,8 +14,17 @@ module Hilbert.Prime.TrialDivision
   ) where
 
 {-|
-    Determines whether n is prime by testing
-    potential factors up to the square root of n.
+    @trialDivision n@ determines whether @n@ is prime by testing potential
+    factors up to the square root of @n@.
+
+    __Preconditions:__ None.
+
+    >>> trialDivision 3
+    True
+    >>> trialDivision 1000
+    False
+    >>> trialDivision (-10)
+    False
 -}
 trialDivision :: (Integral a) => a -> Bool
 trialDivision n

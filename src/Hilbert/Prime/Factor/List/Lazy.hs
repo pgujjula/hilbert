@@ -8,6 +8,7 @@
 
     Factor the positive integers lazily
 -}
+
 module Hilbert.Prime.Factor.List.Lazy
   ( factorTo
   , factorToInf
@@ -25,8 +26,13 @@ import Hilbert.Square (integralSqrt)
 type PQueue = DefaultQueue
 
 {-| 
-    Factor the first @n@ positive integers lazily. Lower memory usage and faster
-    than @take n factorizations@.
+    @factorTo 10@ factors the first @n@ positive integers lazily. Lower memory
+    usage and but slower than @'factorTo''@.
+
+    __Precondition:__ @n@ is nonnegative
+
+    >>> factorTo 10
+    [[],[(2,1)],[(3,1)],[(2,2)],[(5,1)],[(2,1),(3,1)],[(7,1)],[(2,3)],[(3,2)],[(2,1),(5,1)]]
 -}
 factorTo :: Int -> [[(Int, Int)]]
 factorTo n = (prefix ++) $ snd $ mapAccumL step' startQueue [3..n]
@@ -51,11 +57,12 @@ factorTo n = (prefix ++) $ snd $ mapAccumL step' startQueue [3..n]
               return (factorUsing removedPrimes n)
 
 {-|
-    Get a lazy infinite list of factorizations of the poistive integers.
-    Equivalent to @map factor [1..]@
+    Get a lazy infinite list of factorizations of the positive integers.
+    Equivalent to @map factor [1..]@. Keep in mind @take n factorToInf@ is
+    likely slower than either @factorTo n@ or @factorTo' n@.
 
-    >>> take 5 factorizations
-    [[], [(2, 1)], [(3, 1)], [(2, 2)], [(5, 1)]]
+    >>> take 10 factorToInf
+    [[],[(2,1)],[(3,1)],[(2,2)],[(5,1)],[(2,1),(3,1)],[(7,1)],[(2,3)],[(3,2)],[(2,1),(5,1)]]
 -}
 factorToInf :: [[(Int, Int)]]
 factorToInf = (prefix ++) $ snd $ mapAccumL step' startQueue [3..]
