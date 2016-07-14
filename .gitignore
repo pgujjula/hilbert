@@ -6,3 +6,4 @@ cabal.sandbox.config
 *.o
 *temp*
 test/Spec
+.stack-work
