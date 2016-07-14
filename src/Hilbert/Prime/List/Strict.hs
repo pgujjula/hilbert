@@ -21,11 +21,11 @@ import Control.Monad.ST
 import Control.Monad (forM_)
 
 {-|
-    Get a list of all the primes below the given limit. Much faster than
-    @takeWhile (<= n) primes@.
+    @primesTo' n@ strictly computes the primes up to @n@, inclusive. Faster
+    but higher memory usage than @primesTo n@.
 
-    >>> primesLessThan 17
-    [2, 3, 5, 7, 11, 13, 17]
+    >>> primesTo' 10
+    [2, 3, 5, 7]
 -}
 primesTo' :: Int -> [Int]
 primesTo' n | n < 2 = []

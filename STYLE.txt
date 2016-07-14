@@ -1,75 +1,162 @@
-A style guide for this project
-==============================
+STYLE GUIDE
+===========
 
-**** All source files should begin with a module header. Here is an example from
-  Hilbert.ContinuedFrac
+General Conventions
+-------------------
+    * Variable and function names should prioritize being descriptive over
+      being short.
+    * See existing source files for style examples.
+    * All code should have proper style from the beginning.
 
-{-|
-Module      : Hilbert.Digit
-Description : Handle continued fractions.
-Copyright   : (c) Preetham Gujjula, 2016
-License     : GPL-3
-Maintainer  : preetham.gujjula@gmail.com
-Stability   : experimental
+Formatting
+----------
+    * Spaces over tabs.
+    * A general indent is 2 spaces.
+    * No trailing whitespace.
+    * Max line length of 79 characters.
 
-Handle continued fractions. This module uses mathematics described in
+Documentation
+-------------
+    * All new functions must be added with documentation.
+    * Documentation for a function should list all preconditions.
+    * Any references must be cited in the module header or the function header.
+    * All exposed functions and modules should have Haddock documentation.
 
-    * Beceanu, Marius. "Period of the Continued Fraction of √n." Thesis.
-      Princeton University, 2003. Web.
-      <http://web.math.princeton.edu/mathlab/jr02fall/Periodicity/mariusjp.pdf>.
-      Junior Thesis
-    * Myerson, Gerry. "How to Detect When Continued Fractions Period
-      Terminates." Mathematics Stack Exchange. Stack Exchange, 11 Dec. 2011.
-      Web. 24 Apr. 2016. <http://math.stackexchange.com/a/90432>.
--}
+    Details:
+        * If there are any language pragmas, the source file should begin with
+          them.
 
-All the fields should be in exactly this order. All the formatting should look
-exactly like this. If there is nothing to add in the longer description, then the longer description should be the same as the Description field.
+          Example:
+          ________________________________________________________________________________
+          {-# LANGUAGE TypeSynonymInstances #-}
 
-**** After the module header comes a newline
-**** Then comes any LANGUAGE pragmas. For example, in Hilbert.PriorityQueue.Map:
-{-|
-Module      : Hilbert.PriorityQueue.Map
-Description : A priority queue implemention as a wrapper over 'Data.Map.Map'
-Copyright   : (c) Preetham Gujjula, 2016
-License     : GPL-3
-Maintainer  : preetham.gujjula@gmail.com
-Stability   : experimental
+          {-|
+              Module      : Hilbert.PriorityQueue.Map
+              Description : A priority queue implemention as a wrapper over 'Data.Map.Map'
+              ...
+	  ________________________________________________________________________________
 
-A priority queue implemention as a wrapper over 'Data.Map.Map'
--}
+        * Then comes the module header. If there is nothing to add in the
+          longer description, then the longer description should be the same as
+          the Description field. The fields in the example below should always
+          be filled.
 
-**** There should be another newline after any LANGUAGE pragmas.
-**** Then comes the module name. The exported functions should be listed as so:
-module Hilbert.Digit
-  ( numDigits
-  , sumDigits
-  , toDigits
-  , fromDigits) where
-**** Then comes another newline
-**** Then comes the imports. Imports should not have any newlines between them.
-     Put standard library imports before Hilbert imports. Example:
-import Data.Maybe (fromJust)
-import Data.List (find, findIndices)
-import Data.Ratio
-import Hilbert.Square (isSquare, integralSqrt)
-**** After any imports comes another newline.
+          Example:
+          ________________________________________________________________________________
+          {-|
+              Module      : Hilbert.ContinuedFraction
+              Description : Handle continued fractions.
+              Copyright   : (c) Preetham Gujjula, 2016
+              License     : GPL-3
+              Maintainer  : preetham.gujjula@gmail.com
+              Stability   : experimental
 
-********************
-COMMENTS
-********************
- * All functions except the most basic should have a comment describing what
-   they do.
- * One line function header comments should look like:
-   -- This is a comment
- * Multiline function header comments should look like:
-   {- This is a multline comment.
-      Line 2.
-   -}
- * One line Haddock comments should look like
-   -- | This is a comment
- * Multiline Haddock comments should look like
-   {- | This is a Haddock comment.
-      Line 2.
-      Line 3.
-   -}
+              Handle continued fractions. This module uses mathematics described in
+
+                  * Beceanu, Marius. "Period of the Continued Fraction of √n." Thesis.
+                    Princeton University, 2003. Web.
+                    <http://web.math.princeton.edu/mathlab/jr02fall/Periodicity/mariusjp
+                    .pdf>. Junior Thesis
+                  * Myerson, Gerry. "How to Detect When Continued Fractions Period
+                    Terminates." Mathematics Stack Exchange. Stack Exchange, 11 Dec. 2011.
+                    Web. 24 Apr. 2016. <http://math.stackexchange.com/a/90432>.
+          -}
+          ________________________________________________________________________________
+
+        * After the module header comes the list of exports.
+
+          Example:
+          ____________________
+          module Hilbert.Digit
+            ( numDigits
+            , sumDigits
+            , toDigits
+            , fromDigits
+            ) where
+          ____________________
+
+        * After the exports comes the list of imports. Modules from external
+          libraries come first, followed by imports from other Hilbert modules.
+          External and internal modules should be separated by a newline:
+          _________________________________________
+          import Control.Monad.State.Lazy
+          import Control.Applicative ((<$>))
+          import Data.Tuple (swap)
+          import Data.List (mapAccumL, findIndices)
+          _________________________________________
+
+        * Exposed functions should have a Haddock header, followed by the
+          signature and the implementation. The comment should have
+            -- A description of the function.
+            -- A list of preconditions.
+            -- A few examples, including a "normal" case and some edge cases.
+
+          Example:
+          _________________________________________________
+          {-|
+              @numDigits n@ is the number of digits in @n@.
+
+              > Precondition: n >= 0
+
+              >>> numDigits 2938475
+              7
+              >>> numDigits 0
+              1
+          -}
+          numDigits :: (Integral a) => a -> Int
+          numDigits n = ...
+         __________________________________________________
+
+        * Hidden functions should have a similar header, using "{-" instead of
+          "{-|". Extremely simple hidden functions do not need to have as
+          extensive documention, and can instead have a simple description
+          instead.
+
+Structure
+---------
+    * In general, it's fine to have function names overlap. The module names
+      should remove ambiguity. This system might result in long module names
+      and more complex imports, but it makes for nice organization. To prevent
+      collisions and have shorter names, the user can use "import qualified".
+
+      Example: There are two functions that test primality, one with the Miller
+          -Rabin test and the other with the Solovay-Strassen test. We can name
+          both functions "isPrime". One function might go in the module
+          Hilbert.Prime.Test.MillerRabin, and the other in
+          Hilbert.Prime.Test.SolovayStrassen. An end user that wants to use the
+          both functions without collision can import as follows:
+          ___________________________________________________________________
+          import qualified Hilbert.Prime.Test.MillerRabin (isPrime) as MR
+          import qualified Hilbert.Prime.Test.SolovayStraseen (isPrime) as SS
+          ___________________________________________________________________
+          Then they can call their functions as MR.isPrime and SS.isPrime
+          respectively.
+
+Testing
+-------
+    * All new features should come with Hspec tests that tests main
+      functionality and edge cases.
+    * Each module file in the library should have a respective test file in the
+      testing suite.
+    * Tests should be grouped by function.
+
+      Example:
+      _____________________________________________________________________________
+      spec = modifyMaxSuccess (\_ -> numberOfTests) $
+               describe "ContinuedFraction.Core" $ do
+                 describe "mkPeriodic" $ do
+                   it "mkPeriodic _ [] throws an error" $ property $
+                     \xs -> evaluate (mkPeriodic (xs :: [Int]) [])
+                              `shouldThrow`
+                            anyException
+
+                 describe "repeatingPart" $ do
+                   it "returns Nothing for aperiodic continued fraction" $ do
+                     repeatingPart (mkAperiodic [1, 2, 3]) `shouldBe` Nothing
+                   it "returns the right part for periodic continued fraction" $ do
+                     repeatingPart (mkPeriodic [1, 2] [3, 4])
+                       `shouldBe` (Just [3, 4])
+       ____________________________________________________________________________
+
+    * Tests don't have as high standards for style as source code at the
+      moment, this is likely to change.

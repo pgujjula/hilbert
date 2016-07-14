@@ -8,6 +8,7 @@
 
     Functions to handle the digits of integers.
 -}
+
 module Hilbert.Digit
   ( numDigits
   , sumDigits
@@ -18,7 +19,7 @@ module Hilbert.Digit
 {-|
     @numDigits n@ is the number of digits in @n@.
 
-    > Precondition: n >= 0
+    __Precondition:__ @n@ must be nonnegative.
 
     >>> numDigits 2938475
     7
@@ -32,7 +33,7 @@ numDigits n = 1 + (numDigits $ n `div` 10)
 {-|
     @sumDigits n@ is the sum of the digits in @n@.
 
-    > Precondition: n >= 0
+    __Precondition:__ @n@ must be nonnegative.
 
     >>> sumDigits 2938475
     38
@@ -46,7 +47,7 @@ sumDigits n = (n `rem` 10) + sumDigits (n `div` 10)
 {-|
     @toDigits n@ is a list of all the digits in @n@.
 
-    > Precondition: n >= 0
+    __Precondition:__ @n@ must be nonnegative.
 
     >>> toDigits 2938475
     [2, 9, 3, 8, 4, 7, 5]
@@ -66,7 +67,7 @@ toDigits = reverse . toDigits'
 {-|
     @fromDigits xs@ is converts a list of digits @xs@ to an integer.
 
-    > Precondition: All elements of @xs@ are in [0..9]
+    __Precondition:__ All elements of @xs@ are in @[0..9]@.
 
     >>> fromDigits [1, 7, 2, 9]
     1729

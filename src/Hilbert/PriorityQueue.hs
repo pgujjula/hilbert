@@ -8,6 +8,7 @@
 
     Pure priority queue implementations.
 -}
+
 module Hilbert.PriorityQueue
   ( PriorityQueueADT(..)
   , DefaultQueue

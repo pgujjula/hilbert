@@ -53,6 +53,16 @@ primes = findIndices id
           else (state deleteAllMin) >>= mapM_ (\p -> modify (insert p (n + p)))
           return primality
 
+{-|
+    @primesTo n@ lazily compute the primes up to @n@, inclusive. Less memory
+    intensive but likely slower than @primesTo' n@.
+
+    __Precondition:__ @n@ is nonnegative
+    
+    >>> primesTo 10
+    [2, 3, 5, 7]
+-}
+
 primesTo :: Int -> [Int]
 primesTo n = findIndices id
         $ ([False, False] ++)

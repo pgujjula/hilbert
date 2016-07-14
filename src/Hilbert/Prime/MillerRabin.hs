@@ -8,6 +8,7 @@
 
     The Miller-Rabin probabilistic primality test.
 -}
+
 module Hilbert.Prime.MillerRabin
   ( millerRabin
   , millerRabinWith
@@ -15,22 +16,45 @@ module Hilbert.Prime.MillerRabin
 
 import Hilbert.Modular (modPow)
 
--- The default bases used by the Miller Rabin test.
+{-
+   The default bases used by the Miller Rabin test.
+-}
 defaultBases :: (Integral a) => [a]
 defaultBases = [2, 3, 5]
 
 {-|
     @millerRabin n@ performs the Miller-Rabin test on @n@ with a
-    default list of bases. Use @millerRabinWith@ to specify a different
-    set of bases. This is a probabilistic prime test, so correctness is not
-    guaranteed.
+    default list of bases. (Currently {2, 3, 5}). Use 'millerRabinWith' to
+    specify a different set of bases. This is a probabilistic prime test, so
+    correctness is not guaranteed.
+
+    __Preconditions:__ None.
+
+    >>> millerRabin 7
+    True
+    >>> millerRabin 10
+    False
+    
+    Rarely, we have false positives.
+
+    >>> (millerRabin 25326001, trialDivision 25326001)
+    (True, False)
+    
 -}
 millerRabin :: (Integral a) => a -> Bool
 millerRabin n = millerRabinWith defaultBases n
 
 {-|
-    @millerRabinWith n testBases@ performs the Miller-Rabin test on
-    @n@ with the bases @testBases@
+    @millerRabinWith n testBases@ performs the Miller-Rabin test on @n@ with
+    the bases @testBases@. This is a probabilistic prime test, so correctness
+    is not guaranteed.
+
+    __Preconditions:__
+        
+        * @testBases@ consists only of integers in the interval [2, n - 2] (unchecked).
+
+    >>> millerRabinWith [2, 3, 5, 7] 25326001
+    False
 -}
 millerRabinWith :: (Integral a) => [a] -> a -> Bool
 millerRabinWith testBases n =
@@ -51,7 +75,9 @@ millerRabinWith_preconditions n
   | otherwise = Nothing
 
 {-
-   Called from millerRabinWith. Preconditions:
+   Called from millerRabinWith. Doesn't check preconditions.
+   
+   Preconditions:
      * n > 3
      * n is odd
 -}
@@ -80,7 +106,9 @@ isWitness a n = part1 && part2
         testR r = (modPow a (2^r * d) n) /= (n - 1)
         (s, d)  = splitTwos (n - 1)
 
--- Factor an integer into the form 2^r * d, with d odd
+{-
+   Factor an integer into the form 2^r * d, with d odd
+-}
 splitTwos :: (Integral a) => a -> (Int, a)
 splitTwos n = if odd n
               then (0, n)

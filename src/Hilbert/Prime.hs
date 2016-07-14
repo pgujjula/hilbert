@@ -8,6 +8,7 @@
 
     Functions related to primes.
 -}
+
 module Hilbert.Prime
   ( trialDivision
   , millerRabin
