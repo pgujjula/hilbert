@@ -118,7 +118,7 @@ Structure
       should remove ambiguity. This system might result in long module names
       and more complex imports, but it makes for nice organization. To prevent
       collisions and have shorter names, the user can use "import qualified".
-      
+
       Example: There are two functions that test primality, one with the Miller
           -Rabin test and the other with the Solovay-Strassen test. We can name
           both functions "isPrime". One function might go in the module

@@ -6,8 +6,9 @@
     Maintainer  : preetham.gujjula@gmail.com
     Stability   : experimental
 
-    Factor the positive integers lazily
+    Factor a positive integer.
 -}
+
 module Hilbert.Prime.Factor.Single
   ( factor
   ) where
@@ -16,7 +17,9 @@ import Hilbert.Square (integralSqrt)
 import Hilbert.Prime.List.Lazy (primes)
 
 {-|
-    Factor a nonzero integer.
+    Factor an integer.
+
+    __Precondition:__ Input is nonzero.
 
     >>> factor 60
     [(2, 2), (3, 1), (5, 1)]

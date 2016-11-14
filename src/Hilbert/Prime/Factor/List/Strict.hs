@@ -45,16 +45,15 @@ factorWith (n, (x:xs)) =
   let (e, n') = divideOut x n
    in (x, e):(factorWith (n', xs))
 
-
-
 {-|
     Compute the prime factorizations of every positive integer up to @n@. The
     underlying implementation performs the Sieve of Erastosthenes on an MArray,
     so it's fast but memory intensive.
 
-    >>> factorUpTo 10
-    [[], [(2, 1)], [(3, 1)], [(2, 2)], [(5, 1)], [(2, 1), (3, 1)],
-     [(7, 1)], [(2, 3)], [(3, 2)], [(2, 1), (5, 1)]]
+    __Precondition:__ @n@ is nonnegative.
+
+    >>> factorTo' 10
+    [[],[(2,1)],[(3,1)],[(2,2)],[(5,1)],[(2,1),(3,1)],[(7,1)],[(2,3)],[(3,2)],[(2,1),(5,1)]]
 -}
 factorTo' :: Int -> [[(Int, Int)]]
 factorTo' = ([]:)  . (map factorWith)
