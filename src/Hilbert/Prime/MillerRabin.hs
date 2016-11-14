@@ -83,7 +83,7 @@ millerRabinWith_preconditions n
 -}
 millerRabinWith_low_level :: (Integral a) => [a] -> a -> Bool
 millerRabinWith_low_level testBases n =
-  not $ and $ map (\b -> isWitness b n) testBases
+  not $ or $ map (\b -> isWitness b n) testBases
 
 {-
    Check if 'a' is a witness to the compositness of 'n'. If true, then 'n' is 
