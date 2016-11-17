@@ -12,6 +12,7 @@
 module Hilbert.Prime.MillerRabin
   ( millerRabin
   , millerRabinWith
+  , isWitness
   ) where
 
 import Hilbert.Modular (modPow)
@@ -60,7 +61,7 @@ millerRabinWith :: (Integral a) => [a] -> a -> Bool
 millerRabinWith testBases n =
   case millerRabinWith_preconditions n of
     Just b  -> b
-    Nothing -> millerRabinWith_low_level testBases n
+    Nothing -> millerRabinWith_low_level (map toInteger testBases) (toInteger n)
 
 {-
    Check basic preconditions. Returns 'Just _' if n is was determined to be
@@ -81,7 +82,7 @@ millerRabinWith_preconditions n
      * n > 3
      * n is odd
 -}
-millerRabinWith_low_level :: (Integral a) => [a] -> a -> Bool
+millerRabinWith_low_level :: [Integer] -> Integer -> Bool
 millerRabinWith_low_level testBases n =
   not $ or $ map (\b -> isWitness b n) testBases
 
@@ -95,7 +96,7 @@ millerRabinWith_low_level testBases n =
             for all 0 <= r <= s - 1
      where (s, d) = splitTwos n
 -}
-isWitness :: (Integral a) => a -> a -> Bool
+isWitness :: Integer -> Integer -> Bool
 isWitness a n = part1 && part2
   where part1 = adn /= 1
         part2 = and $ map (/= (n - 1)) $ take s $ iterate (\x -> x^2 `rem` n) adn
