@@ -1,5 +1,5 @@
 {-|
-    Module      : Hilbert.Prime.TrialDivision
+    Module      : Hilbert.Prime.Check.TrialDivision
     Description : Functions to compute the primality of a number using
                   trial division.
     Copyright   : (c) Preetham Gujjula, 2016
@@ -7,27 +7,28 @@
     Maintainer  : preetham.gujjula@gmail.com
     Stability   : experimental
 
-    Functions to compute the primality of a number using trial division.
+    Compute the primality of a number using trial division.
 -}
-module Hilbert.Prime.TrialDivision
-  ( trialDivision
+
+module Hilbert.Prime.Check.TrialDivision
+  ( isPrime 
   ) where
 
 {-|
-    @trialDivision n@ determines whether @n@ is prime by testing potential
+    @isPrime n@ determines whether @n@ is prime by testing potential
     factors up to the square root of @n@.
 
     __Preconditions:__ None.
 
-    >>> trialDivision 3
+    >>> isPrime 3
     True
-    >>> trialDivision 1000
+    >>> isPrime 1000
     False
-    >>> trialDivision (-10)
+    >>> isPrime (-10)
     False
 -}
-trialDivision :: (Integral a) => a -> Bool
-trialDivision n
+isPrime :: (Integral a) => a -> Bool
+isPrime n
   | n < 2 = False -- Anything less than 2 is not prime.
   | n < 4 = True  -- 2 and 3 are prime.
   | otherwise = all (\a -> n `rem` a /= 0) testFactors

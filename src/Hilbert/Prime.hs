@@ -10,8 +10,8 @@
 -}
 
 module Hilbert.Prime
-  ( trialDivision
-  , millerRabin
+  ( isPrime
+  , isProbablePrime
   , primes
   , primesTo
   , primesTo'
@@ -21,10 +21,21 @@ module Hilbert.Prime
   , factorToInf
   ) where
 
-import Hilbert.Prime.TrialDivision      (trialDivision)
-import Hilbert.Prime.MillerRabin        (millerRabin)
-import Hilbert.Prime.List.Lazy          (primes, primesTo)
-import Hilbert.Prime.List.Strict        (primesTo')
-import Hilbert.Prime.Factor.List.Lazy   (factorTo, factorToInf)
-import Hilbert.Prime.Factor.List.Strict (factorTo')
-import Hilbert.Prime.Factor.Single      (factor)
+import qualified Hilbert.Prime.Check.TrialDivision
+    as TrialDivision (isPrime)
+import qualified Hilbert.Prime.Check.Probable.MillerRabin
+    as MillerRabin (isProbablePrime)
+import qualified Hilbert.Prime.List.Erastosthenes.Lazy
+    as Erastosthenes (primes, primesTo)
+import qualified Hilbert.Prime.List.Erastosthenes.Strict
+    as Erastosthenes (primesTo')
+
+isPrime         = TrialDivision.isPrime
+isProbablePrime = MillerRabin.isProbablePrime
+primes          = Erastosthenes.primes
+primesTo        = Erastosthenes.primesTo
+primesTo'       = Erastosthenes.primesTo'
+factor          = undefined
+factorTo        = undefined
+factorTo'       = undefined
+factorToInf     = undefined

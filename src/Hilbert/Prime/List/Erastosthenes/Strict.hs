@@ -1,5 +1,5 @@
 {-|
-    Module      : Hilbert.Prime.List.Strict
+    Module      : Hilbert.Prime.List.Erastosthenes.Strict
     Description : Strict Sieve of Erastosthenes
     Copyright   : (c) Preetham Gujjula, 2016
     License     : GPL-3
@@ -11,7 +11,7 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module Hilbert.Prime.List.Strict
+module Hilbert.Prime.List.Erastosthenes.Strict
   ( primesTo'
   ) where
 
