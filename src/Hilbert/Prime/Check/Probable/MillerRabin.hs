@@ -1,5 +1,5 @@
 {-|
-    Module      : Hilbert.Prime.MillerRabin
+    Module      : Hilbert.Prime.Check.Probable.MillerRabin
     Description : The Miller-Rabin probabilistic primality test.
     Copyright   : (c) Preetham Gujjula, 2016
     License     : GPL-3
@@ -9,8 +9,8 @@
     The Miller-Rabin probabilistic primality test.
 -}
 
-module Hilbert.Prime.MillerRabin
-  ( millerRabin
+module Hilbert.Prime.Check.Probable.MillerRabin
+  ( isProbablePrime
   , millerRabinWith
   , isWitness
   ) where
@@ -24,26 +24,26 @@ defaultBases :: (Integral a) => [a]
 defaultBases = [2, 3, 5]
 
 {-|
-    @millerRabin n@ performs the Miller-Rabin test on @n@ with a
+    @isProbablePrime n@ performs the Miller-Rabin test on @n@ with a
     default list of bases. (Currently {2, 3, 5}). Use 'millerRabinWith' to
     specify a different set of bases. This is a probabilistic prime test, so
     correctness is not guaranteed.
 
     __Preconditions:__ None.
 
-    >>> millerRabin 7
+    >>> isProbablePrime 7
     True
-    >>> millerRabin 10
+    >>> isProbablePrime 10
     False
     
     Rarely, we have false positives.
 
-    >>> (millerRabin 25326001, trialDivision 25326001)
+    >>> (isProbablePrime 25326001, isPrime 25326001)
     (True, False)
     
 -}
-millerRabin :: (Integral a) => a -> Bool
-millerRabin n = millerRabinWith defaultBases n
+isProbablePrime :: (Integral a) => a -> Bool
+isProbablePrime n = millerRabinWith defaultBases n
 
 {-|
     @millerRabinWith n testBases@ performs the Miller-Rabin test on @n@ with
@@ -115,3 +115,4 @@ splitTwos n = if odd n
               then (0, n)
               else (r' + 1, d')
   where (r', d') = splitTwos (n `div` 2)
+

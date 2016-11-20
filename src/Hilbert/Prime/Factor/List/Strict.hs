@@ -1,14 +1,16 @@
 {-|
     Module      : Hilbert.Prime.Factor.List.Strict
-    Description : Factor the first n integers strictly.
+    Description : Factor the positive integers strictly.
     Copyright   : (c) Preetham Gujjula, 2016
     License     : GPL-3
     Maintainer  : preetham.gujjula@gmail.com
     Stability   : experimental
 
-    Prime factorization.
+    Factor the positive integers strictly.
 -}
+
 {-# LANGUAGE FlexibleContexts #-}
+
 module Hilbert.Prime.Factor.List.Strict
   ( factorTo'
   ) where
@@ -17,7 +19,7 @@ import Control.Monad.ST
 import Data.Array.ST
 import Data.Array.IArray (assocs)
 import Control.Monad (forM_)
-import Hilbert.Prime.List.Strict (primesTo')
+import Hilbert.Prime.List.Erastosthenes.Strict (primesTo')
 import Hilbert.Square (integralSqrt)
 
 {-
