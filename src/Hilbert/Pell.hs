@@ -53,9 +53,9 @@ combine d (x1, y1) (x2, y2) = (x1 * x2 + y1 * y2 * d,
 
     __Precondition:__ @d >= 2@.
 
-    >>> take 3 (solutions 2)
+    >>> (take 3) <$> (solve 2)
     Just [(3, 2), (17, 20), (99, 70)]
-    >>> take 3 (solutions 4)
+    >>> (take 3) <$> (solve 4)
     Nothing
 -}
 solve :: (Integral a) => a -> Maybe [(a, a)]

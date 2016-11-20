@@ -24,6 +24,7 @@ import Hilbert.Modular (modPow)
         * @p@ must be prime.
         * @a@ must be nonnegative.
 
+
     >>> legendre 10 7
     -1
     >>> legendre 7 7

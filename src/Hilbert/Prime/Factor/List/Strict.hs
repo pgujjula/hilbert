@@ -1,14 +1,3 @@
-{-|
-    Module      : Hilbert.Prime.Factor.List.Strict
-    Description : Factor the positive integers strictly.
-    Copyright   : (c) Preetham Gujjula, 2016
-    License     : GPL-3
-    Maintainer  : preetham.gujjula@gmail.com
-    Stability   : experimental
-
-    Factor the positive integers strictly.
--}
-
 {-# LANGUAGE FlexibleContexts #-}
 
 module Hilbert.Prime.Factor.List.Strict

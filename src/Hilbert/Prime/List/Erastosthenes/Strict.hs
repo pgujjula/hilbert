@@ -1,14 +1,3 @@
-{-|
-    Module      : Hilbert.Prime.List.Erastosthenes.Strict
-    Description : Strict Sieve of Erastosthenes
-    Copyright   : (c) Preetham Gujjula, 2016
-    License     : GPL-3
-    Maintainer  : preetham.gujjula@gmail.com
-    Stability   : experimental
-
-    Compute a list of prime numbers using the Sieve of Erastosthenes.
--}
-
 {-# LANGUAGE FlexibleContexts #-}
 
 module Hilbert.Prime.List.Erastosthenes.Strict
