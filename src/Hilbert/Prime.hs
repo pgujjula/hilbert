@@ -63,6 +63,8 @@ primes          = List.Erastosthenes.Lazy.primes
 {-|
     Generate a list of primes up to the given input, computed lazily. Currently
     uses the Sieve of Erastosthenes: 'List.Erastosthenes.Lazy.primesTo'.
+
+    __Precondition:__ @n@ is nonnegative.
 -}
 primesTo        = List.Erastosthenes.Lazy.primesTo
 

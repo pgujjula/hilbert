@@ -15,6 +15,8 @@ import Control.Monad (forM_)
     @primesTo' n@ strictly computes the primes up to @n@, inclusive. Faster
     but higher memory usage than @primesTo n@.
 
+    __Preconditions:__ @n@ is nonnegative.
+
     >>> primesTo' 10
     [2, 3, 5, 7]
 -}
