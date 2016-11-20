@@ -22,6 +22,7 @@ module Hilbert.Modular
         * b >= 0
         * m > 0
 
+
     >>> modPow 3 4 7
     4
     >>> modPow 0 10 12

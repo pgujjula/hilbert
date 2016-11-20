@@ -1,12 +1,12 @@
 {-|
     Module      : Hilbert.Prime.Factor.TrialDivision
-    Description : Factor the positive integers lazily
+    Description : Factor an integer.
     Copyright   : (c) Preetham Gujjula, 2016
     License     : GPL-3
     Maintainer  : preetham.gujjula@gmail.com
     Stability   : experimental
 
-    Factor a positive integer.
+    Factor an integer.
 -}
 
 module Hilbert.Prime.Factor.TrialDivision

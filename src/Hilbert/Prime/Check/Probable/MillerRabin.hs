@@ -12,7 +12,6 @@
 module Hilbert.Prime.Check.Probable.MillerRabin
   ( isProbablePrime
   , millerRabinWith
-  , isWitness
   ) where
 
 import Hilbert.Modular (modPow)
@@ -53,6 +52,7 @@ isProbablePrime n = millerRabinWith defaultBases n
     __Preconditions:__
         
         * @testBases@ consists only of integers in the interval [2, n - 2] (unchecked).
+
 
     >>> millerRabinWith [2, 3, 5, 7] 25326001
     False

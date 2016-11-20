@@ -1,14 +1,3 @@
-{-|
-    Module      : Hilbert.Prime.Factor.List.Lazy
-    Description : Factor the positive integers lazily.
-    Copyright   : (c) Preetham Gujjula, 2016
-    License     : GPL-3
-    Maintainer  : preetham.gujjula@gmail.com
-    Stability   : experimental
-
-    Factor the positive integers lazily.
--}
-
 module Hilbert.Prime.Factor.List.Lazy
   ( factorTo
   , factorToInf
