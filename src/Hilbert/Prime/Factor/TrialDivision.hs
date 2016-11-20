@@ -1,12 +1,12 @@
 {-|
     Module      : Hilbert.Prime.Factor.TrialDivision
-    Description : Factor an integer.
+    Description : Factor an integer using trial division.
     Copyright   : (c) Preetham Gujjula, 2016
     License     : GPL-3
     Maintainer  : preetham.gujjula@gmail.com
     Stability   : experimental
 
-    Factor an integer.
+    Factor an integer using trial division.
 -}
 
 module Hilbert.Prime.Factor.TrialDivision
@@ -17,7 +17,7 @@ import Hilbert.Square (integralSqrt)
 import Hilbert.Prime.List.Erastosthenes.Lazy (primes)
 
 {-|
-    Factor an integer.
+    Factor an integer using trial division.
 
     __Precondition:__ Input is nonzero.
 
