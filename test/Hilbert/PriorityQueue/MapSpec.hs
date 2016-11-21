@@ -3,10 +3,8 @@ module Hilbert.PriorityQueue.MapSpec
   , spec
   ) where
 
-import Hilbert.PriorityQueue.ADT
-import Hilbert.PriorityQueue.Map
+import Hilbert.PriorityQueue
 import Hilbert.PriorityQueueTest
-import Hilbert.PriorityQueue.List
 import Test.Hspec
 import Test.Hspec.QuickCheck
 import Test.QuickCheck
@@ -14,8 +12,7 @@ import Test.QuickCheck
 main :: IO ()
 main = hspec spec
 
-spec = modifyMaxSuccess (\_ -> numberOfTests) $ 
-         describe "MapQueue" $ do
+spec = modifyMaxSuccess (\_ -> numberOfTests) $ do
            test 1   2
            test 5   2
            test 100 2
@@ -54,10 +51,11 @@ emptyMapQueue   = empty :: MapQueue String Int
    ratio and number of mutations.
 -}
 test insertRatio numMutations = 
-   it ("Comparing MapQueue and ListQueue with insertRatio = "
+   it ("performs correctly when ratio of insertions to deletions is "
           ++ (show insertRatio)
-          ++ " and numMutations = "
+          ++ " and "
           ++ (show numMutations)
+          ++ " mutations are made"
       ) $ do
       forAll mutationGen  $ \mutations ->
         testQueue emptyListQueue emptyMapQueue mutations

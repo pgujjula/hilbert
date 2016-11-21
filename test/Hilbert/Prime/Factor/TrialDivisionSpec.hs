@@ -1,10 +1,10 @@
-module Hilbert.Prime.Factor.SingleSpec
+module Hilbert.Prime.Factor.TrialDivisionSpec
  ( main
  , spec
  ) where
 
 import Test.Hspec (hspec, describe, Spec, it, shouldBe)
-import Hilbert.Prime.Factor.Single (factor)
+import Hilbert.Prime.Factor.TrialDivision (factor)
 
 main :: IO ()
 main = hspec spec

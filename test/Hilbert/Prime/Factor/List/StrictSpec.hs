@@ -5,7 +5,7 @@ module Hilbert.Prime.Factor.List.StrictSpec
 
 import Test.Hspec (hspec, Spec, describe, it, shouldBe)
 
-import Hilbert.Prime.Factor.List.Strict (factorTo')
+import Hilbert.Prime.Factor.List (factorTo')
 
 main :: IO ()
 main = hspec spec

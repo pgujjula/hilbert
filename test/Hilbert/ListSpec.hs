@@ -13,8 +13,7 @@ main :: IO ()
 main = hspec spec
 
 spec = modifyMaxSize (\_ -> maxListSize) $ 
-         modifyMaxSuccess (\_ -> numberOfTests) $
-           describe "List" $ do
+         modifyMaxSuccess (\_ -> numberOfTests) $ do
              describe "rmDups" $ do
                smallCase_rmDups
                arbitraryCase_rmDups
@@ -46,21 +45,21 @@ smallCase_rmDups =
     (rmDups [1, 2, 3]) `shouldBe` [1, 2, 3]
 
 arbitraryCase_rmDups =
-  it "works on arbitrary lists" $ do
+  it "works on arbitrary length lists" $ do
     property $ \x -> (sorted $ rmDups $ sort (x :: [Integer]))
 
 {- 
    groupBy tests
 -}
 parity_groupBy = 
-  it "Grouping integers by parity works" $ do
+  it "correctly groups integers by parity" $ do
     property $ \xs -> 
       (sort $ map sort $ groupBy (compareParity 2) xs)
       `shouldBe` (sort $ map sort $ filter (not . null)
                   [filter even xs, filter odd xs])
 
 equality_groupBy = 
-  it "Grouping integers by equality works" $ do
+  it "correctly groups integers equality" $ do
     property $ \xs -> 
       (sort $ map sort $ groupBy compare (xs :: [Int])) 
         `shouldBe`
