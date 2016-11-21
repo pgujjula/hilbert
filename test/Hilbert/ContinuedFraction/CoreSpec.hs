@@ -22,8 +22,12 @@ import Hilbert.ContinuedFraction
 main :: IO ()
 main = hspec spec
 
-spec = modifyMaxSuccess (\_ -> numberOfTests) $
-         describe "ContinuedFraction.Core" $ do
+-- Parameters
+numberOfTests :: Int
+numberOfTests = 100
+
+-- Tests
+spec = modifyMaxSuccess (\_ -> numberOfTests) $ do
            describe "mkPeriodic" $ do
              it "mkPeriodic _ [] throws an error" $ property $
                \xs -> evaluate (mkPeriodic (xs :: [Int]) [])
@@ -74,9 +78,3 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $
                convergent (mkAperiodic [1, 2, 3]) 4 `shouldBe` (10 % 7)
                convergent (mkAperiodic []) 5 `shouldBe` (0 % 1)
 
-{-
-   Supplementary data/functions
--}
-
-numberOfTests :: Int
-numberOfTests = 100

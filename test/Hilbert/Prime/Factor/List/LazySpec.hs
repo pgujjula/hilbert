@@ -5,7 +5,7 @@ module Hilbert.Prime.Factor.List.LazySpec
 
 import Test.Hspec (hspec, Spec, shouldBe, it, describe)
 
-import Hilbert.Prime.Factor.List.Lazy (factorTo, factorToInf)
+import Hilbert.Prime.Factor.List (factorTo, factorToInf)
 
 main :: IO ()
 main = hspec spec
@@ -26,7 +26,6 @@ spec = do
 -}
 multiplyOut :: [(Int, Int)] -> Int
 multiplyOut = product . (map (uncurry (^)))
-
 
 limit1 :: Int
 limit1 = 100

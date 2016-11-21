@@ -17,12 +17,16 @@ module Hilbert.Legendre
 import Hilbert.Modular (modPow)
 
 {-|
-    @legendre a p@ computes the Legendre symbol (a/p).
-    
+    @legendre a p@ computes the Legendre symbol (a/p), which is 
+        
+        * 1 if a is a quadratic residue of p and p doesn't divide a.
+        * (-1) if a is not a quadratic residue of p
+        * 0 if p divides a
+
     __Preconditions:__
 
-        * @p@ must be prime.
-        * @a@ must be nonnegative.
+        * @p@ must be an odd prime (unchecked).
+        * @a@ must be nonnegative (unchecked).
 
 
     >>> legendre 10 7

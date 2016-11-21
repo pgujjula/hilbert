@@ -1,12 +1,12 @@
-module Hilbert.Prime.List.StrictSpec
+module Hilbert.Prime.List.Erastosthenes.StrictSpec
   ( main
   , spec
   ) where
 
 import Test.Hspec (hspec, Spec, describe, it, shouldBe)
-import Hilbert.Prime (trialDivision)
+import Hilbert.Prime (isPrime)
 
-import Hilbert.Prime.List.Strict (primesTo')
+import Hilbert.Prime.List.Erastosthenes (primesTo')
 
 main :: IO ()
 main = hspec spec
@@ -14,7 +14,7 @@ main = hspec spec
 spec :: Spec
 spec = describe "primesTo'" $ do
          it ("correct up to " ++ (show testLimit)) $ do 
-           let expected = filter trialDivision [1..]
+           let expected = filter isPrime [1..]
            let actual = primesTo' testLimit
            sequence_ $ take testLimit $ zipWith shouldBe actual expected
 

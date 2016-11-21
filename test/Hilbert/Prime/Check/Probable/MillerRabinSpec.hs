@@ -1,14 +1,16 @@
-module Hilbert.Prime.MillerRabinSpec
+module Hilbert.Prime.Check.Probable.MillerRabinSpec
   ( main
   , spec
   ) where
 
-import Hilbert.Prime.MillerRabin (millerRabin, millerRabinWith)
-import Hilbert.Prime.TrialDivision (trialDivision)
+import Hilbert.Prime.Check.Probable.MillerRabin (millerRabinWith)
+import Hilbert.Prime.Check.TrialDivision (isPrime)
 
 import Test.Hspec;
 import Test.QuickCheck;
 import Test.Hspec.QuickCheck;
+import Test.Hspec.Contrib.HUnit (fromHUnitTest)
+import Test.HUnit.Base (Test(TestCase), assertEqual)
 
 import Data.Int;
 import qualified Data.Set as Set;
@@ -16,22 +18,58 @@ import Data.Set ((\\))
 
 main = hspec spec
 
-spec = modifyMaxSuccess (\_ -> numberOfTests) $
-         describe "Prime.MillerRabin" $ do
-           describe "millerRabinWith" $ do
-             it "works on numbers smaller than 3 billion using bases 2, 3, 5, 7" $ do
-               forAll smallGen $ \x -> (millerRabinWith [2, 3, 5, 7] x) == (trialDivision x)
+{-
+   Parameters
+-}
+numberOfTests = 1000
 
+{-
+   Tests
+-}
+spec = modifyMaxSuccess (\_ -> numberOfTests) $
+           describe "millerRabinWith" $ do
+             it "works on numbers large numbers using bases 2, 3, 5, 7" $ do
+               forAll smallGen $ \x -> (millerRabinWith [2, 3, 5, 7] x) == (isPrime x)
              testBase 2
              testBase 3
              testBase 5
              testBase 7
+             testAllBases
+
+{-
+   millerRabinWith tests
+-}
+testBase p = it ("correctly finds pseudoprimes in base " ++ (show p)) $ do
+               let range = [4..strongPseudoLimit]
+               let actual = filter (\x -> (millerRabinWith [p] x) &&
+                                   (not $ isPrime x)) range
+               let expected = strongPseudo p
+               actual `shouldMatchList` expected
+
+testAllBases = it "using more bases eliminates the pseudoprimes of few bases" $ do
+                sequence_ $ zipWith3 assertEqual messages expected actual
+
+    where bases :: [Int]
+          bases = [2, 3, 5, 7]
+
+          pseudoprimes :: [Int]
+          pseudoprimes = concat $ map strongPseudo bases
+
+          expected :: [Bool]
+          expected = map (\_ -> False) pseudoprimes
+
+          actual :: [Bool]
+          actual = map (millerRabinWith bases) pseudoprimes
+
+          makeMessage :: Int -> String
+          makeMessage n = "millerRabinWith " ++ (show bases) ++ " " ++ (show n)
+
+          messages :: [String]
+          messages = map makeMessage pseudoprimes
 
 {- 
    Supplementary data
 -}
-
-numberOfTests = 1000
 
 -- Strong pseudprimes less than 100000 in bases 2, 3, 5, 7, according to OEIS.
 strongPseudoLimit = 100000
@@ -61,13 +99,3 @@ allBasePseudo = [3215031751, 118670087467, 307768373641, 315962312077,
 
 smallGen :: Gen Integer
 smallGen = choose (4, 3 * (10^9))
-
-{-
-   millerRabinWith tests
--}
-testBase p = it ("correctly finds pseudoprimes in base " ++ (show p)) $ do
-               let range = [4..strongPseudoLimit]
-               let actual = filter (\x -> (millerRabinWith [p] x) &&
-                                   (not $ trialDivision x)) range
-               let expected = strongPseudo p
-               actual `shouldMatchList` expected

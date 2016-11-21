@@ -15,7 +15,6 @@ main = hspec spec
 
 spec :: SpecWith()
 spec = modifyMaxSuccess (\_ -> numberOfTests) $ 
-  describe "Modular" $ do 
     describe "modPow" $ do
       edgeCase1_modPow
       edgeCase2_modPow
@@ -60,7 +59,7 @@ edgeCase3_modPow =
         (modPow 0 b m) == 0
 
 fixedPrecision_modPow = 
-    it "doesn't overflow if we use a fixed-precision Integral type" $ 
+    it "works on fixed-precision integers" $ 
       forAll smallGen $ \a -> 
       forAll smallGen $ \b -> 
       forAll smallGen $ \m -> 
@@ -69,7 +68,7 @@ fixedPrecision_modPow =
                            ((fromIntegral m) :: Int8))) == (modPow a b m)
 
 generalCase_modPow = 
-    it "modPow a b m == (a^b) (mod m) if a, b, m > 0" $
+    it "works on arbitrary precision integers" $
       forAll positiveGen $ \a -> 
       forAll positiveGen $ \b -> 
       forAll positiveGen $ \m -> 

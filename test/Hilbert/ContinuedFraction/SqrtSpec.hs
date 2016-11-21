@@ -13,24 +13,23 @@ import Hilbert.ContinuedFraction as CF
   , sqrt
   )
 
-main :: IO ()
-main = hspec spec
-
-spec = modifyMaxSuccess (\_ -> numberOfTests) $ 
-         describe "ContinuedFraction.sqrt" $ do
-           describe "sqrt" $ do
-             it "matches with WolframAlpha for sqrt(1) ... sqrt(10)" $ do
-               test_sqrt
-
 {-
-   Supplementary data/functions
+   Parameters
 -}
 numberOfTests :: Int
 numberOfTests = 100
 
-{-
-   sqrt tests
+main :: IO ()
+main = hspec spec
+
+{- 
+   Tests
 -}
+spec = modifyMaxSuccess (\_ -> numberOfTests) $ do
+           describe "sqrt" $ do
+             it "matches with WolframAlpha for sqrt(1) ... sqrt(10)" $ do
+               test_sqrt
+
 -- Ensure that the Hilbert sqrt function returns the same thing as Wolfram Alpha
 test_sqrt = sequence_ $ zipWith shouldBe testContinuedFrac correctContinuedFrac
   where -- The continued fractions of sqrt(1), sqrt(2), ..., sqrt(10)

@@ -19,7 +19,7 @@ main = hspec spec
 
 spec = modifyMaxSuccess (\_ -> numberOfTests) $ 
          describe "solve" $ do
-           it "satisfies Pell equation" $ do
+           it "solves the Pell equation" $ do
              test_solutions
 
 test_solutions = forAll nonSquareGen testWith

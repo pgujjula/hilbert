@@ -13,8 +13,7 @@ import Data.Int (Int16)
 main :: IO ()
 main = hspec spec
 
-spec = modifyMaxSuccess (\_ -> numberOfTests) $
-       describe "Square" $ do
+spec = modifyMaxSuccess (\_ -> numberOfTests) $ do
          describe "isSquare" $ do
            smallCases_isSquare
            fixedPrecision_isSquare
@@ -55,12 +54,12 @@ numbersGen = do
    isSquare tests
 -}
 smallCases_isSquare = 
-  it ("Finds all squares under " ++ (show (limit^2))) $ do
+  it ("finds all squares under " ++ (show (limit^2))) $ do
      (filter isSquare [0..(limit^2)]) `shouldBe` (map (^2) [0..limit])
   where limit = 100 :: Int
 
 fixedPrecision_isSquare = 
-  it "Works on fixed precision integers" $ do
+  it "works on fixed precision integers" $ do
     let bound = maxBound :: Int16
     let list1 = filter isSquare [1..bound]
     let list2 = map fromIntegral $ takeWhile (<= (fromIntegral bound))
@@ -68,12 +67,12 @@ fixedPrecision_isSquare =
     list1 `shouldBe` list2
 
 arbitraryPrecision_isSquare = 
-  it "Works on arbitrarily sized squares" $ do
+  it "works on arbitrarily sized squares" $ do
     forAll numbersGen $ \x ->
       (isSquare (x^2)) `shouldBe` True
 
 nonSquare = 
-  it "Filters out almost-squares" $ do
+  it "filters out almost-squares" $ do
     forAll (suchThat numbersGen (> 2)) $ \x -> 
              [(isSquare (x^2 - 1)), (isSquare (x^2 + 1))]
                `shouldBe`
@@ -83,11 +82,11 @@ nonSquare =
    integralSqrt tests
 -}
 smallCases_integralSqrt = 
-  it "Works for all cases under 10000" $ do
+  it "works for all cases under 10000" $ do
     shouldBe True $ and $ map integralSqrt_def [1..10000]
 
 fixedPrecision_integralSqrt = 
-  it "Works on fixed precision integers" $ do
+  it "works on fixed precision integers" $ do
     let bound = maxBound :: Int16
     let list1 = map (\y -> (integralSqrt y, y)) [1..bound]
     let list2 = take (fromIntegral bound) $ concat $ map correctAnswer [1..]
@@ -100,7 +99,7 @@ fixedPrecision_integralSqrt =
     sequence_ $ zipWith shouldBe list1 list2
     
 arbitraryPrecision_integralSqrt = 
-  it "Works on arbitrary precision integers" $ do
+  it "works on arbitrary precision integers" $ do
     forAll numbersGen integralSqrt_def
 
 -- Checks the definition of integralSqrt n, ensuring that it returns
