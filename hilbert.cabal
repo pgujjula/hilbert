@@ -36,6 +36,7 @@ library
 --                    Hilbert.Prime.List.Atkins.Strict,
                     Hilbert.Prime.List.Erastosthenes,
                     Hilbert.PriorityQueue,
+                    Hilbert.Sequence,
                     Hilbert.Square
                  
   other-modules: Hilbert.ContinuedFraction.Core,
@@ -81,6 +82,7 @@ executable spec
     Hilbert.Prime.List.Erastosthenes.StrictSpec,
     Hilbert.PriorityQueue.MapSpec,
     Hilbert.PriorityQueueTest,
+    Hilbert.SequenceSpec,
     Hilbert.SquareSpec,
     Spec
 
