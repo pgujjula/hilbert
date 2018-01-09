@@ -75,7 +75,7 @@ testNonResidue =
 {-
    Supplementary data/functions
 -}
-oddPrimeGen :: (Integral a) => Gen Int
+oddPrimeGen :: Gen Int
 oddPrimeGen = elements $ drop 1 $ primesTo primeBound
 
 quadraticResidues :: (Integral a) => a -> [a]

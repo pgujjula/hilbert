@@ -16,10 +16,10 @@
 #  name: custom-snapshot
 #  location: "./custom-snapshot.yaml"
 # resolver: lts-6.7
-resolver: lts-7.9
+resolver: lts-10.3
 
 ghc-options:
-    "*": -O2
+    "$locals": -O2
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.

@@ -1,3 +1,3 @@
 #!/bin/bash
-ghc -O2 -isrc -itest test/Spec.hs
-test/Spec --match=$1
+stack ghc -- -O2 -isrc -itest test/Spec.hs
+dist/build/spec/spec --match=$1
