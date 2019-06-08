@@ -16,7 +16,7 @@
 #  name: custom-snapshot
 #  location: "./custom-snapshot.yaml"
 # resolver: lts-6.7
-resolver: lts-12.14
+resolver: lts-13.24
 
 ghc-options:
     "$locals": -O2
