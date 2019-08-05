@@ -10,6 +10,7 @@ import Data.Tuple (swap)
 
 import Hilbert.PriorityQueue
 import Hilbert.Prime.List.Erastosthenes.Lazy (primes)
+import Hilbert.Prime.Factor.Type (Factorization)
 import Hilbert.Square (integralSqrt)
 
 type PQueue = DefaultQueue
@@ -23,7 +24,7 @@ type PQueue = DefaultQueue
     >>> factorTo 10
     [[],[(2,1)],[(3,1)],[(2,2)],[(5,1)],[(2,1),(3,1)],[(7,1)],[(2,3)],[(3,2)],[(2,1),(5,1)]]
 -}
-factorTo :: Int -> [[(Int, Int)]]
+factorTo :: Int -> [Factorization Int]
 factorTo n = (prefix ++) $ snd $ mapAccumL step' startQueue [3..n]
   where step' a b = swap (step b a)
         prefix = [[], [(2, 1)]]
@@ -53,7 +54,7 @@ factorTo n = (prefix ++) $ snd $ mapAccumL step' startQueue [3..n]
     >>> take 10 factorToInf
     [[],[(2,1)],[(3,1)],[(2,2)],[(5,1)],[(2,1),(3,1)],[(7,1)],[(2,3)],[(3,2)],[(2,1),(5,1)]]
 -}
-factorToInf :: [[(Int, Int)]]
+factorToInf :: [Factorization Int]
 factorToInf = (prefix ++) $ snd $ mapAccumL step' startQueue [3..]
   where step' a b = swap (step b a)
         prefix = [[], [(2, 1)]]

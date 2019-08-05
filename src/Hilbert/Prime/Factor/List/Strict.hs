@@ -9,6 +9,7 @@ import Data.Array.ST
 import Data.Array.IArray (assocs)
 import Control.Monad (forM_)
 import Hilbert.Prime.List.Erastosthenes.Strict (primesTo')
+import Hilbert.Prime.Factor.Type (Factorization)
 import Hilbert.Square (integralSqrt)
 
 {-
@@ -46,7 +47,7 @@ factorWith (n, (x:xs)) =
     >>> factorTo' 10
     [[],[(2,1)],[(3,1)],[(2,2)],[(5,1)],[(2,1),(3,1)],[(7,1)],[(2,3)],[(3,2)],[(2,1),(5,1)]]
 -}
-factorTo' :: Int -> [[(Int, Int)]]
+factorTo' :: Int -> [Factorization Int]
 factorTo' = ([]:)  . (map factorWith)
            . tail   . (map (\(a, b) -> (a, reverse b)))
            . assocs . primeFactors 
