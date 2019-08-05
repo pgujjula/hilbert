@@ -19,6 +19,7 @@ module Hilbert.Prime
   , factorTo
   , factorTo'
   , factorToInf
+  , Factorization
   ) where
 
 import qualified Hilbert.Prime.Check.TrialDivision
@@ -35,6 +36,7 @@ import qualified Hilbert.Prime.Factor.List.Lazy
     as Factor.List.Lazy (factorTo, factorToInf)
 import qualified Hilbert.Prime.Factor.List.Strict
     as Factor.List.Strict (factorTo')
+import Hilbert.Prime.Factor.Type (Factorization)
 
 {-| 
     Determine whether a number is prime. Currently uses
