@@ -6,6 +6,7 @@ cabal.sandbox.config
 *.o
 *temp*
 test/Spec
+test/Main
 .stack-work
 src/highlight.js
 src/style.css

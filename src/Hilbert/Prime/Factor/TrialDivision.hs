@@ -15,6 +15,7 @@ module Hilbert.Prime.Factor.TrialDivision
 
 import Hilbert.Square (integralSqrt)
 import Hilbert.Prime.List.Erastosthenes.Lazy (primes)
+import Hilbert.Prime.Factor.Type (Factorization)
 
 {-|
     Factor an integer using trial division.
@@ -28,7 +29,7 @@ import Hilbert.Prime.List.Erastosthenes.Lazy (primes)
     >>> factor (-10)
     [(-1, 1), (2, 1), (5, 1)]
 -}
-factor :: (Integral a) => a -> [(a, a)]
+factor :: (Integral a) => a -> Factorization a
 factor x | x < 0 = (-1, 1):(factor (-x))
 factor 0 = error "Can't factor 0"
 factor x = factorFromList x (takeWhile (<= (integralSqrt x)) (map fromIntegral primes))
@@ -38,7 +39,7 @@ factor x = factorFromList x (takeWhile (<= (integralSqrt x)) (map fromIntegral p
      * k^e divides n, but k^(e + 1) does not (i.e., e = k || n)
      * n' = n / (k^e)
 -}
-divideOut :: (Integral a) => a -> a -> (a, a)
+divideOut :: (Integral a) => a -> a -> (Int, a)
 divideOut k n = if n `rem` k == 0
                 then let (f, n') = divideOut k (n `quot` k)
                      in (f + 1, n')
@@ -49,7 +50,7 @@ divideOut k n = if n `rem` k == 0
    k || n = e, and n / (k ^ e) = n', then this function returns
    Just ((k, e), n', <elements after k>)
 -}
-divideFirst :: (Integral a) => a -> [a] -> Maybe ((a, a), a, [a])
+divideFirst :: (Integral a) => a -> [a] -> Maybe ((a, Int), a, [a])
 divideFirst n [] = Nothing
 divideFirst n (k:ks) =
   let (e, n') = divideOut k n
@@ -61,7 +62,7 @@ divideFirst n (k:ks) =
    factorFromList n list computes the prime factorization of n using the
    primes in list.
 -}
-factorFromList :: (Integral a) => a -> [a] -> [(a, a)]
+factorFromList :: (Integral a) => a -> [a] -> [(a, Int)]
 factorFromList 1 _ = []
 factorFromList n list =
   case divideFirst n list of

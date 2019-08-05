@@ -40,6 +40,7 @@ library
                  
   other-modules: Hilbert.ContinuedFraction.Core,
                  Hilbert.ContinuedFraction.Sqrt,
+                 Hilbert.Prime.Factor.Type,
                  Hilbert.Prime.Factor.List.Lazy,
                  Hilbert.Prime.Factor.List.Strict,
                  Hilbert.Prime.List.Erastosthenes.Lazy,
