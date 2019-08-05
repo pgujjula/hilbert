@@ -15,11 +15,12 @@ module Hilbert.Prime
   , primes
   , primesTo
   , primesTo'
+
+  , Factorization
   , factor
   , factorTo
   , factorTo'
   , factorToInf
-  , Factorization
   ) where
 
 import qualified Hilbert.Prime.Check.TrialDivision
@@ -85,6 +86,7 @@ primesTo'       = List.Erastosthenes.Strict.primesTo'
     __Precondition:__ Input is nonzero.
 
 -}
+factor :: (Integral a) => a -> Factorization a
 factor          = Factor.TrialDivision.factor
 
 {-|
