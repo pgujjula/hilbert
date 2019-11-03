@@ -12,9 +12,15 @@
 module Hilbert.List
   ( rmDups
   , groupBy
+  , mergeMany
   ) where
 
+import Prelude hiding (null)
 import Data.List (sortBy)
+import qualified Data.List as List (null)
+
+import Data.PQueue.Prio.Min (MinPQueue)
+import qualified Data.PQueue.Prio.Min as PQueue
 
 {-|
     @rmDups xs@ removes the duplicates from a list @xs@.
@@ -56,3 +62,47 @@ groupBy func list = groupAscending func $ sortBy func list
                                  then (x:box):boxes
                                  else [x]:(box:boxes)
                               where (box:boxes) = groupAscending func xs
+
+{-|
+    Merge a list of lists. Works with infinite lists of infinite lists.
+
+    __Preconditions:__ Each list must be sorted, and the list of lists must be sorted by first element.
+
+    >>> mergeMany [[1, 4, 9, 16], [1, 1, 2, 3], [2, 3, 5, 7]]
+    [1, 1, 1, 2, 2, 3, 3, 4, 5, 7, 9, 16]
+-}
+mergeMany :: (Ord a) => [[a]] -> [a]
+mergeMany xss = 
+  let xss' = filter (not . List.null) xss
+   in if List.null xss'
+      then []
+      else let n = Plane (filter (not . List.null) xss')
+            in generate (PQueue.singleton (root n) n)
+
+   where
+     generate :: (Ord a) => MinPQueue a (Node a) -> [a]
+     generate pq =
+       case PQueue.minViewWithKey pq of
+         Nothing -> []
+         Just ((x, node), pq') -> x:(generate pq'')
+           where pq'' = foldr (uncurry PQueue.insert) pq' (children node)
+
+
+     null :: Node a -> Bool
+     null (Plane xss) = List.null xss
+     null (Line xs)   = List.null xs
+
+     root :: Node a -> a
+     root (Plane xss) = head (head xss)
+     root (Line xs) = head xs
+
+     children :: Node a -> [(a, Node a)]
+     children node =
+        map (\x -> (root x, x))
+      $ filter (not . null)
+      $ case node of
+          (Line (x:xs))        -> [Line xs]
+          (Plane ((x:xs):xss)) -> [Line xs, Plane xss]
+
+data Node a = Plane [[a]] | Line [a]
+  deriving (Show, Ord, Eq)
