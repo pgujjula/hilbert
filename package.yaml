@@ -29,6 +29,7 @@ library:
     - Hilbert.Prime.Factor.TrialDivision
     - Hilbert.Prime.List.Erastosthenes
     - Hilbert.PriorityQueue
+    - Hilbert.Sequence
     - Hilbert.Square
   other-modules:
     - Hilbert.ContinuedFraction.Core
