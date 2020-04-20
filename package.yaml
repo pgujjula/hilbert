@@ -8,7 +8,7 @@ maintainer:          "preetham.gujjula@gmail.com"
 copyright:           "2020 Preetham Gujjula"
 
 category: Math
-description: Please see the README on GitHub at <https://github.com/pgujjula/project-euler#readme>
+description: Please see the README on GitHub at <https://github.com/pgujjula/hilbert#readme>
 
 extra-source-files:
 - README.md
