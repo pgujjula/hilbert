@@ -19,7 +19,6 @@ library:
     - Hilbert.ContinuedFraction
     - Hilbert.Digit
     - Hilbert.Legendre
-    - Hilbert.List
     - Hilbert.Modular
     - Hilbert.Pell
     - Hilbert.Prime
