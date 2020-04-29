@@ -30,10 +30,12 @@ spec = modifyMaxSuccess (\_ -> numberOfTests) $ do
             smallCases_numDigits
             fixedPrecision_numDigits
             arbitraryPrecision_numDigits
+            numDigitsSpec
           describe "sumDigits" $ do
             smallCases_sumDigits
             fixedPrecision_sumDigits
             arbitraryPrecision_sumDigits
+            sumDigitsSpec
           describe "toDigits" $ do 
             smallCases_toDigits
             fixedPrecision_toDigits
@@ -171,3 +173,45 @@ listToInteger = read . concat . (map show)
 singleDigitMessage = "works on single digit numbers"
 fixedPrecisionMessage = "works on fixed precision integers"
 arbitraryPrecisionMessage = "works on arbitrary precision integers"
+
+numDigitsSpec :: Spec
+numDigitsSpec = do
+  let testDigits :: (Integral a) => [a] -> Expectation
+      testDigits ds = forM_ ds $ \x -> numDigits x `shouldBe` 1
+   in do
+      it "single-digit Ints"
+        $ testDigits (signedDigits :: [Int])
+      it "single-digit Integers"
+        $ testDigits (signedDigits :: [Integer])
+
+  let naive :: (Integral a, Show a) => a -> Int
+      naive = length . show . abs
+
+      testArbitrary :: (Integral a, Show a) => a -> Property
+      testArbitrary x = numDigits x === naive x
+   in do
+      it "arbitrary-length Ints"
+        $ forAll uniformLengthIntGen testArbitrary
+      it "arbitrary-length Integers"
+        $ forAll uniformLengthIntegerGen testArbitrary
+
+sumDigitsSpec :: Spec
+sumDigitsSpec = do
+  let testDigits :: (Integral a) => [a] -> Expectation
+      testDigits ds = forM_ ds $ \x -> sumDigits x `shouldBe` fromIntegral (abs x)
+   in do
+      it "single-digit Ints"
+        $ testDigits (signedDigits :: [Int])
+      it "single-digit Integers"
+        $ testDigits (signedDigits :: [Integer])
+
+  let naive :: (Integral a, Show a) => a -> Int
+      naive = sum . map (read . (:[])) . show . abs
+
+      testArbitrary :: (Integral a, Show a) => a -> Property
+      testArbitrary x = sumDigits x === naive x
+   in do
+      it "arbitrary-length Ints"
+        $ forAll uniformLengthIntGen testArbitrary
+      it "arbitrary-length Integers"
+        $ forAll uniformLengthIntegerGen testArbitrary
