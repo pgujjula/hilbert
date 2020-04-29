@@ -19,30 +19,28 @@ module Hilbert.Digit
 {-|
     @numDigits n@ is the number of digits in @n@.
 
-    __Precondition:__ @n@ must be nonnegative.
-
     >>> numDigits 2938475
     7
     >>> numDigits 0
     1
+    >>> numDigits (-38417)
+    5
 -}
 numDigits :: (Integral a) => a -> Int
-numDigits n | abs n < 10 = 1
-numDigits n = 1 + (numDigits $ n `div` 10)
+numDigits = length . show . toInteger . abs
 
 {-|
     @sumDigits n@ is the sum of the digits in @n@.
-
-    __Precondition:__ @n@ must be nonnegative.
 
     >>> sumDigits 2938475
     38
     >>> sumDigits 0
     0
+    >>> sumDigits (-12)
+    3
 -}
-sumDigits :: (Integral a) => a -> a
-sumDigits n | n < 10 = n
-sumDigits n = (n `rem` 10) + sumDigits (n `div` 10)
+sumDigits :: (Integral a) => a -> Int
+sumDigits = sum . toDigits . abs
 
 {-|
     @toDigits n@ is a list of all the digits in @n@.
