@@ -1,3 +1,2 @@
 #!/bin/bash
-stack ghc -- -O2 -isrc -itest test/Spec.hs test/Main.hs
-test/Main --match=$1
+stack runhaskell -- -isrc -itest test/Main.hs --match=$1
