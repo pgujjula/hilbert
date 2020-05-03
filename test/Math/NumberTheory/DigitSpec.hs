@@ -3,21 +3,66 @@ module Math.NumberTheory.DigitSpec (spec) where
 
 import Control.Monad   (forM_)
 import Data.Proxy      (Proxy (Proxy))
+import System.Random         (Random)
 
 import Test.Hspec      (Expectation, Spec, anyErrorCall, describe, it, shouldBe,
                         shouldThrow)
-import Test.QuickCheck (Gen, Property, arbitrary, elements, forAll, listOf,
-                        suchThat, (===))
+import Test.QuickCheck (Gen, Property, arbitrary, elements, forAll, listOf, sized,
+                        suchThat, (===), resize, choose, oneof)
 
-import Math.NumberTheory.Digit (fromDigits, toDigits)
+import Math.NumberTheory.Digit (fromDigits, toDigits, sumDigits, numDigits)
+
+maxNumDigits :: Int
+maxNumDigits = 50
 
 spec :: Spec
 spec = do
+    describe "numDigits" numDigitsSpec
+    describe "sumDigits" sumDigitsSpec
     describe "fromDigits" fromDigitsSpec
     describe "toDigits" toDigitsSpec
 
-digits :: (Integral a) => [a]
-digits = [0..9]
+numDigitsSpec :: Spec
+numDigitsSpec = do
+  let testDigits :: (Integral a) => [a] -> Expectation
+      testDigits ds = forM_ ds $ \x -> numDigits x `shouldBe` 1
+   in do
+      it "single-digit Ints"
+        $ testDigits (signedDigits :: [Int])
+      it "single-digit Integers"
+        $ testDigits (signedDigits :: [Integer])
+
+  let naive :: (Integral a, Show a) => a -> Int
+      naive = length . show . abs
+
+      testArbitrary :: (Integral a, Show a) => a -> Property
+      testArbitrary x = numDigits x === naive x
+   in do
+      it "arbitrary-length Ints"
+        $ forAll uniformLengthIntGen testArbitrary
+      it "arbitrary-length Integers"
+        $ forAll uniformLengthIntegerGen testArbitrary
+
+sumDigitsSpec :: Spec
+sumDigitsSpec = do
+  let testDigits :: (Integral a) => [a] -> Expectation
+      testDigits ds = forM_ ds $ \x -> sumDigits x `shouldBe` fromIntegral (abs x)
+   in do
+      it "single-digit Ints"
+        $ testDigits (signedDigits :: [Int])
+      it "single-digit Integers"
+        $ testDigits (signedDigits :: [Integer])
+
+  let naive :: (Integral a, Show a) => a -> Int
+      naive = sum . map (read . (:[])) . show . abs
+
+      testArbitrary :: (Integral a, Show a) => a -> Property
+      testArbitrary x = sumDigits x === naive x
+   in do
+      it "arbitrary-length Ints"
+        $ forAll uniformLengthIntGen testArbitrary
+      it "arbitrary-length Integers"
+        $ forAll uniformLengthIntegerGen testArbitrary
 
 fromDigitsSpec :: Spec
 fromDigitsSpec = do
@@ -81,3 +126,26 @@ toDigitsSpec = do
     it "arbitrary length Integer" $
         forAll (arbitrary `suchThat` (>= 0) :: Gen Integer) test
 
+{- Utilities -}
+digits :: (Integral a) => [a]
+digits = [0..9]
+
+signedDigits :: (Integral a) => [a]
+signedDigits = [-9..9]
+
+-- Generate integers where the length in base 10 is uniformly distributed.
+-- Take care to prevent overflow.
+uniformLengthIntegralGen :: (Random a, Integral a) => Gen a
+uniformLengthIntegralGen = sized $ \n -> oneof $ map genLength [1..n]
+  where genLength i = oneof [positive, negative]
+          where lower = 10^(i - 1)
+                upper = 10^i - 1
+                positive = choose (lower, upper)
+                negative = choose (-upper, -lower)
+
+uniformLengthIntGen :: Gen Int
+uniformLengthIntGen = resize maxIntLength uniformLengthIntegralGen
+  where maxIntLength = length (show (maxBound :: Int)) - 1
+
+uniformLengthIntegerGen :: Gen Integer
+uniformLengthIntegerGen = resize maxNumDigits uniformLengthIntegralGen
