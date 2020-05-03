@@ -11,5 +11,5 @@ git clone https://github.com/pgujjula/hilbert
 cd hilbert
 stack build
 stack test
-stack haddock --open
+stack haddock hilbert --open
 ```
