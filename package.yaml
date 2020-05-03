@@ -19,7 +19,7 @@ dependencies:
 library:
   source-dirs: src
   exposed-modules:
-#    - Math.NumberTheory.ContinuedFraction
+    - Math.NumberTheory.ContinuedFraction
     - Math.NumberTheory.Power
     - Math.NumberTheory.Digit
 #    - Hilbert.ContinuedFraction
@@ -38,8 +38,8 @@ library:
 #    - Hilbert.Sequence
 #    - Hilbert.Square
 #  other-modules:
-#    - Math.NumberTheory.ContinuedFraction.Core
-#    - Math.NumberTheory.ContinuedFraction.Sqrt
+    - Math.NumberTheory.ContinuedFraction.Core
+    - Math.NumberTheory.ContinuedFraction.Sqrt
 #    - Hilbert.Prime.Factor.Type
 #    - Hilbert.Prime.Factor.List.Lazy
 #    - Hilbert.Prime.Factor.List.Strict
@@ -60,8 +60,8 @@ tests:
     source-dirs: test
     main: Main.hs
     other-modules:
-#      - Math.NumberTheory.ContinuedFraction.CoreSpec
-#      - Math.NumberTheory.ContinuedFraction.SqrtSpec
+      - Math.NumberTheory.ContinuedFraction.CoreSpec
+      - Math.NumberTheory.ContinuedFraction.SqrtSpec
       - Math.NumberTheory.DigitSpec
       - Math.NumberTheory.PowerSpec
       - Spec
@@ -86,6 +86,7 @@ tests:
       - QuickCheck
       - quickcheck-assertions
       - random
+      - HUnit
 #      - containers
 #      - hspec-contrib
 #      - random
