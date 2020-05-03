@@ -15,7 +15,6 @@ module Hilbert.Square
      , integralRoot
      ) where
 
-import Hilbert.Digit (numDigits)
 import Data.Maybe (fromJust)
 import Data.List (find)
 
@@ -32,7 +31,7 @@ potentialRoots k m =
       l = toInteger k
 
       -- The initial approximation
-      initial = 10^((toInteger $ numDigits n) `div` l)
+      initial = 10^((toInteger $ length $ show n) `div` l)
 
       -- A list of improving approximations
       approximations = iterate initial
