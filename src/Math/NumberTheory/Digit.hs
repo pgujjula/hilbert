@@ -8,7 +8,9 @@
 Handle the digits of numbers.
 -}
 module Math.NumberTheory.Digit
-    ( fromDigits
+    ( numDigits
+    , sumDigits
+    , fromDigits
     , toDigits
     ) where
 
@@ -16,6 +18,30 @@ import Data.Char (chr, ord)
 
 ordZero :: Int
 ordZero = ord '0'
+
+{-| @numDigits n@ is the number of digits in @n@.
+
+    >>> numDigits 2938475
+    7
+    >>> numDigits 0
+    1
+    >>> numDigits (-38417)
+    5
+-}
+numDigits :: (Integral a) => a -> Int
+numDigits = length . show . toInteger . abs
+
+{-| @sumDigits n@ is the sum of the digits in @n@.
+
+    >>> sumDigits 2938475
+    38
+    >>> sumDigits 0
+    0
+    >>> sumDigits (-12)
+    3
+-}
+sumDigits :: (Integral a) => a -> Int
+sumDigits = sum . toDigits . abs
 
 {-| Convert a list of digits to an integer.
 
