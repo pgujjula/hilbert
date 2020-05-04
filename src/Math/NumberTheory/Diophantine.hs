@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 {-| Module      : Math.NumberTheory.Diophantine
     Description : Solve diophantine equations
     Copyright   : (c) Preetham Gujjula, 2020
@@ -9,14 +10,19 @@ Solve diophantine equations.
 -}
 module Math.NumberTheory.Diophantine
     ( solvePell
+    , pythagoreanTriples
+    , primitivePythagoreanTriples
     ) where
-
-import Math.NumberTheory.ContinuedFraction as CF
-import Math.NumberTheory.Power (isSquare)
 
 import Data.Ratio (numerator, denominator)
 import Data.Maybe (fromJust)
 import Data.List (find)
+
+import Data.List.Ordered (mergeAll)
+
+import Math.NumberTheory.ContinuedFraction as CF
+import Math.NumberTheory.Power (isSquare)
+
 
 {-|
     @solvePell d@ yields all solutions (x, y) in positive integers to the Pell
@@ -55,3 +61,61 @@ solvePell d
     -}
     combine (x1, y1) (x2, y2) = (x1 * x2 + y1 * y2 * d, 
                                  x1 * y2 + x2 * y1)
+
+newtype Triple a = Triple {unTriple :: (a, a, a)}
+  deriving (Show)
+
+instance Eq a => Eq (Triple a) where
+    Triple x == Triple y = x == y
+
+instance Ord a => Ord (Triple a) where
+    compare (Triple (a, b, c)) (Triple (a', b', c')) = compare (c, a) (c', a')
+
+{-| List of all integer triples (a, b, c) such that
+      * a^2 + b^2 == c^2
+      * 0 < a <= b <= c
+      * gcd(a, b, c) == 1
+    Ordered by increasing c, and then by increasing a.
+-}
+primitivePythagoreanTriples :: forall a. (Integral a) => [(a, a, a)]
+primitivePythagoreanTriples = map unTriple $ mergeAll $ tripleLists
+  where
+    -- We use Euclid's formula to generate Pythagorean triples. For each primitive
+    -- triple a, b, c and b even, there are m, n with m > n > 0, such that m and n
+    -- are not both odd, and 
+    --     a = m^2 - n^2,  b = 2*m*n,  c = m^2 + n^2
+    -- In this formula b is always even, but we want a <= b. So we swap a and b if
+    -- we have to.
+    mkTriple :: (a, a) -> Triple a
+    mkTriple (m, n) = Triple (a, b, c)
+      where
+        a' = m^2 - n^2
+        b' = 2*m*n
+        (a, b) = if a' <= b' then (a', b') else (b', a')
+        c = m^2 + n^2
+
+    -- get all possible values of n that could be paired with m to make a primitive
+    -- pythagorean triple, subject to the conditions above
+    getns :: a -> [a]
+    getns m = filter (\n -> oddFilter n && gcd m n == 1) [1..m - 1]
+        where oddFilter x = if odd m then not . odd $ x else True
+
+    -- A list of lists of all primitive triples. tripleLists !! i is a list of all
+    -- triples such that m == i (and such that the other conditions above hold).
+    tripleLists :: [[Triple a]]
+    tripleLists = map (map mkTriple . mkRow) [0..]
+        where mkRow i = zip (repeat i) (getns i)
+
+scale :: (Integral a) => Triple a -> a -> Triple a
+scale (Triple (a, b, c)) k = Triple (k*a, k*b, k*c)
+
+{-| List of all integer triples (a, b, c) such that
+      * a^2 + b^2 == c^2
+      * 0 < a <= b <= c
+    Ordered by increasing c, and then by increasing b.
+-}
+pythagoreanTriples :: (Integral a) => [(a, a, a)]
+pythagoreanTriples = map unTriple $ mergeAll $ tripleLists
+  where 
+    tripleLists = map mkScales primitivePythagoreanTriples
+    mkScales t = map (scale (Triple t)) [1..]
