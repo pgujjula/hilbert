@@ -9,13 +9,31 @@
 -}
 
 module Math.NumberTheory.Power
-     ( integralSqrt
+     ( squares
+     , cubes
+     , integralSqrt
      , isSquare
      , integralRoot
      ) where
 
 import Data.Maybe (fromJust)
 import Data.List (find)
+
+{-| The square numbers, starting from 0.
+
+    >>> take 5 squares
+    [0, 1, 4, 9, 16]
+-}
+squares :: (Integral a) => [a]
+squares = map (^2) [0..]
+
+{-| The positive cubic numbers, starting from 0.
+
+    >>> take 5 cubes
+    [0, 1, 8, 27, 64]
+-}
+cubes :: (Integral a) => [a]
+cubes = map (^3) [0..]
 
 {-
    Generate potential roots using Newton's method.

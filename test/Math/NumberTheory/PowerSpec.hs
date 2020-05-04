@@ -8,7 +8,7 @@ import Test.Hspec (Spec, shouldBe, it, describe)
 import Test.QuickCheck (Gen, forAll, suchThat, choose, vectorOf, (===), arbitrary)
 import Test.QuickCheck.Assertions ((<=?), (?>))
 
-import Math.NumberTheory.Power (isSquare, integralSqrt, integralRoot)
+import Math.NumberTheory.Power (isSquare, integralSqrt, integralRoot, squares, cubes)
 import Math.NumberTheory.Digit (fromDigits)
 
 -- The maximum number of digits of any test case input
@@ -17,6 +17,8 @@ maxNumDigits = 1000
 
 spec :: Spec
 spec = do
+    describe "squares" squareSpec
+    describe "cubes" cubesSpec
     describe "isSquare" $ do
         smallCases_isSquare
         fixedPrecision_isSquare
@@ -27,6 +29,14 @@ spec = do
         fixedPrecision_integralSqrt
         arbitraryPrecision_integralSqrt
     describe "integralRoot" integralRootSpec
+
+squareSpec :: Spec
+squareSpec = do
+    it "first 10 correct" $ take 10 squares `shouldBe` (map (^2) [0..9])
+
+cubesSpec :: Spec
+cubesSpec = do
+    it "first 10 correct" $ take 10 cubes `shouldBe` (map (^3) [0..9])
 
 -- A generator to create very large numbers. First, the number of digits in the
 -- test case is chosen at random from [1..maxNumDigits]. Then each of the
