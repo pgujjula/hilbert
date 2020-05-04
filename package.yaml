@@ -23,6 +23,7 @@ library:
     - Math.NumberTheory.Power
     - Math.NumberTheory.Digit
     - Math.NumberTheory.Diophantine
+    - Math.Combinatorics
 #    - Hilbert.ContinuedFraction
 #    - Hilbert.Digit
 #    - Hilbert.Legendre
@@ -51,6 +52,7 @@ library:
 #    - Hilbert.PriorityQueue.List
   dependencies:
     - data-ordlist
+    - chimera
 #    - base
 #    - containers
 #    - mtl
@@ -67,6 +69,7 @@ tests:
       - Math.NumberTheory.DigitSpec
       - Math.NumberTheory.DiophantineSpec
       - Math.NumberTheory.PowerSpec
+      - Math.CombinatoricsSpec
       - Spec
 #      - Hilbert.ContinuedFraction.SqrtSpec
 #      - Hilbert.DigitSpec
