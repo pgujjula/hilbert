@@ -22,6 +22,7 @@ library:
     - Math.NumberTheory.ContinuedFraction
     - Math.NumberTheory.Power
     - Math.NumberTheory.Digit
+    - Math.NumberTheory.Diophantine
 #    - Hilbert.ContinuedFraction
 #    - Hilbert.Digit
 #    - Hilbert.Legendre
@@ -63,6 +64,7 @@ tests:
       - Math.NumberTheory.ContinuedFraction.CoreSpec
       - Math.NumberTheory.ContinuedFraction.SqrtSpec
       - Math.NumberTheory.DigitSpec
+      - Math.NumberTheory.DiophantineSpec
       - Math.NumberTheory.PowerSpec
       - Spec
 #      - Hilbert.ContinuedFraction.SqrtSpec
