@@ -48,10 +48,7 @@ potentialRoots k m =
    in map fromIntegral
         [potentialRoot - 1, potentialRoot, potentialRoot + 1]
 
-{-|
-    @isSquare n@ returns whether the @n@ is a perfect square.
-
-    __Preconditions:__ @n@ is nonnegative
+{-| @isSquare n@ returns whether @n@ is a perfect square.
 
     >>> isSquare 4
     True
@@ -61,7 +58,9 @@ potentialRoots k m =
     True
 -}
 isSquare :: Integral a => a -> Bool
-isSquare n = any (== n) $ map (^2) $ potentialRoots 2 n
+isSquare n
+    | n < 0     = False
+    | otherwise = any (== n) $ map (^2) $ potentialRoots 2 n
 
 {-|
     @integralSqrt n@ computes the largest integer less than
