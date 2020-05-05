@@ -15,6 +15,9 @@ spec = do
 --    describe "factorizations" factorizationsSpec
 --    describe "factorizationsTo" factorizationsToSpec
 
+naiveIsPrime :: (Integral a) => a -> Bool
+naiveIsPrime n = n >= 2 && (not $ any (\d -> n `rem` d == 0) [2..integralSqrt n])
+
 isPrimeSpec :: Spec
 isPrimeSpec = do
     it "negative numbers not prime" $ do
@@ -25,22 +28,21 @@ isPrimeSpec = do
     it "1 not prime" $ do
         isPrime 1 `shouldBe` False
 
-    let naive n = n >= 2 && (not $ any (\d -> n `rem` d == 0) [2..integralSqrt n])
     it "primes up to 1000 correct" $ do
-        filter isPrime [1..1000] `shouldBe` filter naive [1..1000]
+        filter isPrime [1..1000] `shouldBe` filter naiveIsPrime [1..1000]
 
     it "works on arbitrary Ints" $
-        forAll (choose (1 :: Int, 100000)) $ \x -> isPrime x === naive x
+        forAll (choose (1 :: Int, 100000)) $ \x -> isPrime x === naiveIsPrime x
 
 primesSpec :: Spec
 primesSpec =
     it "correct for primes up to 10000" $ do
-        takeWhile (<= 10000) primes `shouldBe` (filter isPrime [1..10000])
+        takeWhile (<= 10000) primes `shouldBe` (filter naiveIsPrime [1..10000])
 
 primesToSpec :: Spec
 primesToSpec =
     it "correct for primes up to 10000" $ do
-        primesTo 10000 `shouldBe` (filter isPrime [1..10000])
+        primesTo 10000 `shouldBe` (filter naiveIsPrime [1..10000])
 
 --factorSpec :: Spec
 --factorSpec = undefined :: Spec
