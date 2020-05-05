@@ -6,6 +6,7 @@ module Math.Probability
     , map
     , lift2
     , bind
+    , events
     ) where
 
 import Prelude hiding (map, pure)
@@ -38,6 +39,9 @@ norm dist = mkDist $ Map.map (/ total) mp
 
 scale :: Rational -> Dist a -> Dist a
 scale r = mkDist . Map.map (*r) . getMap
+
+events :: Dist a -> [(a, Rational)]
+events = Map.assocs . getMap
 
 -- Functor-like
 map :: (Ord b) => (a -> b) -> Dist a -> Dist b
