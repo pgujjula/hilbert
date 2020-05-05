@@ -1,5 +1,5 @@
 name:                hilbert
-version:             0.1.4.0
+version:             0.1.5.0
 synopsis:            Number theory in pure Haskell
 github:              "pgujjula/hilbert"
 license:             GPL-3
@@ -24,6 +24,7 @@ library:
     - Math.NumberTheory.Digit
     - Math.NumberTheory.Diophantine
     - Math.Combinatorics
+    - Math.NumberTheory.Prime
 #    - Hilbert.ContinuedFraction
 #    - Hilbert.Digit
 #    - Hilbert.Legendre
@@ -53,8 +54,8 @@ library:
   dependencies:
     - data-ordlist
     - chimera
+    - containers
 #    - base
-#    - containers
 #    - mtl
 #    - array
 #    - pqueue
@@ -69,6 +70,7 @@ tests:
       - Math.NumberTheory.DigitSpec
       - Math.NumberTheory.DiophantineSpec
       - Math.NumberTheory.PowerSpec
+      - Math.NumberTheory.PrimeSpec
       - Math.CombinatoricsSpec
       - Spec
 #      - Hilbert.ContinuedFraction.SqrtSpec
