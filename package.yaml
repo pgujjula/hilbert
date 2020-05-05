@@ -14,7 +14,7 @@ extra-source-files:
 - README.md
 
 dependencies:
-- base >= 4.7 && < 5.0
+- base >= 4.13 && < 5.0
 
 library:
   source-dirs: src
@@ -25,6 +25,7 @@ library:
     - Math.NumberTheory.Diophantine
     - Math.Combinatorics
     - Math.NumberTheory.Prime
+    - Math.Probability
 #    - Hilbert.ContinuedFraction
 #    - Hilbert.Digit
 #    - Hilbert.Legendre
