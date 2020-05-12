@@ -1,16 +1,17 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module Math.NumberTheory.DigitSpec (spec) where
 
-import Control.Monad   (forM_)
-import Data.Proxy      (Proxy (Proxy))
-import System.Random         (Random)
+import Control.Monad           (forM_)
+import Data.Proxy              (Proxy (Proxy))
+import System.Random           (Random)
 
-import Test.Hspec      (Expectation, Spec, anyErrorCall, describe, it, shouldBe,
-                        shouldThrow)
-import Test.QuickCheck (Gen, Property, arbitrary, elements, forAll, listOf, sized,
-                        suchThat, (===), resize, choose, oneof)
+import Test.Hspec              (Expectation, Spec, anyErrorCall, describe, it,
+                                shouldBe, shouldThrow)
+import Test.QuickCheck         (Gen, Property, arbitrary, choose, elements,
+                                forAll, listOf, oneof, resize, sized, suchThat,
+                                (===))
 
-import Math.NumberTheory.Digit (fromDigits, toDigits, sumDigits, numDigits)
+import Math.NumberTheory.Digit (fromDigits, numDigits, sumDigits, toDigits)
 
 maxNumDigits :: Int
 maxNumDigits = 50

@@ -1,15 +1,17 @@
 module Math.NumberTheory.PowerSpec (spec) where
 
-import Control.Monad (forM_)
-import Data.Int (Int16)
-import System.Random (Random)
+import Control.Monad              (forM_, zipWithM_)
+import Data.Int                   (Int16)
+import System.Random              (Random)
 
-import Test.Hspec (Spec, shouldBe, it, describe)
-import Test.QuickCheck (Gen, forAll, suchThat, choose, vectorOf, (===), arbitrary)
+import Test.Hspec                 (Spec, describe, it, shouldBe, shouldSatisfy)
+import Test.QuickCheck            (Gen, arbitrary, choose, forAll, suchThat,
+                                   vectorOf, (===))
 import Test.QuickCheck.Assertions ((<=?), (?>))
 
-import Math.NumberTheory.Power (isSquare, integralSqrt, integralRoot, squares, cubes)
-import Math.NumberTheory.Digit (fromDigits)
+import Math.NumberTheory.Digit    (fromDigits)
+import Math.NumberTheory.Power    (cubes, integralRoot, integralSqrt, isSquare,
+                                   squares)
 
 -- The maximum number of digits of any test case input
 maxNumDigits :: Int
@@ -19,99 +21,82 @@ spec :: Spec
 spec = do
     describe "squares" squareSpec
     describe "cubes" cubesSpec
-    describe "isSquare" $ do
-        smallCases_isSquare
-        fixedPrecision_isSquare
-        arbitraryPrecision_isSquare
-        nonSquare
-    describe "integralSqrt" $ do
-        smallCases_integralSqrt
-        fixedPrecision_integralSqrt
-        arbitraryPrecision_integralSqrt
+    describe "isSquare" isSquareSpec
+    describe "integralSqrt" integralSqrtSpec
     describe "integralRoot" integralRootSpec
 
 squareSpec :: Spec
-squareSpec = do
-    it "first 10 correct" $ take 10 squares `shouldBe` (map (^2) [0..9])
+squareSpec =
+    it "first 10 correct" $ take 10 squares `shouldBe` map (^2) [0..9]
 
 cubesSpec :: Spec
-cubesSpec = do
-    it "first 10 correct" $ take 10 cubes `shouldBe` (map (^3) [0..9])
+cubesSpec =
+    it "first 10 correct" $ take 10 cubes `shouldBe` map (^3) [0..9]
+
+isSquareSpec :: Spec
+isSquareSpec = do
+    let limit = 100 :: Int
+    it ("all squares under " ++ show (limit^2)) $
+        filter isSquare [0..(limit^2)] `shouldBe` map (^2) [0..limit]
+
+    it "fixed precision integers" $ do
+        let bound = maxBound :: Int16
+        let actual = filter isSquare [1..bound]
+        let expected = map fromIntegral $ takeWhile (<= fromIntegral bound)
+                                     $ map (^2) [(1 :: Integer)..]
+        actual `shouldBe` expected
+
+    it "exact squares" $
+        forAll numbersGen $ \x -> isSquare (x^2)
+
+    it "one too small" $
+        forAll (suchThat numbersGen (> 2)) $ \x ->
+            not $ isSquare (x^2 - 1)
+
+    it "one too large" $
+        forAll (suchThat numbersGen (> 2)) $ \x ->
+            not $ isSquare (x^2 + 1)
 
 -- A generator to create very large numbers. First, the number of digits in the
--- test case is chosen at random from [1..maxNumDigits]. Then each of the
--- digits in the test case are generated using digitsGen.
+-- test case is chosen at random from [1..maxNumDigits], and then a random number
+-- is generated with that many digits
 numbersGen :: Gen Integer
 numbersGen = do
-    numDigits <- numDigitsGen
-    list <- vectorOf numDigits digitsGen
+    numDigits <- choose (1, maxNumDigits)
+    list <- vectorOf numDigits (choose (0, 9))
     return (fromDigits list)
-      where
-        -- The generator for the number of digits in the test case
-        numDigitsGen :: Gen Int
-        numDigitsGen = choose (1, maxNumDigits)
-
-        -- The generator for the digits to use in the tests
-        digitsGen :: Gen Int
-        digitsGen = choose (0, 9)
-
-{-
-   isSquare tests
--}
-smallCases_isSquare = 
-  it ("finds all squares under " ++ (show (limit^2))) $ do
-     (filter isSquare [0..(limit^2)]) `shouldBe` (map (^2) [0..limit])
-  where limit = 100 :: Int
-
-fixedPrecision_isSquare = 
-  it "works on fixed precision integers" $ do
-    let bound = maxBound :: Int16
-    let list1 = filter isSquare [1..bound]
-    let list2 = map fromIntegral $ takeWhile (<= (fromIntegral bound))
-                                 $ map (^2) [(1 :: Integer)..]
-    list1 `shouldBe` list2
-
-arbitraryPrecision_isSquare = 
-  it "works on arbitrarily sized squares" $ do
-    forAll numbersGen $ \x ->
-      (isSquare (x^2)) `shouldBe` True
-
-nonSquare = 
-  it "filters out almost-squares" $ do
-    forAll (suchThat numbersGen (> 2)) $ \x -> 
-             [(isSquare (x^2 - 1)), (isSquare (x^2 + 1))]
-               `shouldBe`
-             [False, False]
 
 {-
    integralSqrt tests
 -}
-smallCases_integralSqrt = 
-  it "works for all cases under 10000" $ do
-    shouldBe True $ and $ map integralSqrt_def [1..10000]
+integralSqrtSpec :: Spec
+integralSqrtSpec = do
+    let check x = let s = integralSqrt x
+                  in (s^2 <= x) && ((s + 1)^2 > x)
 
-fixedPrecision_integralSqrt = 
-  it "works on fixed precision integers" $ do
-    let bound = maxBound :: Int16
-    let list1 = map (\y -> (integralSqrt y, y)) [1..bound]
-    let list2 = take (fromIntegral bound) $ concat $ map correctAnswer [1..]
-           -- correctAnswer x is a list of all (x, y) such that
-           -- integralSqrt y should equal x
-           where correctAnswer :: Int16 -> [(Int16, Int16)]
-                 correctAnswer y = map (\(a, b) -> (fromIntegral a, fromIntegral b))
-                                 $ zip (repeat x) [x^2 .. (x + 1)^2 - 1]          
-                    where x = toInteger y
-    sequence_ $ zipWith shouldBe list1 list2
-    
-arbitraryPrecision_integralSqrt = 
-  it "works on arbitrary precision integers" $ do
-    forAll numbersGen integralSqrt_def
+    let limit = 10000 :: Int
+    it ("all integers under " ++ show limit) $
+        mapM_ (`shouldSatisfy` check) [1..limit]
 
--- Checks the definition of integralSqrt n, ensuring that it returns
--- the largest integer less than the square root of n. This function is
--- used in the actual integralSqrt tests.
-integralSqrt_def x = let s = integralSqrt x
-                      in (s^2 <= x) && ((s + 1)^2 > x)
+    it "fixed precision" $ do
+        let bound = maxBound :: Int16
+        let actual = map integralSqrt [1..bound]
+        let expected = map (fromIntegral . integralSqrt) [1..toInteger bound]
+        zipWithM_ shouldBe actual expected
+
+    it "arbitrary precision" $
+        forAll numbersGen check
+
+    it "perfect squares" $
+        forAll numbersGen (\x -> integralSqrt (x^2) === x)
+
+    it "one too small" $
+        forAll (numbersGen `suchThat` (> 0)) $ \x ->
+            integralSqrt (x^2 - 1) === (x - 1)
+
+    it "one too large" $
+        forAll (numbersGen `suchThat` (> 0)) $ \x ->
+            integralSqrt (x^2 + 1) === x
 
 maxBase :: (Integral a) => a
 maxBase = 1000
@@ -150,4 +135,4 @@ integralRootSpec = do
     it "fixed precision" $
         forAll fixedTestCase $ \(k, n) ->
             let root = integralRoot k n :: Int
-             in root^k <= n && (toInteger root + 1)^k > (toInteger n)
+             in root^k <= n && (toInteger root + 1)^k > toInteger n
