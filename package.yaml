@@ -25,43 +25,19 @@ library:
     - Math.NumberTheory.Diophantine
     - Math.NumberTheory.Modular
     - Math.NumberTheory.Fibonacci
-    - Math.Combinatorics
     - Math.NumberTheory.Prime
+    - Math.Combinatorics
     - Math.Probability
-#    - Hilbert.ContinuedFraction
-#    - Hilbert.Digit
 #    - Hilbert.Legendre
-#    - Hilbert.List
-#    - Hilbert.Modular
 #    - Hilbert.Pell
-#    - Hilbert.Prime
-#    - Hilbert.Prime.Check.Probable.MillerRabin
-#    - Hilbert.Prime.Check.TrialDivision
-#    - Hilbert.Prime.Factor.List
-#    - Hilbert.Prime.Factor.TrialDivision
-#    - Hilbert.Prime.List.Erastosthenes
-#    - Hilbert.PriorityQueue
 #    - Hilbert.Sequence
-#    - Hilbert.Square
-#  other-modules:
+  other-modules:
     - Math.NumberTheory.ContinuedFraction.Core
     - Math.NumberTheory.ContinuedFraction.Sqrt
-#    - Hilbert.Prime.Factor.Type
-#    - Hilbert.Prime.Factor.List.Lazy
-#    - Hilbert.Prime.Factor.List.Strict
-#    - Hilbert.Prime.List.Erastosthenes.Lazy
-#    - Hilbert.Prime.List.Erastosthenes.Strict
-#    - Hilbert.PriorityQueue.ADT
-#    - Hilbert.PriorityQueue.Map
-#    - Hilbert.PriorityQueue.List
   dependencies:
     - data-ordlist
     - chimera
     - containers
-#    - base
-#    - mtl
-#    - array
-#    - pqueue
 
 tests:
   spec:
@@ -77,21 +53,6 @@ tests:
       - Math.NumberTheory.ModularSpec
       - Math.CombinatoricsSpec
       - Spec
-#      - Hilbert.ContinuedFraction.SqrtSpec
-#      - Hilbert.DigitSpec
-#      - Hilbert.ListSpec
-#      - Hilbert.LegendreSpec
-#      - Hilbert.ModularSpec
-#      - Hilbert.PellSpec
-#      - Hilbert.Prime.Check.Probable.MillerRabinSpec
-#      - Hilbert.Prime.Check.TrialDivisionSpec
-#      - Hilbert.Prime.Factor.List.LazySpec
-#      - Hilbert.Prime.Factor.List.StrictSpec
-#      - Hilbert.Prime.Factor.TrialDivisionSpec
-#      - Hilbert.Prime.List.Erastosthenes.LazySpec
-#      - Hilbert.Prime.List.Erastosthenes.StrictSpec
-#      - Hilbert.PriorityQueue.MapSpec
-#      - Hilbert.PriorityQueueTest
     dependencies:
       - hilbert
       - hspec
@@ -99,9 +60,3 @@ tests:
       - quickcheck-assertions
       - random
       - HUnit
-#      - containers
-#      - hspec-contrib
-#      - random
-#      - HUnit
-#      - mtl
-#      - array

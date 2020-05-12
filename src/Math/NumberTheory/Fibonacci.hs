@@ -10,29 +10,29 @@
 
 module Math.NumberTheory.Fibonacci
     ( fibonacci
-    , fibonacciN
     , fibonacciMod
+    , fibonacciN
     , fibonacciModN
 
     , lucasNum
-    , lucasNumN
     , lucasNumMod
+    , lucasNumN
     , lucasNumModN
 
     , lucasSeq
-    , lucasSeqN
     , lucasSeqMod
+    , lucasSeqN
     , lucasSeqModN
     ) where
 
 fibonacci :: (Integral a) => [a]
 fibonacci = fst $ lucasSeq 1 (-1)
 
-fibonacciN :: (Integral a) => a -> a
-fibonacciN = fst . lucasSeqN 1 (-1)
-
 fibonacciMod :: (Integral a) => a -> [a]
 fibonacciMod m = fst $ lucasSeqMod m 1 (-1)
+
+fibonacciN :: (Integral a) => a -> a
+fibonacciN = fst . lucasSeqN 1 (-1)
 
 fibonacciModN :: (Integral a) => a -> a -> a
 fibonacciModN m = fst . lucasSeqModN m 1 (-1)
@@ -41,11 +41,11 @@ fibonacciModN m = fst . lucasSeqModN m 1 (-1)
 lucasNum :: (Integral a) => [a]
 lucasNum = snd $ lucasSeq 1 (-1)
 
-lucasNumN :: (Integral a) => a -> a
-lucasNumN = snd . lucasSeqN 1 (-1)
-
 lucasNumMod :: (Integral a) => a -> [a]
 lucasNumMod m = snd $ lucasSeqMod m 1 (-1)
+
+lucasNumN :: (Integral a) => a -> a
+lucasNumN = snd . lucasSeqN 1 (-1)
 
 lucasNumModN :: (Integral a) => a -> a -> a
 lucasNumModN m = snd . lucasSeqModN m 1 (-1)
@@ -99,9 +99,12 @@ lucasSeqModN :: (Integral a) => a -> a -> a -> a -> (a, a)
 lucasSeqModN m p q = (\(Group u _ v _) -> (u, v)) . mkGroup
   where
     mkGroup n
-        | n == 0    = Group 0 1 2 (reduce p)
-        | odd n     = step reduce p q (mkGroup (n - 1))
-        | otherwise = double reduce (^) p q halfN (mkGroup halfN)
+        | n == 0    = Group 0 1 2 p'
+        | odd n     = step reduce p' q' (mkGroup (n - 1))
+        | otherwise = double reduce (^) p' q' halfN (mkGroup halfN)
       where
         halfN = n `div` 2
-        reduce = (`rem` m)
+
+    reduce = (`rem` m)
+    p' = reduce p
+    q' = reduce q
