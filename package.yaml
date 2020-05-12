@@ -24,6 +24,7 @@ library:
     - Math.NumberTheory.Digit
     - Math.NumberTheory.Diophantine
     - Math.NumberTheory.Modular
+    - Math.NumberTheory.Fibonacci
     - Math.Combinatorics
     - Math.NumberTheory.Prime
     - Math.Probability
