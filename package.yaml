@@ -40,6 +40,7 @@ library:
     - Math.NumberTheory.Fibonacci
     - Math.NumberTheory.Prime
     - Math.NumberTheory.Prime.Factor
+    - Math.NumberTheory.Divisor
     - Math.Combinatorics
     - Math.Probability
 #    - Hilbert.Legendre
