@@ -1,4 +1,4 @@
-{-| Module      : Math.NumberTheory.Prime.Factorization
+{-| Module      : Math.NumberTheory.Prime.Factor
     Description : Prime factorizationa.
     Copyright   : (c) Preetham Gujjula, 2020
     License     : GPL-3
@@ -8,7 +8,7 @@
     Prime factorization.
 -}
 
-module Math.NumberTheory.Prime.Factorization
+module Math.NumberTheory.Prime.Factor
     ( Factorization
     , multiply
     , pow
@@ -36,7 +36,7 @@ import           Math.NumberTheory.Prime (primes)
 type Factorization a = [(a, Int)]
 
 multiply :: (Integral a) => Factorization a -> Factorization a -> Factorization a
-mulitply xs [] = xs
+multiply xs [] = xs
 multiply [] ys = ys
 multiply ((px, ex):xs) ((py, ey):ys) =
     case compare px py of
