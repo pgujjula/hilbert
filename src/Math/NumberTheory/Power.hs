@@ -18,6 +18,9 @@ module Math.NumberTheory.Power
 
 import Data.Maybe (fromJust)
 import Data.List (find)
+import Debug.Trace (trace)
+
+import Math.NumberTheory.Digit (numDigits)
 
 {-| The square numbers, starting from 0.
 
@@ -40,31 +43,6 @@ cubes = map (^3) [0..]
    If x is an approximation for sqrt(n), then (x*x + n)/(2*x) is
    a better approximation.
 -}
-potentialRoots :: Integral a => a -> a -> [a]
-potentialRoots k m =
-  let -- To deal with fixed precision integers, we need to convert to
-      -- Integer first.
-      n = toInteger m
-      l = toInteger k
-
-      -- The initial approximation
-      initial = 10^((toInteger $ length $ show n) `div` l)
-
-      -- A list of improving approximations
-      approximations = iterate initial
-      iterate x = x:(iterate next)
-        where next = x + dy `div` (l * x)
-              dy = n - x^l
-
-      -- Find the first approximation that does not result in
-      -- a better approximation, call it potentialroot.
-      differences = zipWith (\a b -> abs (a - b)) approximations (tail approximations)
-      approxWithDiffs = zip approximations differences
-      potentialRoot = fst $ fromJust $ find (\(a, b) -> b <= 1) approxWithDiffs
-
-      -- The actual square root must be at most 1 off from the actual square
-   in map fromIntegral
-        [potentialRoot - 1, potentialRoot, potentialRoot + 1]
 
 {-| @isSquare n@ returns whether @n@ is a perfect square.
 
@@ -78,24 +56,37 @@ potentialRoots k m =
 isSquare :: Integral a => a -> Bool
 isSquare n
     | n < 0     = False
-    | otherwise = any (== n) $ map (^2) $ potentialRoots 2 n
+    | otherwise = x*x == n
+  where
+    x = integralSqrt n
 
-{-|
-    @integralSqrt n@ computes the largest integer less than
-    the square root of @n@.
+{-| @integralSqrt n@ computes the largest integer less than or equal to square
+    root of @n@.
 -}
 integralSqrt :: Integral a => a -> a
-integralSqrt m =
-  let -- To deal with fixed precision integers, we need to convert to
-      -- Integer first.
-      n = toInteger m
-      pr = potentialRoots 2 n
-      potentialRoots' = reverse $ [(head pr) - 1] ++ pr ++ [(last pr) + 1]
-   in fromIntegral $ fromJust $ find (\x -> (x^2) <= n) potentialRoots'
+integralSqrt n = search initial
+  where
+    -- To avoid overflow with fixed precision integers, we need to convert to
+    -- Integer first.
+    n' = toInteger n
 
-{-|
-    @integralRoot k n@ computes the largest integer less than
-    the @k@th root of @n@.
+    -- The initial approximation
+    initial = 10^((toInteger $ numDigits n') `quot` 2)
+
+    search x
+        | dy == doublex = x
+        | dx == 0       = x
+        | otherwise     = search (x + dx)
+      where
+        next = x + dx
+        dy = n - squarex
+        dx = dy `div` doublex
+
+        squarex = x*x
+        doublex = 2*x 
+
+{-| @integralRoot k n@ computes the largest integer less than the @k@th root of
+    @n@.
 -}
 integralRoot :: (Integral a, Integral b) => b -> a -> a
 integralRoot k n = fromIntegral $ search 0 n'
@@ -111,4 +102,3 @@ integralRoot k n = fromIntegral $ search 0 n'
                   GT -> search lower (midpoint - 1)
                 where
                   midpoint = (lower + upper + 1) `div` 2
-
