@@ -59,7 +59,7 @@ instance (Show a) => (Show (ContinuedFraction a)) where
     Create a new periodic continued fraction.
 
     __Preconditions:__ In @mkPeriodic xs ys@,
-    
+
       * @xs@ and @ys@ should be finite (unchecked).
       * @ys@ should not be empty (checked).
 
@@ -95,7 +95,7 @@ mkAperiodic = APeriodic
     Nothing
 -}
 repeatingPart :: ContinuedFraction a -> Maybe [a]
-repeatingPart (APeriodic _) = Nothing
+repeatingPart (APeriodic _)   = Nothing
 repeatingPart (Periodic _ xs) = Just xs
 
 {-|
@@ -110,7 +110,7 @@ repeatingPart (Periodic _ xs) = Just xs
     [1, 2, 3, 4, 5]
 -}
 nonRepeatingPart :: ContinuedFraction a -> [a]
-nonRepeatingPart (APeriodic xs) = xs
+nonRepeatingPart (APeriodic xs)  = xs
 nonRepeatingPart (Periodic xs _) = xs
 
 {-|
@@ -137,7 +137,7 @@ toList (APeriodic xs)   = xs
 -}
 isPeriodic :: ContinuedFraction a -> Bool
 isPeriodic (Periodic _ _) = True
-isPeriodic (APeriodic _) = False
+isPeriodic (APeriodic _)  = False
 
 {-|
     @convergent cfrac n@ computes the @n@th convergent of @cfrac@.
@@ -172,7 +172,7 @@ convergent cfrac n = convFromList $ take n $ toList cfrac
    Compute the convergent of a finite list representing a continued fraction.
 -}
 convFromList :: (Integral a) => [a] -> Ratio a
-convFromList [] = 0 % 1
-convFromList [x] = x % 1
+convFromList []     = 0 % 1
+convFromList [x]    = x % 1
 convFromList (x:xs) = (x % 1) + (1 / convFromList xs)
 

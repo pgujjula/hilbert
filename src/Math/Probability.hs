@@ -9,12 +9,12 @@ module Math.Probability
     , toList
     ) where
 
-import Prelude hiding (map, pure)
-import qualified Data.Map as Map
-import           Data.Map (Map)
-import           Data.List (genericLength)
+import           Data.List  (genericLength)
+import           Data.Map   (Map)
+import qualified Data.Map   as Map
+import           Prelude    hiding (map, pure)
 
-import Data.Ratio ((%))
+import           Data.Ratio ((%))
 
 newtype Distribution a = Distribution {getMap :: Map a Rational}
     deriving (Show, Eq, Ord)

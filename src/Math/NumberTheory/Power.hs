@@ -94,7 +94,7 @@ integralSqrt n = search initial
         dx = dy `div` doublex
 
         squarex = x*x
-        doublex = 2*x 
+        doublex = 2*x
 
 {-| @integralRoot k n@ computes the largest integer less than the @k@th root of
     @n@.

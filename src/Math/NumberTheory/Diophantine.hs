@@ -14,14 +14,14 @@ module Math.NumberTheory.Diophantine
     , primitivePythagoreanTriples
     ) where
 
-import Data.Ratio (numerator, denominator)
-import Data.Maybe (fromJust)
-import Data.List (find)
+import Data.List                           (find)
+import Data.Maybe                          (fromJust)
+import Data.Ratio                          (denominator, numerator)
 
-import Data.List.Ordered (mergeAll)
+import Data.List.Ordered                   (mergeAll)
 
 import Math.NumberTheory.ContinuedFraction as CF
-import Math.NumberTheory.Power (isSquare, square)
+import Math.NumberTheory.Power             (isSquare, square)
 
 
 {-|
@@ -43,7 +43,7 @@ solvePell d
     | isSquare d = []
     | otherwise  = scanl1 combine (repeat fundamental)
   where
-    {- Get the fundamental solution (x, y) to the Pell equation x² - d y² = 1   
+    {- Get the fundamental solution (x, y) to the Pell equation x² - d y² = 1
 
         __Preconditions:__
             * @d >= 2@
@@ -59,7 +59,7 @@ solvePell d
 
            (x₁ + y₁ √d) * (x₂ + y₂ √d) == (x₃ + y₃ √d)
     -}
-    combine (x1, y1) (x2, y2) = (x1 * x2 + y1 * y2 * d, 
+    combine (x1, y1) (x2, y2) = (x1 * x2 + y1 * y2 * d,
                                  x1 * y2 + x2 * y1)
 
 newtype Triple a = Triple {unTriple :: (a, a, a)}
@@ -82,7 +82,7 @@ primitivePythagoreanTriples = map unTriple $ mergeAll tripleLists
   where
     -- We use Euclid's formula to generate Pythagorean triples. For each primitive
     -- triple a, b, c and b even, there are m, n with m > n > 0, such that m and n
-    -- are not both odd, and 
+    -- are not both odd, and
     --     a = m^2 - n^2,  b = 2*m*n,  c = m^2 + n^2
     -- In this formula b is always even, but we want a <= b. So we swap a and b if
     -- we have to.
@@ -120,6 +120,6 @@ scale (Triple (a, b, c)) k = Triple (k*a, k*b, k*c)
 -}
 pythagoreanTriples :: (Integral a) => [(a, a, a)]
 pythagoreanTriples = map unTriple $ mergeAll tripleLists
-  where 
+  where
     tripleLists = map mkScales primitivePythagoreanTriples
     mkScales t = map (scale (Triple t)) [1..]

@@ -11,7 +11,7 @@ import Data.Chimera (memoizeFix)
     Some special cases:
 
     >>> numPartitions 0
-    1 
+    1
     >>> numPartitions (-1)  -- or any negative number
     0
 -}
@@ -29,7 +29,7 @@ partFix :: (Word -> Integer) -> Word -> Integer
 partFix p n
   | n == 0    = 1
   | otherwise = sum $ zipWith (*) weights $ map p recursiveArgs
-  where 
+  where
     weights :: [Integer]
     weights = cycle [1, 1, -1, -1]
 
@@ -48,4 +48,4 @@ partFix p n
 
         alternate :: [a] -> [a] -> [a]
         alternate (x:xs) (y:ys) = x : y : alternate xs ys
-        alternate _ _ = error "finite list"
+        alternate _ _           = error "finite list"

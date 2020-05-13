@@ -12,8 +12,8 @@ module Math.NumberTheory.ContinuedFraction.Sqrt
     ( Math.NumberTheory.ContinuedFraction.Sqrt.sqrt
     ) where
 
-import Math.NumberTheory.Power (integralSqrt, isSquare, square)
 import Math.NumberTheory.ContinuedFraction.Core
+import Math.NumberTheory.Power                  (integralSqrt, isSquare, square)
 
 {-|
     @sqrt n@ returns the continued fraction representation of the square root of

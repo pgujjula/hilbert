@@ -28,5 +28,5 @@ module Math.NumberTheory.ContinuedFraction
     , Math.NumberTheory.ContinuedFraction.Sqrt.sqrt
     ) where
 
-import Math.NumberTheory.ContinuedFraction.Sqrt
 import Math.NumberTheory.ContinuedFraction.Core
+import Math.NumberTheory.ContinuedFraction.Sqrt
