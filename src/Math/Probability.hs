@@ -11,15 +11,17 @@ module Math.Probability
 
 import Prelude hiding (map, pure)
 import qualified Data.Map as Map
-import           Data.Map (Map, (!))
+import           Data.Map (Map)
 import           Data.List (genericLength)
 
-import Data.Ratio (Rational, (%))
+import Data.Ratio ((%))
 
 newtype Distribution a = Distribution {getMap :: Map a Rational}
     deriving (Show, Eq, Ord)
 
 type Dist = Distribution
+
+mkDist :: Map a Rational -> Distribution a
 mkDist = Distribution
 
 fromList :: (Ord a) => [(a, Rational)] -> Dist a
@@ -36,9 +38,6 @@ norm dist = mkDist $ Map.map (/ total) mp
   where
     total = sum mp
     mp = getMap dist
-
-scale :: Rational -> Dist a -> Dist a
-scale r = mkDist . Map.map (*r) . getMap
 
 toList :: Dist a -> [(a, Rational)]
 toList = Map.assocs . getMap

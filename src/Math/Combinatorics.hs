@@ -48,3 +48,4 @@ partFix p n
 
         alternate :: [a] -> [a] -> [a]
         alternate (x:xs) (y:ys) = x:y:(alternate xs ys)
+        alternate _ _ = error "finite list"

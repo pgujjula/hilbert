@@ -13,17 +13,16 @@ module Math.NumberTheory.Prime
      , primes
      , primesTo
 
---     , Factorization
---     , factor
+     , Factorization
+     , factor
 --     , factorizations
 --     , factorizationsTo
      ) where
 
-import qualified Data.IntMap as IntMap
-import           Data.IntMap           (IntMap, (!))
-import           Data.Maybe (fromMaybe)
-import           Data.List  (foldl')
-import           Data.Function ((&))
+import           Data.IntMap             (IntMap)
+import qualified Data.IntMap             as IntMap
+import           Data.List               (foldl')
+import           Data.Maybe              (fromMaybe)
 
 import           Math.NumberTheory.Power (integralSqrt)
 
@@ -39,7 +38,7 @@ isPrime n
               $ takeWhile (<= integralSqrt n) $ map fromIntegral primes
 
 {-| A lazy infinite list of primes.
-    
+
     >>> take 10 primes
     [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
 -}
@@ -59,9 +58,10 @@ primes = 2 : sieve (IntMap.singleton 4 [2]) [3..]
 
           -- found a prime. yield it and insert it into the list at the first
           -- multiple that matters: x^2
-          GT -> x : sieve (insert (x^2, x) mp) xs
+          GT -> x : sieve (insert (x*x, x) mp) xs
       where
         ((n, ps), mp') = IntMap.deleteFindMin mp
+    sieve _ [] = error "sieving empty list, this should not be possible"
 
     -- Given a number and its prime divisors, generate a list of the next
     -- multiple for each prime, so we can reinsert these into the map.
@@ -70,7 +70,7 @@ primes = 2 : sieve (IntMap.singleton 4 [2]) [3..]
 
     -- Insert a (number, prime divisor) pair into a map
     insert :: (Int, Int) -> IntMap [Int] -> IntMap [Int]
-    insert (n, p) mp = IntMap.alter (pushPrime p) n mp
+    insert (n, p) = IntMap.alter (pushPrime p) n
       where
         pushPrime q xs = Just (q : fromMaybe [] xs)
 
@@ -81,7 +81,7 @@ primes = 2 : sieve (IntMap.singleton 4 [2]) [3..]
 
 
 {-| A lazy infinite list of primes, up to a limit. Will be faster than 'primes'.
-    
+
     >>> primesTo 30
     [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
 -}
@@ -105,9 +105,8 @@ primesTo m = 2 : sieve (IntMap.singleton 4 [2]) [3..]
 
                   -- found a prime. yield it and insert it into the list at the first
                   -- multiple that matters: x^2
-                  GT -> x : sieve (insert (x^2, x) mp) xs
-      where
-        ((n, ps), mp') = IntMap.deleteFindMin mp
+                  GT -> x : sieve (insert (x*x, x) mp) xs
+    sieve _ [] = error "sieving empty list, this should not be possible"
 
     -- Given a number and its prime divisors, generate a list of the next
     -- multiple for each prime, so we can reinsert these into the map.
@@ -131,10 +130,10 @@ primesTo m = 2 : sieve (IntMap.singleton 4 [2]) [3..]
 type Factorization a = [(a, Int)]
 
 factor :: (Integral a) => a -> Factorization a
-factor = undefined
+factor n = undefined $ toInteger n
 
-factorizations :: [Factorization Int]
-factorizations = undefined
-
-factorizationsTo :: Int -> [Factorization Int]
-factorizationsTo = undefined
+--factorizations :: [Factorization Int]
+--factorizations = undefined
+--
+--factorizationsTo :: Int -> [Factorization Int]
+--factorizationsTo = undefined

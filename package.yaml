@@ -13,6 +13,19 @@ description: Please see the README on GitHub at <https://github.com/pgujjula/hil
 extra-source-files:
 - README.md
 
+ghc-options:
+- -Wall
+- -Wcompat
+- -Wmissing-export-lists
+- -Wincomplete-uni-patterns
+- -Wincomplete-record-updates
+- -Wpartial-fields
+- -Wmissing-home-modules
+- -Werror=missing-home-modules
+- -Widentities
+- -Wredundant-constraints
+- -Wmissing-export-lists
+
 dependencies:
 - base >= 4.13 && < 5.0
 
@@ -50,6 +63,7 @@ tests:
       - Math.NumberTheory.DiophantineSpec
       - Math.NumberTheory.PowerSpec
       - Math.NumberTheory.PrimeSpec
+      - Math.NumberTheory.FibonacciSpec
       - Math.NumberTheory.ModularSpec
       - Math.CombinatoricsSpec
       - Spec
