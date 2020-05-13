@@ -1,6 +1,6 @@
-{-| Module      : Math.NumberTheory.Prime
+{-| Module      : Math.NumberTheory.Prime.Factorization
     Description : Functions related to primes.
-    Copyright   : (c) Preetham Gujjula, 2016
+    Copyright   : (c) Preetham Gujjula, 2020
     License     : GPL-3
     Maintainer  : preetham.gujjula@gmail.com
     Stability   : experimental
@@ -12,11 +12,6 @@ module Math.NumberTheory.Prime
      ( isPrime
      , primes
      , primesTo
-
-     , Factorization
-     , factor
---     , factorizations
---     , factorizationsTo
      ) where
 
 import           Data.IntMap             (IntMap)
@@ -125,15 +120,3 @@ primesTo m = 2 : sieve (IntMap.singleton 4 [2]) [3..]
     -- into the map at its next multiple.
     reinsert :: (Int, [Int]) -> IntMap [Int] -> IntMap [Int]
     reinsert (d, ps) mp = foldl' (flip insert) mp (updates (d, ps))
-
-
-type Factorization a = [(a, Int)]
-
-factor :: (Integral a) => a -> Factorization a
-factor n = undefined $ toInteger n
-
---factorizations :: [Factorization Int]
---factorizations = undefined
---
---factorizationsTo :: Int -> [Factorization Int]
---factorizationsTo = undefined

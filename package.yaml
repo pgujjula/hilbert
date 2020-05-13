@@ -1,5 +1,5 @@
 name:                hilbert
-version:             0.1.7.0
+version:             0.1.8.0
 synopsis:            Number theory in pure Haskell
 github:              "pgujjula/hilbert"
 license:             GPL-3
@@ -39,6 +39,7 @@ library:
     - Math.NumberTheory.Modular
     - Math.NumberTheory.Fibonacci
     - Math.NumberTheory.Prime
+    - Math.NumberTheory.Prime.Factorization
     - Math.Combinatorics
     - Math.Probability
 #    - Hilbert.Legendre
@@ -49,6 +50,8 @@ library:
     - data-ordlist
     - chimera
     - containers
+    - vector
+    - list-duplicate
 
 tests:
   spec:
