@@ -42,8 +42,6 @@ library:
     - Math.Combinatorics
     - Math.Probability
 #    - Hilbert.Legendre
-#    - Hilbert.Pell
-#    - Hilbert.Sequence
   other-modules:
     - Math.NumberTheory.ContinuedFraction.Core
     - Math.NumberTheory.ContinuedFraction.Sqrt
