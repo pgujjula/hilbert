@@ -2,10 +2,10 @@ module Math.NumberTheory.ContinuedFraction.CoreSpec
   ( spec
   ) where
 
-import Test.Hspec
-import Test.QuickCheck
-import Test.Hspec.QuickCheck
-import Test.HUnit.Lang
+import Test.Hspec (Spec, describe, it, shouldBe, shouldThrow, anyException, shouldStartWith)
+import Test.QuickCheck (property)
+import Test.Hspec.QuickCheck (modifyMaxSuccess)
+import Test.HUnit.Lang (assertFailure)
 import Control.Exception (evaluate)
 import Data.Ratio ((%))
 
@@ -19,14 +19,12 @@ import Math.NumberTheory.ContinuedFraction
   , convergent
   )
 
-main :: IO ()
-main = hspec spec
-
 -- Parameters
 numberOfTests :: Int
 numberOfTests = 100
 
 -- Tests
+spec :: Spec
 spec = modifyMaxSuccess (\_ -> numberOfTests) $ do
            describe "mkPeriodic" $ do
              it "mkPeriodic _ [] throws an error" $ property $

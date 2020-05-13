@@ -7,7 +7,6 @@ import System.Random              (Random)
 import Test.Hspec                 (Spec, describe, it, shouldBe, shouldSatisfy)
 import Test.QuickCheck            (Gen, arbitrary, choose, forAll, suchThat,
                                    vectorOf, (===))
-import Test.QuickCheck.Assertions ((<=?), (?>))
 
 import Math.NumberTheory.Digit    (fromDigits)
 import Math.NumberTheory.Power    (cubes, integralRoot, integralSqrt, isSquare,
