@@ -15,14 +15,13 @@ module Math.NumberTheory.Divisor
     , divisorPairsF
     ) where
 
-import Data.List (foldl')
-import Control.Applicative (liftA2)
-import Data.Maybe (fromMaybe)
+import Control.Applicative            (liftA2)
+import Data.List                      (foldl')
 
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
 
 divisors :: (Integral a) => a -> [a]
-divisors = fromMaybe [] . fmap divisorsF . factor . abs
+divisors = maybe [] divisorsF . factor . abs
 
 divisorsF :: (Integral a) => Factorization a -> [a]
 divisorsF = foldl' (liftA2 (*)) [1] . map pows

@@ -22,8 +22,8 @@ import           Data.IntMap             (IntMap)
 import qualified Data.IntMap             as IntMap
 import           Data.List               (foldl')
 import           Data.Maybe              (fromMaybe)
-import qualified Data.Vector             as Vector
 import           Data.Vector             (Vector)
+import qualified Data.Vector             as Vector
 
 import           Data.Chimera            (Chimera)
 import qualified Data.Chimera            as Chimera
