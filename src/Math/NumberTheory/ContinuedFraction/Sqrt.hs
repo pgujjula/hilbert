@@ -48,9 +48,9 @@ sqrt x = mkPeriodic [first] periodicPart
    Like takeWhile, but includes the first failing value.
 -}
 takeUntil :: (a -> Bool) -> [a] -> [a]
-takeUntil proc (x1:xs) = if (proc x1)
-                            then [x1]
-                            else x1:(takeUntil proc xs)
+takeUntil proc (x1:xs) = if proc x1
+                         then [x1]
+                         else x1 : takeUntil proc xs
 takeUntil _ xs = xs
 
 {-
@@ -92,7 +92,7 @@ unsafeReciprocal :: Surd Integer -> Surd Integer
 unsafeReciprocal (Surd a b c d) = simplify $ Surd a' b c' d'
   where a' = a*d
         c' = -c*d
-        d' = (square a)*b - square c
+        d' = square a * b - square c
 
 {-
     Compute the floor of a quadratic surd. We have
@@ -131,7 +131,7 @@ minus (Surd a b c d) n = simplify $ Surd a b (c - d*n) d
    Assumes that b is nonzero.
 -}
 cfracSurd :: (Integral a) => Surd a -> [a]
-cfracSurd surd = k:(cfracSurd surd')
+cfracSurd surd = k : cfracSurd surd'
   where k = surdFloor surd
         surd' = reciprocal $ surd `minus` k
 

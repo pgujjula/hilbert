@@ -51,7 +51,7 @@ solvePell d
     -}
     fundamental = toPair $ fromJust $ find solution
                 $ map (convergent (CF.sqrt d)) [1..]
-      where solution frac = square (numerator frac) - d * (square (denominator frac)) == 1
+      where solution frac = square (numerator frac) - d * square (denominator frac) == 1
             toPair frac = (numerator frac, denominator frac)
 
     {- Combine two solutions (x₁, y₁) and (x₂, y₂) to the Pell equation with
@@ -78,7 +78,7 @@ instance Ord a => Ord (Triple a) where
     Ordered by increasing c, and then by increasing a.
 -}
 primitivePythagoreanTriples :: forall a. (Integral a) => [(a, a, a)]
-primitivePythagoreanTriples = map unTriple $ mergeAll $ tripleLists
+primitivePythagoreanTriples = map unTriple $ mergeAll tripleLists
   where
     -- We use Euclid's formula to generate Pythagorean triples. For each primitive
     -- triple a, b, c and b even, there are m, n with m > n > 0, such that m and n
@@ -101,7 +101,8 @@ primitivePythagoreanTriples = map unTriple $ mergeAll $ tripleLists
     -- pythagorean triple, subject to the conditions above
     getns :: a -> [a]
     getns m = filter (\n -> oddFilter n && gcd m n == 1) [1..m - 1]
-        where oddFilter x = if odd m then not . odd $ x else True
+      where
+        oddFilter x = even m || even x
 
     -- A list of lists of all primitive triples. tripleLists !! i is a list of all
     -- triples such that m == i (and such that the other conditions above hold).
@@ -118,7 +119,7 @@ scale (Triple (a, b, c)) k = Triple (k*a, k*b, k*c)
     Ordered by increasing c, and then by increasing b.
 -}
 pythagoreanTriples :: (Integral a) => [(a, a, a)]
-pythagoreanTriples = map unTriple $ mergeAll $ tripleLists
+pythagoreanTriples = map unTriple $ mergeAll tripleLists
   where 
     tripleLists = map mkScales primitivePythagoreanTriples
     mkScales t = map (scale (Triple t)) [1..]

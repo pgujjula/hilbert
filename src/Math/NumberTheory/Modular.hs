@@ -37,22 +37,22 @@ import Math.NumberTheory.Power (square)
     1
 -}
 modPow :: (Integral a) => a -> a -> a -> a
-modPow a b m = fromIntegral $ modPow_low_level (toInteger a) (toInteger b) (toInteger m)
+modPow a b m = fromIntegral $ modPowLowLevel (toInteger a) (toInteger b) (toInteger m)
 
 {-
    Compute modular power without worring about overflow.
 -}
-modPow_low_level :: Integer -> Integer -> Integer -> Integer
-modPow_low_level a b m
+modPowLowLevel :: Integer -> Integer -> Integer -> Integer
+modPowLowLevel a b m
   -- Corner case
   | b == 0                = 1
   -- Ensure 0 <= a < m
-  | a >= m                = modPow_low_level (a `rem` m) b m
+  | a >= m                = modPowLowLevel (a `rem` m) b m
   -- Base case
   | b == 1                = a
   -- Recursive cases
-  | b `rem` 2 == 0        = (square (modPow_low_level a b' m)) `rem` m
-  | otherwise             = (a * square (modPow_low_level a b' m)) `rem` m
+  | even b                = square (modPowLowLevel a b' m) `rem` m
+  | otherwise             = (a * square (modPowLowLevel a b' m)) `rem` m
                                 where b' = b `quot` 2
 
 {-|
@@ -78,23 +78,24 @@ egcd :: (Integral a) => a -> a -> (a, (a, a))
 egcd m n
   | m < n  = (g', (signa * a', signb * b'))
   | otherwise = (g', (signb * b', signa * a'))
-  where (g', (a', b')) = egcd_low_level (abs lower) (abs upper)
+  where (g', (a', b')) = egcdLowLevel (abs lower) (abs upper)
         signa = signum lower
         signb = signum upper
         lower = min m n
         upper = max m n
 
 {- Here, we are guaranteed n > m > 0 -}
-egcd_low_level :: (Integral a) => a -> a -> (a, (a, a))
-egcd_low_level m n = egcd_recursive m n (1, 0) (0, 1)
+egcdLowLevel :: (Integral a) => a -> a -> (a, (a, a))
+egcdLowLevel m n = egcdRecursive m n (1, 0) (0, 1)
 
-egcd_recursive :: (Integral a) => a -> a -> (a, a) -> (a, a) -> (a, (a, a))
-egcd_recursive m n m_coeffs n_coeffs
-  | m == 0 = (n, n_coeffs)
-  | otherwise = egcd_recursive r m (n0 - q*m0, n1 - q*m1) m_coeffs
-  where (q, r) = quotRem n m
-        (m0, m1) = m_coeffs
-        (n0, n1) = n_coeffs
+egcdRecursive :: (Integral a) => a -> a -> (a, a) -> (a, a) -> (a, (a, a))
+egcdRecursive m n m_coeffs n_coeffs
+    | m == 0 = (n, n_coeffs)
+    | otherwise = egcdRecursive r m (n0 - q*m0, n1 - q*m1) m_coeffs
+  where
+    (q, r) = quotRem n m
+    (m0, m1) = m_coeffs
+    (n0, n1) = n_coeffs
 
 {-|
     @modInv a m@ is the modular inverse of @a@ modulo @m@, if it exists.

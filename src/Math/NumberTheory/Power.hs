@@ -83,7 +83,7 @@ integralSqrt n = search initial
     n' = toInteger n
 
     -- The initial approximation
-    initial = 10^((toInteger $ numDigits n') `quot` 2)
+    initial = 10^(toInteger (numDigits n') `quot` 2)
 
     search x
         | dy == doublex = x

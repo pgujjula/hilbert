@@ -52,8 +52,8 @@ data ContinuedFraction a =
     mkAperiodic [1,4,6]
 -}
 instance (Show a) => (Show (ContinuedFraction a)) where
-   show (Periodic xs ys) = "mkPeriodic "  ++ (show xs) ++ " " ++ (show ys)
-   show (APeriodic xs)   = "mkAperiodic " ++ (show xs)
+   show (Periodic xs ys) = "mkPeriodic "  ++ show xs ++ " " ++ show ys
+   show (APeriodic xs)   = "mkAperiodic " ++ show xs
 
 {-|
     Create a new periodic continued fraction.
@@ -82,7 +82,7 @@ mkPeriodic xs ys
     [1, 2, 3, 4, 5]
 -}
 mkAperiodic :: [a] -> ContinuedFraction a
-mkAperiodic xs = APeriodic xs
+mkAperiodic = APeriodic
 
 {-|
     Get the repeating part of a continued fraction, if it has one.
@@ -122,7 +122,7 @@ nonRepeatingPart (Periodic xs _) = xs
     [3, 6, 6, 6, 6]
 -}
 toList :: ContinuedFraction a -> [a]
-toList (Periodic xs ys) = xs ++ (cycle ys)
+toList (Periodic xs ys) = xs ++ cycle ys
 toList (APeriodic xs)   = xs
 
 {-|
@@ -174,5 +174,5 @@ convergent cfrac n = convFromList $ take n $ toList cfrac
 convFromList :: (Integral a) => [a] -> Ratio a
 convFromList [] = 0 % 1
 convFromList [x] = x % 1
-convFromList (x:xs) = (x % 1) + (1 / (convFromList xs))
+convFromList (x:xs) = (x % 1) + (1 / convFromList xs)
 
