@@ -1,13 +1,12 @@
-module Main where
+module Main (main) where
 
-import Test.Hspec.Runner
-import Test.Hspec.Formatters
-import qualified Spec
-import System.IO (hPutStr, hFlush)
-import Data.List (intersperse)
+import Test.Hspec.Formatters (Formatter, specdoc)
+import Test.Hspec.Runner     (configFormatter, defaultConfig, hspecWith)
+
+import Spec                  (spec)
 
 customFormatter :: Formatter
-customFormatter = specdoc 
+customFormatter = specdoc
 
 main :: IO ()
 main = hspecWith defaultConfig {configFormatter = Just customFormatter} Spec.spec

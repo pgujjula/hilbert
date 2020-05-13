@@ -15,6 +15,8 @@ module Math.NumberTheory.Modular
     , modInv
     ) where
 
+import Math.NumberTheory.Power (square)
+
 {-|
     @modPow a b m @ efficiently computes @mod (a^b) m@.
 
@@ -49,8 +51,8 @@ modPow_low_level a b m
   -- Base case
   | b == 1                = a
   -- Recursive cases
-  | b `rem` 2 == 0        = (modPow_low_level a b' m)^2 `rem` m
-  | otherwise             = (a * (modPow_low_level a b' m)^2) `rem` m
+  | b `rem` 2 == 0        = (square (modPow_low_level a b' m)) `rem` m
+  | otherwise             = (a * square (modPow_low_level a b' m)) `rem` m
                                 where b' = b `quot` 2
 
 {-|

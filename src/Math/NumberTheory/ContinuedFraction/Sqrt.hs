@@ -12,7 +12,7 @@ module Math.NumberTheory.ContinuedFraction.Sqrt
     ( Math.NumberTheory.ContinuedFraction.Sqrt.sqrt
     ) where
 
-import Math.NumberTheory.Power (integralSqrt, isSquare)
+import Math.NumberTheory.Power (integralSqrt, isSquare, square)
 import Math.NumberTheory.ContinuedFraction.Core
 
 {-|
@@ -63,6 +63,7 @@ data Surd a = Surd a a a a
 {-
    Cast a Surd to prevent integer overflow.
 -}
+cast :: (Integral a, Integral b) => Surd a -> Surd b
 cast (Surd a b c d) = Surd (fromIntegral a) (fromIntegral b)
                            (fromIntegral c) (fromIntegral d)
 
@@ -72,7 +73,7 @@ cast (Surd a b c d) = Surd (fromIntegral a) (fromIntegral b)
 -}
 simplify :: (Integral a) => Surd a -> Surd a
 simplify (Surd a b c d) = Surd a' b c' d'
-  where [a', c', d'] = map (`div` g) [a, c, d]
+  where (a', c', d') = (a `div` g, c `div` g, d `div` g)
         g = gcd a (gcd c d)
 
 {-
@@ -87,11 +88,11 @@ reciprocal = cast . unsafeReciprocal . cast
    A reciprocal that that does not handle overflow associated with
    fixed-precision integers.
 -}
-unsafeReciprocal :: (Integral a) => Surd a -> Surd a
+unsafeReciprocal :: Surd Integer -> Surd Integer
 unsafeReciprocal (Surd a b c d) = simplify $ Surd a' b c' d'
   where a' = a*d
         c' = -c*d
-        d' = (a^2)*b - (c^2)
+        d' = (square a)*b - square c
 
 {-
     Compute the floor of a quadratic surd. We have
@@ -107,7 +108,7 @@ unsafeReciprocal (Surd a b c d) = simplify $ Surd a' b c' d'
         (see Beceanu, Lemma 2.1 for the proof of the last statement)
 -}
 surdFloor :: (Integral a) => Surd a -> a
-surdFloor = fromIntegral . unsafeSurdFloor . cast
+surdFloor = fromInteger . unsafeSurdFloor . cast
 
 {-
    An unsafe floor that does not handle overflow associated with fixed-
@@ -115,7 +116,7 @@ surdFloor = fromIntegral . unsafeSurdFloor . cast
 -}
 unsafeSurdFloor :: (Integral a) => Surd a -> a
 unsafeSurdFloor (Surd a b c d) =
-    let f1 = integralSqrt (a^2 * b)
+    let f1 = integralSqrt (square a * b)
         f2 = f1 + c
      in f2 `div` d
 

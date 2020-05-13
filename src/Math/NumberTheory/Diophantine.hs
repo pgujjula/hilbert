@@ -21,7 +21,7 @@ import Data.List (find)
 import Data.List.Ordered (mergeAll)
 
 import Math.NumberTheory.ContinuedFraction as CF
-import Math.NumberTheory.Power (isSquare)
+import Math.NumberTheory.Power (isSquare, square)
 
 
 {-|
@@ -51,7 +51,7 @@ solvePell d
     -}
     fundamental = toPair $ fromJust $ find solution
                 $ map (convergent (CF.sqrt d)) [1..]
-      where solution frac = (numerator frac)^2 - d * (denominator frac)^2 == 1
+      where solution frac = square (numerator frac) - d * (square (denominator frac)) == 1
             toPair frac = (numerator frac, denominator frac)
 
     {- Combine two solutions (x₁, y₁) and (x₂, y₂) to the Pell equation with
@@ -69,7 +69,7 @@ instance Eq a => Eq (Triple a) where
     Triple x == Triple y = x == y
 
 instance Ord a => Ord (Triple a) where
-    compare (Triple (a, b, c)) (Triple (a', b', c')) = compare (c, a) (c', a')
+    compare (Triple (a, b, c)) (Triple (a', b', c')) = compare (c, a, b) (c', a', b')
 
 {-| List of all integer triples (a, b, c) such that
       * a^2 + b^2 == c^2
@@ -89,10 +89,13 @@ primitivePythagoreanTriples = map unTriple $ mergeAll $ tripleLists
     mkTriple :: (a, a) -> Triple a
     mkTriple (m, n) = Triple (a, b, c)
       where
-        a' = m^2 - n^2
+        a' = m2 - n2
         b' = 2*m*n
         (a, b) = if a' <= b' then (a', b') else (b', a')
-        c = m^2 + n^2
+        c = m2 + n2
+
+        m2 = square m
+        n2 = square n
 
     -- get all possible values of n that could be paired with m to make a primitive
     -- pythagorean triple, subject to the conditions above

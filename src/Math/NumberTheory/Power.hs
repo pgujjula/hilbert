@@ -9,18 +9,23 @@
 -}
 
 module Math.NumberTheory.Power
-     ( squares
+     ( square
+     , squares
+     , cube
      , cubes
      , integralSqrt
      , isSquare
      , integralRoot
      ) where
 
-import Data.Maybe (fromJust)
-import Data.List (find)
-import Debug.Trace (trace)
-
 import Math.NumberTheory.Digit (numDigits)
+
+{-| Square a number. Useful to have, instead of writing x^2 and getting a
+    warning with -Wtype-defaults that the type of 2 is being inferred as
+    Integer.
+-}
+square :: (Integral a) => a -> a
+square a = a*a
 
 {-| The square numbers, starting from 0.
 
@@ -28,7 +33,14 @@ import Math.NumberTheory.Digit (numDigits)
     [0, 1, 4, 9, 16]
 -}
 squares :: (Integral a) => [a]
-squares = map (^2) [0..]
+squares = map square [0..]
+
+{-| Cube a number. Useful to have, instead of writing x^3 and getting a
+    warning with -Wtype-defaults that the type of 3 is being inferred as
+    Integer.
+-}
+cube :: (Integral a) => a -> a
+cube a = a*a*a
 
 {-| The positive cubic numbers, starting from 0.
 
@@ -36,7 +48,7 @@ squares = map (^2) [0..]
     [0, 1, 8, 27, 64]
 -}
 cubes :: (Integral a) => [a]
-cubes = map (^3) [0..]
+cubes = map cube [0..]
 
 {-
    Generate potential roots using Newton's method.
@@ -78,7 +90,6 @@ integralSqrt n = search initial
         | dx == 0       = x
         | otherwise     = search (x + dx)
       where
-        next = x + dx
         dy = n - squarex
         dx = dy `div` doublex
 
