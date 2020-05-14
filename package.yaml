@@ -42,6 +42,7 @@ library:
     - Math.NumberTheory.Prime.Factor
     - Math.NumberTheory.Divisor
     - Math.Combinatorics.Partition
+    - Math.Combinatorics.Binomial
     - Math.Probability
 #    - Hilbert.Legendre
   other-modules:
