@@ -1,3 +1,4 @@
+{-# LANGUAGE MagicHash #-}
 {-| Module      : Math.NumberTheory.Power
     Description : Functions related to powers.
     Copyright   : (c) Preetham Gujjula, 2016
@@ -16,7 +17,11 @@ module Math.NumberTheory.Power
      , integralSqrt
      , isSquare
      , integralRoot
+     , integralLog
      ) where
+
+import GHC.Integer.Logarithms  (integerLogBase#)
+import GHC.Types               (Int (..))
 
 import Math.NumberTheory.Digit (numDigits)
 
@@ -113,3 +118,12 @@ integralRoot k n = fromIntegral $ search 0 n'
                   GT -> search lower (midpoint - 1)
                 where
                   midpoint = (lower + upper + 1) `div` 2
+
+{-| @integralLogBase b n@ is the largest integer k such that b^k is less than or
+    equal to n.
+-}
+integralLogBase :: (Integral b, Integral a) => b -> a -> Maybe Int
+integralLogBase b n
+    | b <= 1    = Nothing
+    | n <= 0    = Nothing
+    | otherwise = Just $ I# (integerLogBase# (toInteger b) (toInteger n))

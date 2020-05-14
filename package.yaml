@@ -53,6 +53,8 @@ library:
     - containers
     - vector
     - list-duplicate
+    - integer-gmp
+    - ghc-prim
 
 tests:
   spec:

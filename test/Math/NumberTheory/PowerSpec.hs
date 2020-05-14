@@ -9,8 +9,8 @@ import Test.QuickCheck            (Gen, arbitrary, choose, forAll, suchThat,
                                    vectorOf, (===))
 
 import Math.NumberTheory.Digit    (fromDigits)
-import Math.NumberTheory.Power    (cubes, integralRoot, integralSqrt, isSquare,
-                                   squares)
+import Math.NumberTheory.Power    (cubes, integralRoot, integralSqrt, integralRoot,
+                                   isSquare, squares)
 
 -- The maximum number of digits of any test case input
 maxNumDigits :: Int
