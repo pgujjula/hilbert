@@ -1,8 +1,8 @@
-module Math.CombinatoricsSpec (spec) where
+module Math.Combinatorics.PartitionSpec (spec) where
 
 import Test.Hspec         (Spec, describe, it, shouldBe)
 
-import Math.Combinatorics (numPartitions)
+import Math.Combinatorics.Partition (numPartitions)
 
 spec :: Spec
 spec = describe "numParititions" numPartitionsSpec

@@ -1,4 +1,4 @@
-module Math.Combinatorics (numPartitions) where
+module Math.Combinatorics.Partition (numPartitions) where
 
 import Data.Chimera (memoizeFix)
 

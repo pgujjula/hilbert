@@ -41,7 +41,7 @@ library:
     - Math.NumberTheory.Prime
     - Math.NumberTheory.Prime.Factor
     - Math.NumberTheory.Divisor
-    - Math.Combinatorics
+    - Math.Combinatorics.Partition
     - Math.Probability
 #    - Hilbert.Legendre
   other-modules:
@@ -69,7 +69,7 @@ tests:
       - Math.NumberTheory.PrimeSpec
       - Math.NumberTheory.FibonacciSpec
       - Math.NumberTheory.ModularSpec
-      - Math.CombinatoricsSpec
+      - Math.Combinatorics.PartitionSpec
       - Spec
     dependencies:
       - hilbert
