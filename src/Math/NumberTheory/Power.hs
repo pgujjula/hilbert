@@ -17,7 +17,7 @@ module Math.NumberTheory.Power
      , integralSqrt
      , isSquare
      , integralRoot
-     , integralLog
+     , integralLogBase
      ) where
 
 import GHC.Integer.Logarithms  (integerLogBase#)
