@@ -44,6 +44,7 @@ library:
     - Math.Combinatorics.Partition
     - Math.Combinatorics.Binomial
     - Math.Probability
+    - Math.Polynomial
 #    - Hilbert.Legendre
   other-modules:
     - Math.NumberTheory.ContinuedFraction.Core
@@ -56,6 +57,7 @@ library:
     - list-duplicate
     - integer-gmp
     - ghc-prim
+    - composition
 
 tests:
   spec:
