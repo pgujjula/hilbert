@@ -7,7 +7,8 @@ import Data.Maybe                     (fromJust)
 import Test.Hspec                     (Spec, describe, it, shouldBe)
 
 import Math.NumberTheory.Divisor      (divides, divisorPairs, divisorPairsF,
-                                       divisors, divisorsF)
+                                       divisors, divisorsF, numDivisors,
+                                       numDivisorsF)
 import Math.NumberTheory.Prime.Factor (factor)
 
 limit :: Int
@@ -20,6 +21,8 @@ spec = do
     describe "divisorsF"     divisorsFSpec
     describe "divisorPairs"  divisorPairsSpec
     describe "divisorPairsF" divisorPairsFSpec
+    describe "numDivisors"   numDivisorsSpec 
+    describe "numDivisorsF"  numDivisorsFSpec
 
 dividesSpec :: Spec
 dividesSpec = do
@@ -64,4 +67,15 @@ divisorPairsFSpec =
                 `shouldBe` ((length (divisors x) + 1) `div` 2)
             mapM_ (\(a, b) -> a * b `shouldBe` x) dps
 
+numDivisorsSpec :: Spec
+numDivisorsSpec = do
+    it ("correct for abs n up to " ++ show limit) $
+        let naive n = length $ filter (`divides` n) [1..abs n]
+         in forM_ [(-limit)..limit] $ \x -> numDivisors x `shouldBe` naive x
 
+numDivisorsFSpec :: Spec
+numDivisorsFSpec =
+    it ("correct for n up to " ++ show limit) $
+        let naive n = length $ filter (`divides` n) [1..abs n]
+         in forM_ [1..limit] $ \x ->
+                (numDivisorsF . fromJust . factor $ x) `shouldBe` naive x

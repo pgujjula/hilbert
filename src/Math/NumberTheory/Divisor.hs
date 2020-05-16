@@ -14,6 +14,9 @@ module Math.NumberTheory.Divisor
     , divisorsF
     , divisorPairs
     , divisorPairsF
+
+    , numDivisors
+    , numDivisorsF
     ) where
 
 import Control.Applicative            (liftA2)
@@ -87,3 +90,25 @@ divisorPairsF = mkPairs . divisorsF
 
 mkPairs :: [a] -> [(a, a)]
 mkPairs xs = take ((length xs + 1) `div` 2) $ zip xs (reverse xs)
+
+{-| The number of positive divisors of n.
+
+    >>> numDivisors 12
+    6
+    >>> numDivisors 1
+    1
+    >>> numDivisors 0
+    0
+-}
+numDivisors :: (Integral a) => a -> a
+numDivisors = maybe 0 numDivisorsF . factor . abs
+
+{-| The number of positive divisors of n, from its factorization.
+
+    >>> numDivisorsF [(2, 2), (3, 1)]
+    6
+    >>> numDivisorsF []
+    1
+-}
+numDivisorsF :: (Integral a) => Factorization a -> a
+numDivisorsF = product . map (\(_, e) -> fromIntegral e + 1)
