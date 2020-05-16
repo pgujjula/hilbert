@@ -12,12 +12,16 @@ module Math.NumberTheory.Prime
      ( isPrime
      , primes
      , primesTo
+     , composites
+     , compositesTo
      ) where
 
 import           Data.IntMap             (IntMap)
 import qualified Data.IntMap             as IntMap
 import           Data.List               (foldl')
 import           Data.Maybe              (fromMaybe)
+
+import           Data.List.Ordered       (minus)
 
 import           Math.NumberTheory.Power (integralSqrt)
 
@@ -120,3 +124,20 @@ primesTo m = 2 : sieve (IntMap.singleton 4 [2]) [3..]
     -- into the map at its next multiple.
     reinsert :: (Int, [Int]) -> IntMap [Int] -> IntMap [Int]
     reinsert (d, ps) mp = foldl' (flip insert) mp (updates (d, ps))
+
+{-| A lazy infinite list of composities.
+
+    >>> takeWhile (<= 20) composites
+    [4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20]
+-}
+composites :: [Int]
+composites = [2..] `minus` primes
+
+{-| A lazy infinite list of composities, up to a limit. Will be faster than
+    'composites'.
+
+    >>> compositesTo 20
+    [4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20]
+-}
+compositesTo :: Int -> [Int]
+compositesTo n = [2..n] `minus` primesTo n

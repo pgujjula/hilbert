@@ -1,16 +1,19 @@
 module Math.NumberTheory.PrimeSpec (spec) where
 
-import Test.Hspec (it, describe, Spec, shouldBe)
-import Test.QuickCheck (forAll, choose, (===))
+import Test.Hspec              (Spec, describe, it, shouldBe)
+import Test.QuickCheck         (choose, forAll, (===))
 
 import Math.NumberTheory.Power (integralSqrt)
-import Math.NumberTheory.Prime (isPrime, primes, primesTo)
+import Math.NumberTheory.Prime (composites, compositesTo, isPrime, primes,
+                                primesTo)
 
 spec :: Spec
 spec = do
     describe "isPrime" isPrimeSpec
     describe "primes" primesSpec
     describe "primesTo" primesToSpec
+    describe "composites" compositesSpec
+    describe "compositesTo" compositesToSpec
 --    describe "factor" factorSpec
 --    describe "factorizations" factorizationsSpec
 --    describe "factorizationsTo" factorizationsToSpec
@@ -43,6 +46,16 @@ primesToSpec :: Spec
 primesToSpec =
     it "correct for primes up to 10000" $ do
         primesTo 10000 `shouldBe` (filter naiveIsPrime [1..10000])
+
+compositesSpec :: Spec
+compositesSpec =
+    it "correct for composities up to 10000" $ do
+        takeWhile (<= 10000) composites `shouldBe` (filter (not . naiveIsPrime) [2..10000])
+
+compositesToSpec :: Spec
+compositesToSpec =
+    it "correct for composities up to 10000" $ do
+        compositesTo 10000 `shouldBe` (filter (not . naiveIsPrime) [2..10000])
 
 --factorSpec :: Spec
 --factorSpec = undefined :: Spec
