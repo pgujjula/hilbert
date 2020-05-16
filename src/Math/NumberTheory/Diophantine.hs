@@ -24,8 +24,7 @@ import Math.NumberTheory.ContinuedFraction as CF
 import Math.NumberTheory.Power             (isSquare, square)
 
 
-{-|
-    @solvePell d@ yields all solutions (x, y) in positive integers to the Pell
+{-| @solvePell d@ yields all solutions (x, y) in positive integers to the Pell
     equation x² - d y² = 1 in ascending order.
 
     __Precondition:__ @d >= 1@. If @d <= 0@, then no solutions will be reported,
@@ -71,6 +70,20 @@ instance Eq a => Eq (Triple a) where
 instance Ord a => Ord (Triple a) where
     compare (Triple (a, b, c)) (Triple (a', b', c')) = compare (c, a, b) (c', a', b')
 
+scale :: (Integral a) => Triple a -> a -> Triple a
+scale (Triple (a, b, c)) k = Triple (k*a, k*b, k*c)
+
+{-| List of all integer triples (a, b, c) such that
+      * a^2 + b^2 == c^2
+      * 0 < a <= b <= c
+    Ordered by increasing c, and then by increasing b.
+-}
+pythagoreanTriples :: (Integral a) => [(a, a, a)]
+pythagoreanTriples = map unTriple $ mergeAll tripleLists
+  where
+    tripleLists = map mkScales primitivePythagoreanTriples
+    mkScales t = map (scale (Triple t)) [1..]
+
 {-| List of all integer triples (a, b, c) such that
       * a^2 + b^2 == c^2
       * 0 < a <= b <= c
@@ -109,17 +122,3 @@ primitivePythagoreanTriples = map unTriple $ mergeAll tripleLists
     tripleLists :: [[Triple a]]
     tripleLists = map (map mkTriple . mkRow) [0..]
         where mkRow i = zip (repeat i) (getns i)
-
-scale :: (Integral a) => Triple a -> a -> Triple a
-scale (Triple (a, b, c)) k = Triple (k*a, k*b, k*c)
-
-{-| List of all integer triples (a, b, c) such that
-      * a^2 + b^2 == c^2
-      * 0 < a <= b <= c
-    Ordered by increasing c, and then by increasing b.
--}
-pythagoreanTriples :: (Integral a) => [(a, a, a)]
-pythagoreanTriples = map unTriple $ mergeAll tripleLists
-  where
-    tripleLists = map mkScales primitivePythagoreanTriples
-    mkScales t = map (scale (Triple t)) [1..]

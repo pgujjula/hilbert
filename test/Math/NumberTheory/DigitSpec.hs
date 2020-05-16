@@ -86,10 +86,10 @@ fromDigitsSpec = do
     it "single-digit inputs, output type Int" $ testDigits int digits
     it "single-digit inputs, output type Integer" $ testDigits integer digits
 
-    let naive :: (Integral a, Read a) => [Int] -> a
+    let naive :: (Read a) => [Int] -> a
         naive = read . concatMap show . (0:)
 
-        qcTest :: forall a. (Integral a, Read a) => Proxy a -> [Int] -> Property
+        qcTest :: forall a. (Integral a) => Proxy a -> [Int] -> Property
         qcTest _ xs = toInteger (fromDigits xs :: a) === (naive xs :: Integer)
 
         digitListGen :: Gen [Int]
@@ -117,7 +117,7 @@ toDigitsSpec = do
     it "single-digit Integers" $ testDigits (digits :: [Integer])
     it "three digits"         $ toDigits 345 `shouldBe` [3, 4, 5]
 
-    let naive :: (Integral a, Show a) => a -> [Int]
+    let naive :: (Show a) => a -> [Int]
         naive = map (read . (:[])) . show
 
         test :: (Integral a, Show a) => a -> Property
