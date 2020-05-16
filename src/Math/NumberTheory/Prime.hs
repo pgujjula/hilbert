@@ -9,12 +9,12 @@
 -}
 
 module Math.NumberTheory.Prime
-     ( isPrime
-     , primes
-     , primesTo
-     , composites
-     , compositesTo
-     ) where
+    ( isPrime
+    , primes
+    , primesTo
+    , composites
+    , compositesTo
+    ) where
 
 import           Data.IntMap             (IntMap)
 import qualified Data.IntMap             as IntMap

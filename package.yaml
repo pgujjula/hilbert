@@ -70,10 +70,11 @@ tests:
       - Math.NumberTheory.ContinuedFraction.SqrtSpec
       - Math.NumberTheory.DigitSpec
       - Math.NumberTheory.DiophantineSpec
+      - Math.NumberTheory.DivisorSpec
       - Math.NumberTheory.FibonacciSpec
+      - Math.NumberTheory.ModularSpec
       - Math.NumberTheory.PowerSpec
       - Math.NumberTheory.PrimeSpec
-      - Math.NumberTheory.ModularSpec
       - Spec
     dependencies:
       - hilbert

@@ -10,15 +10,15 @@
 -}
 
 module Math.NumberTheory.Power
-     ( square
-     , squares
-     , cube
-     , cubes
-     , integralSqrt
-     , isSquare
-     , integralRoot
-     , integralLogBase
-     ) where
+    ( square
+    , squares
+    , cube
+    , cubes
+    , integralSqrt
+    , isSquare
+    , integralRoot
+    , integralLogBase
+    ) where
 
 import GHC.Integer.Logarithms  (integerLogBase#)
 import GHC.Types               (Int (..))

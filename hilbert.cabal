@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0b04b45010f4322b69d3a077274554763610e881a9639a2b0ee4e69f713b164a
+-- hash: 71baab30d1d80ea1c116973f9d346cedc0a1ceb9f88fd1c4140ab1f1cd6a9ceb
 
 name:           hilbert
 version:        0.1.12.0
@@ -68,10 +68,11 @@ test-suite spec
       Math.NumberTheory.ContinuedFraction.SqrtSpec
       Math.NumberTheory.DigitSpec
       Math.NumberTheory.DiophantineSpec
+      Math.NumberTheory.DivisorSpec
       Math.NumberTheory.FibonacciSpec
+      Math.NumberTheory.ModularSpec
       Math.NumberTheory.PowerSpec
       Math.NumberTheory.PrimeSpec
-      Math.NumberTheory.ModularSpec
       Spec
   hs-source-dirs:
       test

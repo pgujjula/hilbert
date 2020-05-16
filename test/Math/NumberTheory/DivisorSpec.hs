@@ -1,7 +1,6 @@
 module Math.NumberTheory.DivisorSpec (spec) where
 
 import Control.Monad                  (forM_)
-import Data.Function                  ((&))
 import Data.List                      (sort)
 import Data.Maybe                     (fromJust)
 
@@ -9,7 +8,6 @@ import Test.Hspec                     (Spec, describe, it, shouldBe)
 
 import Math.NumberTheory.Divisor      (divides, divisorPairs, divisorPairsF,
                                        divisors, divisorsF)
-import Math.NumberTheory.Power        (integralSqrt)
 import Math.NumberTheory.Prime.Factor (factor)
 
 limit :: Int
