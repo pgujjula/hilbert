@@ -9,54 +9,39 @@
 -}
 
 module Math.NumberTheory.ContinuedFraction.Core
-  ( ContinuedFraction
-  , mkPeriodic
-  , mkAperiodic
-  , repeatingPart
-  , nonRepeatingPart
-  , toList
-  , isPeriodic
-  , convergent
-  ) where
+    ( ContinuedFraction
+    , mkPeriodic
+    , mkAperiodic
+    , repeatingPart
+    , nonRepeatingPart
+    , toList
+    , isPeriodic
+    , convergent
+    ) where
 
 import Data.Ratio
 
-{-|
-    Data type to represent continued fractions.
--}
+{-| Data type to represent continued fractions. -}
 data ContinuedFraction a =
-   {-
-      Periodic xs ys represents a continued fraction with non-repeating part xs
+   {- Periodic xs ys represents a continued fraction with non-repeating part xs
       and repeating part ys. The list form of this fraction is xs ++ (cycle ys).
       ys should not be empty (checked), and both xs and ys should be finite
       (unchecked).
    -}
     Periodic [a] [a]
 
-   {-
-      APeriodic xs represents a continued fraction that does not repeat. xs can
+   {- APeriodic xs represents a continued fraction that does not repeat. xs can
       be finite or infinite, but it should not be periodic after a while
       (unchecked).
    -}
  | APeriodic [a]
    deriving (Eq)
 
-{-|
-    A show instance for ContinuedFraction.
-
-    __Preconditions__: None.
-
-    >>> show (mkPeriodic [2] [1, 3])
-    mkPeriodic [2] [1,3]
-    >>> show (mkAperiodic [1, 4, 6])
-    mkAperiodic [1,4,6]
--}
 instance (Show a) => (Show (ContinuedFraction a)) where
    show (Periodic xs ys) = "mkPeriodic "  ++ show xs ++ " " ++ show ys
    show (APeriodic xs)   = "mkAperiodic " ++ show xs
 
-{-|
-    Create a new periodic continued fraction.
+{-| Create a new periodic continued fraction.
 
     __Preconditions:__ In @mkPeriodic xs ys@,
 
@@ -68,12 +53,11 @@ instance (Show a) => (Show (ContinuedFraction a)) where
 -}
 mkPeriodic :: [a] -> [a] -> ContinuedFraction a
 mkPeriodic xs ys
-  | null ys   = error $ "Repeating part cannot be null in"
-                        ++ "periodic continued fraction."
+  | null ys   = error $ "mkPeriodic: Repeating part cannot be null in periodic "
+                     ++ "continued fraction."
   | otherwise = Periodic xs ys
 
-{-|
-    Create a new aperiodic continued fraction.
+{-| Create a new aperiodic continued fraction.
 
     __Precondition:__ In @mkAperiodic xs@, @xs@ can be finite or infinite, but
     it should not be periodic after a while (unchecked).
@@ -84,8 +68,7 @@ mkPeriodic xs ys
 mkAperiodic :: [a] -> ContinuedFraction a
 mkAperiodic = APeriodic
 
-{-|
-    Get the repeating part of a continued fraction, if it has one.
+{-| Get the repeating part of a continued fraction, if it has one.
 
     __Preconditions:__ None.
 
@@ -98,9 +81,7 @@ repeatingPart :: ContinuedFraction a -> Maybe [a]
 repeatingPart (APeriodic _)   = Nothing
 repeatingPart (Periodic _ xs) = Just xs
 
-{-|
-    Get the non-repeating part of a continued fraction. Both periodic and
-    aperiodic fractions have non-repeating parts.
+{-| Get the non-repeating part of a continued fraction.
 
     __Preconditions:__ None.
 
@@ -113,8 +94,7 @@ nonRepeatingPart :: ContinuedFraction a -> [a]
 nonRepeatingPart (APeriodic xs)  = xs
 nonRepeatingPart (Periodic xs _) = xs
 
-{-|
-    Get the list form of a continued fraction.
+{-| Convert a continued fraction to a list of terms.
 
     __Preconditions:__ None.
 
@@ -125,8 +105,7 @@ toList :: ContinuedFraction a -> [a]
 toList (Periodic xs ys) = xs ++ cycle ys
 toList (APeriodic xs)   = xs
 
-{-|
-    @True@ if the list is periodic after a while.
+{-| @True@ if the list is periodic after a while.
 
     __Preconditions:__ None.
 
@@ -139,8 +118,7 @@ isPeriodic :: ContinuedFraction a -> Bool
 isPeriodic (Periodic _ _) = True
 isPeriodic (APeriodic _)  = False
 
-{-|
-    @convergent cfrac n@ computes the @n@th convergent of @cfrac@.
+{-| @convergent cfrac n@ computes the @n@th convergent of @cfrac@.
 
     For example, to compute convergents for the continued fraction for /e/,
     which is @[2, 1, 2, 1, 1, 4, 1, 1, 6, 1, ...]@,
@@ -168,11 +146,8 @@ print (fromRational approximation)
 convergent :: (Integral a) => ContinuedFraction a -> Int -> Ratio a
 convergent cfrac n = convFromList $ take n $ toList cfrac
 
-{-
-   Compute the convergent of a finite list representing a continued fraction.
--}
+-- Compute the convergent of a finite list representing a continued fraction.
 convFromList :: (Integral a) => [a] -> Ratio a
 convFromList []     = 0 % 1
 convFromList [x]    = x % 1
 convFromList (x:xs) = (x % 1) + (1 / convFromList xs)
-
