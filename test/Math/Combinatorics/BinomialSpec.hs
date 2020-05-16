@@ -2,7 +2,7 @@
 module Math.Combinatorics.BinomialSpec (spec) where
 
 import           Test.Hspec                  (Spec, describe, it, shouldBe)
-import           Test.QuickCheck             (Gen, forAll, (===))
+import           Test.QuickCheck             (forAll, (===))
 import qualified Test.QuickCheck             as QuickCheck (choose)
 
 import           Math.Combinatorics.Binomial (factorial, choose, permute)

@@ -21,11 +21,11 @@ spec = do
                      `shouldThrow` anyException
 
     describe "repeatingPart" $ do
-        it "aperiodic continued fraction" $ do
+        it "aperiodic continued fraction" $
             repeatingPart (mkAperiodic [1, 2, 3]) `shouldBe` Nothing
-        it "periodic continued fraction" $ do
+        it "periodic continued fraction" $
             repeatingPart (mkPeriodic [1, 2] [3, 4])
-                `shouldBe` (Just [3, 4])
+                `shouldBe` Just [3, 4]
 
     describe "nonRepeatingPart" $ do
         it "periodic continued fraction" $
@@ -48,13 +48,13 @@ spec = do
 
     describe "convergent" $ do
         it "approximates e well" $ do
-            let e = mkAperiodic $ (2:) $ concat $ map (\x -> [1, x, 1]) [2, 4..]
+            let e = mkAperiodic $ (2:) $ concatMap (\x -> [1, x, 1]) [2, 4..]
             let shouldBeCloseTo x y =
                     if abs (x - y) < 10**(-20)
                     then return ()
                     else assertFailure $
                              show x ++ " not close enough to " ++ show y
-            (fromRational $ convergent e 100) `shouldBeCloseTo` 2.718281828459045
+            fromRational (convergent e 100) `shouldBeCloseTo` 2.718281828459045
         it "periodic fractions" $ do
             convergent (mkPeriodic [1, 2] [3, 4]) 0 `shouldBe` (0 % 1)
             convergent (mkPeriodic [1, 2] [3, 4]) 4 `shouldBe` (43 % 30)

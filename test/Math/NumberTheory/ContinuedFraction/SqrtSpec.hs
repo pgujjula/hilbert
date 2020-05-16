@@ -1,52 +1,32 @@
-module Math.NumberTheory.ContinuedFraction.SqrtSpec
-  ( spec
-  ) where
+module Math.NumberTheory.ContinuedFraction.SqrtSpec (spec) where
 
-import Test.Hspec
-import Test.QuickCheck
-import Test.Hspec.QuickCheck
+import           Control.Monad                       (zipWithM_)
 
-import Math.NumberTheory.ContinuedFraction as CF
-  ( ContinuedFraction
-  , mkPeriodic
-  , mkAperiodic
-  , sqrt
-  )
+import           Test.Hspec                          (Spec, describe, it,
+                                                      shouldBe)
 
-{-
-   Parameters
--}
-numberOfTests :: Int
-numberOfTests = 100
+import           Math.NumberTheory.ContinuedFraction (ContinuedFraction,
+                                                      mkAperiodic, mkPeriodic)
+import qualified Math.NumberTheory.ContinuedFraction as CF (sqrt)
 
-main :: IO ()
-main = hspec spec
+spec :: Spec
+spec = describe "sqrt" $
+    it "matches with WolframAlpha for sqrt(1) ... sqrt(10)" $
+        let testContinuedFrac :: [ContinuedFraction Int]
+            testContinuedFrac = map CF.sqrt [1..10]
 
-{- 
-   Tests
--}
-spec = modifyMaxSuccess (\_ -> numberOfTests) $ do
-           describe "sqrt" $ do
-             it "matches with WolframAlpha for sqrt(1) ... sqrt(10)" $ do
-               test_sqrt
+            correctContinuedFrac :: [ContinuedFraction Int]
+            correctContinuedFrac =
+               [ mkAperiodic [1]
+               , mkPeriodic  [1] [2]
+               , mkPeriodic  [1] [1, 2]
+               , mkAperiodic [2]
+               , mkPeriodic  [2] [4]
+               , mkPeriodic  [2] [2, 4]
+               , mkPeriodic  [2] [1, 1, 1, 4]
+               , mkPeriodic  [2] [1, 4]
+               , mkAperiodic [3]
+               , mkPeriodic  [3] [6]
+               ]
 
--- Ensure that the Hilbert sqrt function returns the same thing as Wolfram Alpha
-test_sqrt = sequence_ $ zipWith shouldBe testContinuedFrac correctContinuedFrac
-  where -- The continued fractions of sqrt(1), sqrt(2), ..., sqrt(10)
-        -- courtesy of Wolfram Alpha.
-        correctContinuedFrac :: [ContinuedFraction Int]
-        correctContinuedFrac =
-           [ mkAperiodic [1]
-           , mkPeriodic  [1] [2]
-           , mkPeriodic  [1] [1, 2]
-           , mkAperiodic [2]
-           , mkPeriodic  [2] [4]
-           , mkPeriodic  [2] [2, 4]
-           , mkPeriodic  [2] [1, 1, 1, 4]
-           , mkPeriodic  [2] [1, 4]
-           , mkAperiodic [3]
-           , mkPeriodic  [3] [6]
-           ]
-
-        -- The continued fractions returned by sqrt
-        testContinuedFrac = map CF.sqrt [1..10]
+         in zipWithM_ shouldBe testContinuedFrac correctContinuedFrac
