@@ -32,19 +32,19 @@ dependencies:
 library:
   source-dirs: src
   exposed-modules:
+    - Math.Combinatorics.Binomial
+    - Math.Combinatorics.Partition
     - Math.NumberTheory.ContinuedFraction
-    - Math.NumberTheory.Power
     - Math.NumberTheory.Digit
     - Math.NumberTheory.Diophantine
-    - Math.NumberTheory.Modular
+    - Math.NumberTheory.Divisor
     - Math.NumberTheory.Fibonacci
+    - Math.NumberTheory.Modular
+    - Math.NumberTheory.Power
     - Math.NumberTheory.Prime
     - Math.NumberTheory.Prime.Factor
-    - Math.NumberTheory.Divisor
-    - Math.Combinatorics.Partition
-    - Math.Combinatorics.Binomial
-    - Math.Probability
     - Math.Polynomial
+    - Math.Probability
 #    - Hilbert.Legendre
   other-modules:
     - Math.NumberTheory.ContinuedFraction.Core
@@ -64,15 +64,16 @@ tests:
     source-dirs: test
     main: Main.hs
     other-modules:
+      - Math.Combinatorics.BinomialSpec
+      - Math.Combinatorics.PartitionSpec
       - Math.NumberTheory.ContinuedFraction.CoreSpec
       - Math.NumberTheory.ContinuedFraction.SqrtSpec
       - Math.NumberTheory.DigitSpec
       - Math.NumberTheory.DiophantineSpec
+      - Math.NumberTheory.FibonacciSpec
       - Math.NumberTheory.PowerSpec
       - Math.NumberTheory.PrimeSpec
-      - Math.NumberTheory.FibonacciSpec
       - Math.NumberTheory.ModularSpec
-      - Math.Combinatorics.PartitionSpec
       - Spec
     dependencies:
       - hilbert

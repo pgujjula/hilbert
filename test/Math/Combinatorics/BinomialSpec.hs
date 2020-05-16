@@ -5,7 +5,7 @@ import           Test.Hspec                  (Spec, describe, it, shouldBe)
 import           Test.QuickCheck             (Gen, forAll, (===))
 import qualified Test.QuickCheck             as QuickCheck (choose)
 
-import           Math.Combinatorics.Binomial (choose, factorial, permute)
+import           Math.Combinatorics.Binomial (factorial, choose, permute)
 
 -- Limit for quickcheck inputs
 limit :: Integer

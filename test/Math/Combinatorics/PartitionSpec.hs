@@ -1,6 +1,6 @@
 module Math.Combinatorics.PartitionSpec (spec) where
 
-import Test.Hspec         (Spec, describe, it, shouldBe)
+import Test.Hspec                   (Spec, describe, it, shouldBe)
 
 import Math.Combinatorics.Partition (numPartitions)
 
