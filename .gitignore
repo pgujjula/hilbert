@@ -11,4 +11,3 @@ test/Main
 src/highlight.js
 src/style.css
 stack.yaml.lock
-hilbert.cabal

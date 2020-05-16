@@ -1,0 +1,87 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 0b04b45010f4322b69d3a077274554763610e881a9639a2b0ee4e69f713b164a
+
+name:           hilbert
+version:        0.1.12.0
+synopsis:       Number theory in pure Haskell
+description:    Please see the README on GitHub at <https://github.com/pgujjula/hilbert#readme>
+category:       Math
+homepage:       https://github.com/pgujjula/hilbert#readme
+bug-reports:    https://github.com/pgujjula/hilbert/issues
+author:         Preetham Gujjula
+maintainer:     pgujjula+hilbert@protonmail.com
+copyright:      2020 Preetham Gujjula
+license:        GPL-3
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/pgujjula/hilbert
+
+library
+  exposed-modules:
+      Math.Combinatorics.Binomial
+      Math.Combinatorics.Partition
+      Math.NumberTheory.ContinuedFraction
+      Math.NumberTheory.Digit
+      Math.NumberTheory.Diophantine
+      Math.NumberTheory.Divisor
+      Math.NumberTheory.Fibonacci
+      Math.NumberTheory.Modular
+      Math.NumberTheory.Power
+      Math.NumberTheory.Prime
+      Math.NumberTheory.Prime.Factor
+      Math.Polynomial
+      Math.Probability
+  other-modules:
+      Math.NumberTheory.ContinuedFraction.Core
+      Math.NumberTheory.ContinuedFraction.Sqrt
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Wmissing-export-lists -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Wmissing-home-modules -Werror=missing-home-modules -Widentities -Wredundant-constraints -Wmissing-export-lists
+  build-depends:
+      base >=4.13 && <5.0
+    , chimera
+    , composition
+    , containers
+    , data-ordlist
+    , ghc-prim
+    , integer-gmp
+    , list-duplicate
+    , vector
+  default-language: Haskell2010
+
+test-suite spec
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Math.Combinatorics.BinomialSpec
+      Math.Combinatorics.PartitionSpec
+      Math.NumberTheory.ContinuedFraction.CoreSpec
+      Math.NumberTheory.ContinuedFraction.SqrtSpec
+      Math.NumberTheory.DigitSpec
+      Math.NumberTheory.DiophantineSpec
+      Math.NumberTheory.FibonacciSpec
+      Math.NumberTheory.PowerSpec
+      Math.NumberTheory.PrimeSpec
+      Math.NumberTheory.ModularSpec
+      Spec
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Wmissing-export-lists -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Wmissing-home-modules -Werror=missing-home-modules -Widentities -Wredundant-constraints -Wmissing-export-lists -Wno-type-defaults
+  build-depends:
+      HUnit
+    , QuickCheck
+    , base >=4.13 && <5.0
+    , hilbert
+    , hspec
+    , quickcheck-assertions
+    , random
+  default-language: Haskell2010
