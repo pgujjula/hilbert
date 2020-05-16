@@ -1,5 +1,5 @@
 name:                hilbert
-version:             0.1.12.0
+version:             0.1.14.0
 synopsis:            Number theory in pure Haskell
 github:              "pgujjula/hilbert"
 license:             GPL-3
@@ -39,6 +39,7 @@ library:
     - Math.NumberTheory.Diophantine
     - Math.NumberTheory.Divisor
     - Math.NumberTheory.Fibonacci
+    - Math.NumberTheory.Figurate
     - Math.NumberTheory.Modular
     - Math.NumberTheory.Power
     - Math.NumberTheory.Prime
@@ -71,6 +72,7 @@ tests:
       - Math.NumberTheory.DigitSpec
       - Math.NumberTheory.DiophantineSpec
       - Math.NumberTheory.DivisorSpec
+      - Math.NumberTheory.FigurateSpec
       - Math.NumberTheory.FibonacciSpec
       - Math.NumberTheory.ModularSpec
       - Math.NumberTheory.PowerSpec
