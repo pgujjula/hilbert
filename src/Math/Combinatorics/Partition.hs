@@ -1,3 +1,13 @@
+{-| Module      : Math.NumberTheory.Digit
+    Description : Counting partitions of an integer.
+    Copyright   : (c) Preetham Gujjula, 2020
+    License     : GPL-3
+    Maintainer  : preetham.gujjula@gmail.com
+    Stability   : experimental
+
+Counting partitions of an integer.
+-}
+
 module Math.Combinatorics.Partition (numPartitions) where
 
 import Data.Chimera (memoizeFix)

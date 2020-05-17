@@ -1,3 +1,13 @@
+{-| Module      : Math.NumberTheory.Digit
+    Description : Functions related to the binomial coefficient.
+    Copyright   : (c) Preetham Gujjula, 2020
+    License     : GPL-3
+    Maintainer  : preetham.gujjula@gmail.com
+    Stability   : experimental
+
+Functions related to the binomial coefficient.
+-}
+
 module Math.Combinatorics.Binomial
     ( factorial
     , choose
