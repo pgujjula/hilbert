@@ -14,24 +14,21 @@ spec = do
     describe "primesTo" primesToSpec
     describe "composites" compositesSpec
     describe "compositesTo" compositesToSpec
---    describe "factor" factorSpec
---    describe "factorizations" factorizationsSpec
---    describe "factorizationsTo" factorizationsToSpec
 
 naiveIsPrime :: (Integral a) => a -> Bool
-naiveIsPrime n = n >= 2 && (not $ any (\d -> n `rem` d == 0) [2..integralSqrt n])
+naiveIsPrime n = n >= 2 && not (any (\d -> n `rem` d == 0) [2..integralSqrt n])
 
 isPrimeSpec :: Spec
 isPrimeSpec = do
     it "negative numbers not prime" $ do
         isPrime (-1) `shouldBe` False
         isPrime (-2) `shouldBe` False
-    it "0 not prime" $ do
+    it "0 not prime" $
         isPrime 0 `shouldBe` False
-    it "1 not prime" $ do
+    it "1 not prime" $
         isPrime 1 `shouldBe` False
 
-    it "primes up to 1000 correct" $ do
+    it "primes up to 1000 correct" $
         filter isPrime [1..1000] `shouldBe` filter naiveIsPrime [1..1000]
 
     it "works on arbitrary Ints" $
@@ -39,29 +36,20 @@ isPrimeSpec = do
 
 primesSpec :: Spec
 primesSpec =
-    it "correct for primes up to 10000" $ do
-        takeWhile (<= 10000) primes `shouldBe` (filter naiveIsPrime [1..10000])
+    it "correct for primes up to 10000" $
+        takeWhile (<= 10000) primes `shouldBe` filter naiveIsPrime [1..10000]
 
 primesToSpec :: Spec
 primesToSpec =
-    it "correct for primes up to 10000" $ do
-        primesTo 10000 `shouldBe` (filter naiveIsPrime [1..10000])
+    it "correct for primes up to 10000" $
+        primesTo 10000 `shouldBe` filter naiveIsPrime [1..10000]
 
 compositesSpec :: Spec
 compositesSpec =
-    it "correct for composities up to 10000" $ do
-        takeWhile (<= 10000) composites `shouldBe` (filter (not . naiveIsPrime) [2..10000])
+    it "correct for composities up to 10000" $
+        takeWhile (<= 10000) composites `shouldBe` filter (not . naiveIsPrime) [2..10000]
 
 compositesToSpec :: Spec
 compositesToSpec =
-    it "correct for composities up to 10000" $ do
-        compositesTo 10000 `shouldBe` (filter (not . naiveIsPrime) [2..10000])
-
---factorSpec :: Spec
---factorSpec = undefined :: Spec
---
---factorizationsSpec :: Spec
---factorizationsSpec = undefined :: Spec
---
---factorizationsToSpec :: Spec
---factorizationsToSpec = undefined :: Spec
+    it "correct for composities up to 10000" $
+        compositesTo 10000 `shouldBe` filter (not . naiveIsPrime) [2..10000]

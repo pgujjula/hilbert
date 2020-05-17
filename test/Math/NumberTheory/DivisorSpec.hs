@@ -21,7 +21,7 @@ spec = do
     describe "divisorsF"     divisorsFSpec
     describe "divisorPairs"  divisorPairsSpec
     describe "divisorPairsF" divisorPairsFSpec
-    describe "numDivisors"   numDivisorsSpec 
+    describe "numDivisors"   numDivisorsSpec
     describe "numDivisorsF"  numDivisorsFSpec
 
 dividesSpec :: Spec
@@ -68,7 +68,7 @@ divisorPairsFSpec =
             mapM_ (\(a, b) -> a * b `shouldBe` x) dps
 
 numDivisorsSpec :: Spec
-numDivisorsSpec = do
+numDivisorsSpec =
     it ("correct for abs n up to " ++ show limit) $
         let naive n = length $ filter (`divides` n) [1..abs n]
          in forM_ [(-limit)..limit] $ \x -> numDivisors x `shouldBe` naive x

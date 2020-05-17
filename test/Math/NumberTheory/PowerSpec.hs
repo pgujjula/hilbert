@@ -1,16 +1,16 @@
 module Math.NumberTheory.PowerSpec (spec) where
 
-import Control.Monad              (forM_, zipWithM_)
-import Data.Int                   (Int16)
-import System.Random              (Random)
+import Control.Monad           (forM_, zipWithM_)
+import Data.Int                (Int16)
+import System.Random           (Random)
 
-import Test.Hspec                 (Spec, describe, it, shouldBe, shouldSatisfy)
-import Test.QuickCheck            (Gen, arbitrary, choose, forAll, suchThat,
-                                   vectorOf, (===))
+import Test.Hspec              (Spec, describe, it, shouldBe, shouldSatisfy)
+import Test.QuickCheck         (Gen, arbitrary, choose, forAll, suchThat,
+                                vectorOf, (===))
 
-import Math.NumberTheory.Digit    (fromDigits)
-import Math.NumberTheory.Power    (cubes, integralRoot, integralSqrt, integralRoot,
-                                   isSquare, squares)
+import Math.NumberTheory.Digit (fromDigits)
+import Math.NumberTheory.Power (cubes, integralRoot, integralSqrt, isSquare,
+                                squares)
 
 -- The maximum number of digits of any test case input
 maxNumDigits :: Int
