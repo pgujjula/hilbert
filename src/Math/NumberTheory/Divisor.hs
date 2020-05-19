@@ -17,10 +17,16 @@ module Math.NumberTheory.Divisor
 
     , numDivisors
     , numDivisorsF
+
+    , relativelyPrime
+
+    , totient
+    , totientF
     ) where
 
 import Control.Applicative            (liftA2)
 import Data.List                      (foldl')
+import Data.Maybe                     (fromJust)
 
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
 
@@ -112,3 +118,34 @@ numDivisors = maybe 0 numDivisorsF . factor . abs
 -}
 numDivisorsF :: (Integral a) => Factorization a -> a
 numDivisorsF = product . map (\(_, e) -> fromIntegral e + 1)
+
+{-| @relativelyPrime m n@ is @True@ if @m@ and @n@ have no common positive
+    divisors other than 1.
+-}
+relativelyPrime :: (Integral a) => a -> a -> Bool
+relativelyPrime m n = gcd m n == 1
+
+{-| @totient n@ is the number of integers in [1..n] that are relatively prime
+    to @n@. Also, @totient 0 == 1@ by convention.
+
+    >>> totient 10
+    4
+    >>> totient (-4)
+    0
+-}
+totient :: (Integral a) => a -> a
+totient n
+    | n < 0     = 0
+    | n == 0    = 1
+    | otherwise = totientF n (fromJust $ factor n)
+
+{-| Like 'totient', but takes the factorization of @n@ to speed up the
+    computation of the totient.
+
+    >>> totient 10 [(2, 1), (5, 1)]
+    4
+-}
+totientF :: (Integral a) => a -> Factorization a -> a
+totientF = foldl' step
+  where
+    step n (p, _) = n * (p - 1) `div` p

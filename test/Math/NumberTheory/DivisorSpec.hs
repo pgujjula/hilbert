@@ -8,7 +8,7 @@ import Test.Hspec                     (Spec, describe, it, shouldBe)
 
 import Math.NumberTheory.Divisor      (divides, divisorPairs, divisorPairsF,
                                        divisors, divisorsF, numDivisors,
-                                       numDivisorsF)
+                                       numDivisorsF, relativelyPrime, totient, totientF)
 import Math.NumberTheory.Prime.Factor (factor)
 
 limit :: Int
@@ -16,13 +16,16 @@ limit = 1000
 
 spec :: Spec
 spec = do
-    describe "divides"       dividesSpec
-    describe "divisors"      divisorsSpec
-    describe "divisorsF"     divisorsFSpec
-    describe "divisorPairs"  divisorPairsSpec
-    describe "divisorPairsF" divisorPairsFSpec
-    describe "numDivisors"   numDivisorsSpec
-    describe "numDivisorsF"  numDivisorsFSpec
+    describe "divides"         dividesSpec
+    describe "divisors"        divisorsSpec
+    describe "divisorsF"       divisorsFSpec
+    describe "divisorPairs"    divisorPairsSpec
+    describe "divisorPairsF"   divisorPairsFSpec
+    describe "numDivisors"     numDivisorsSpec
+    describe "numDivisorsF"    numDivisorsFSpec
+    describe "relativelyPrime" relativelyPrimeSpec
+    describe "totient"         totientSpec
+    describe "totientF"        totientFSpec
 
 dividesSpec :: Spec
 dividesSpec = do
@@ -79,3 +82,40 @@ numDivisorsFSpec =
         let naive n = length $ filter (`divides` n) [1..abs n]
          in forM_ [1..limit] $ \x ->
                 (numDivisorsF . fromJust . factor $ x) `shouldBe` naive x
+
+relativelyPrimeSpec :: Spec
+relativelyPrimeSpec = do
+    it "0 is not relatively prime to 0" $
+        relativelyPrime 0 0    `shouldBe` False
+    it "0 is relatively prime to 1/-1" $ do
+        relativelyPrime 0 1    `shouldBe` True
+        relativelyPrime 0 (-1) `shouldBe` True
+    it "0 is not relatively to integers with magnitude > 1" $ do
+        relativelyPrime 0 2    `shouldBe` False
+        relativelyPrime 0 (-2) `shouldBe` False
+    it "1 is relatively prime to 1/-1" $ do
+        relativelyPrime 1 1    `shouldBe` True
+        relativelyPrime 1 (-1) `shouldBe` True
+    it "3 is relatively prime to 5/-5" $ do
+        relativelyPrime 3 5    `shouldBe` True
+        relativelyPrime 3 (-5) `shouldBe` True
+    it "-3 is not relatively prime to 6/-6" $ do
+        relativelyPrime (-3) 6    `shouldBe` False
+        relativelyPrime (-3) (-6) `shouldBe` False
+
+totientSpec :: Spec
+totientSpec = do
+    it "totient of negative numbers is 0" $
+        totient (-1) `shouldBe` 0
+    it "totient of 0 is 1" $
+        totient 0 `shouldBe` 1
+    it ("correct for up to " ++ show limit) $
+        forM_ [1..limit] $ \n ->
+            totient n `shouldBe` length (filter (relativelyPrime n) [1..n])
+
+totientFSpec :: Spec
+totientFSpec = do
+    it ("correct for up to " ++ show limit) $
+        forM_ [1..limit] $ \n ->
+            totientF n (fromJust $ factor n)
+                `shouldBe` length (filter (relativelyPrime n) [1..n])
