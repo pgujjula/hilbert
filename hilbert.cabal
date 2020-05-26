@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e720528747574deedd01fb3bf9c4fe1cc42663ef6ae247157543c3b4026b8da5
+-- hash: 36f3b0497f3b7eb84d52a198fbbd2fe048152c195f2118bc222b30952bc1167e
 
 name:           hilbert
-version:        0.1.14.0
+version:        0.1.17.0
 synopsis:       Number theory in pure Haskell
 description:    Please see the README on GitHub at <https://github.com/pgujjula/hilbert#readme>
 category:       Math

@@ -18,6 +18,9 @@ module Math.NumberTheory.Divisor
     , numDivisors
     , numDivisorsF
 
+    , sumDivisors
+    , sumDivisorsF
+
     , relativelyPrime
 
     , totient
@@ -118,6 +121,28 @@ numDivisors = maybe 0 numDivisorsF . factor . abs
 -}
 numDivisorsF :: (Integral a) => Factorization a -> a
 numDivisorsF = product . map (\(_, e) -> fromIntegral e + 1)
+
+{-| The sum of the positive divisors of n.
+
+    >>> sumDivisors 12
+    28
+    >>> sumDivisors 1
+    1
+    >>> sumDivisors 0
+    0
+-}
+sumDivisors :: (Integral a) => a -> a
+sumDivisors = maybe 0 sumDivisorsF . factor . abs
+
+{-| The sum of the positive divisors of n, from its factorization.
+
+    >>> sumDivisorsF [(2, 2), (3, 1)]
+    28
+    >>> sumDivisorsF []
+    1
+-}
+sumDivisorsF :: (Integral a) => Factorization a -> a
+sumDivisorsF = product . map (\(p, e) -> (p^(e + 1) - 1) `div` (p - 1))
 
 {-| @relativelyPrime m n@ is @True@ if @m@ and @n@ have no common positive
     divisors other than 1.

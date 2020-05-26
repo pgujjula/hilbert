@@ -8,7 +8,9 @@ import Test.Hspec                     (Spec, describe, it, shouldBe)
 
 import Math.NumberTheory.Divisor      (divides, divisorPairs, divisorPairsF,
                                        divisors, divisorsF, numDivisors,
-                                       numDivisorsF, relativelyPrime, totient, totientF)
+                                       numDivisorsF, relativelyPrime,
+                                       sumDivisors, sumDivisorsF, totient,
+                                       totientF)
 import Math.NumberTheory.Prime.Factor (factor)
 
 limit :: Int
@@ -23,6 +25,8 @@ spec = do
     describe "divisorPairsF"   divisorPairsFSpec
     describe "numDivisors"     numDivisorsSpec
     describe "numDivisorsF"    numDivisorsFSpec
+    describe "sumDivisors"     sumDivisorsSpec
+    describe "sumDivisorsF"    sumDivisorsFSpec
     describe "relativelyPrime" relativelyPrimeSpec
     describe "totient"         totientSpec
     describe "totientF"        totientFSpec
@@ -83,6 +87,19 @@ numDivisorsFSpec =
          in forM_ [1..limit] $ \x ->
                 (numDivisorsF . fromJust . factor $ x) `shouldBe` naive x
 
+sumDivisorsSpec :: Spec
+sumDivisorsSpec =
+    it ("correct for abs n up to " ++ show limit) $
+        let naive n = sum $ filter (`divides` n) [1..abs n]
+         in forM_ [(-limit)..limit] $ \x -> sumDivisors x `shouldBe` naive x
+
+sumDivisorsFSpec :: Spec
+sumDivisorsFSpec =
+    it ("correct for n up to " ++ show limit) $
+        let naive n = sum $ filter (`divides` n) [1..abs n]
+         in forM_ [1..limit] $ \x ->
+                (sumDivisorsF . fromJust . factor $ x) `shouldBe` naive x
+
 relativelyPrimeSpec :: Spec
 relativelyPrimeSpec = do
     it "0 is not relatively prime to 0" $
@@ -114,7 +131,7 @@ totientSpec = do
             totient n `shouldBe` length (filter (relativelyPrime n) [1..n])
 
 totientFSpec :: Spec
-totientFSpec = do
+totientFSpec =
     it ("correct for up to " ++ show limit) $
         forM_ [1..limit] $ \n ->
             totientF n (fromJust $ factor n)
