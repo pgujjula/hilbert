@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 36f3b0497f3b7eb84d52a198fbbd2fe048152c195f2118bc222b30952bc1167e
+-- hash: 77e2d3408b2edaa7d8dfd2fd1bd724582b14a2325cac643a4928b855acd1c039
 
 name:           hilbert
 version:        0.1.17.0
@@ -88,4 +88,18 @@ test-suite spec
     , hspec
     , quickcheck-assertions
     , random
+  default-language: Haskell2010
+
+benchmark fib
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_hilbert
+  hs-source-dirs:
+      bench/fib
+  ghc-options: -Wall -Wcompat -Wmissing-export-lists -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Wmissing-home-modules -Werror=missing-home-modules -Widentities -Wredundant-constraints -Wmissing-export-lists -O2
+  build-depends:
+      base >=4.13 && <5.0
+    , criterion
+    , hilbert
   default-language: Haskell2010
