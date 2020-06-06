@@ -91,7 +91,7 @@ primesTo m = 2 : sieve (IntMap.singleton 4 [2]) [3..]
     sieve :: IntMap [Int] -> [Int] -> [Int]
     sieve mp (x:xs) =
         case IntMap.minViewWithKey mp of
-            Nothing -> []
+            Nothing -> [x..m]
             Just ((n, ps), mp') ->
                 case compare n x of
                   -- The first number in the map was too small. Reinsert its prime

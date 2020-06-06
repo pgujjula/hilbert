@@ -40,9 +40,11 @@ primesSpec =
         takeWhile (<= 10000) primes `shouldBe` filter naiveIsPrime [1..10000]
 
 primesToSpec :: Spec
-primesToSpec =
+primesToSpec = do
     it "correct for primes up to 10000" $
         primesTo 10000 `shouldBe` filter naiveIsPrime [1..10000]
+    it "is inclusive" $
+        primesTo 97 `shouldBe` filter naiveIsPrime [1..97]
 
 compositesSpec :: Spec
 compositesSpec =
