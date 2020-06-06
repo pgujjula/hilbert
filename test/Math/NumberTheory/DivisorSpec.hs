@@ -23,11 +23,15 @@ spec = do
     describe "divisorsF"       divisorsFSpec
     describe "divisorPairs"    divisorPairsSpec
     describe "divisorPairsF"   divisorPairsFSpec
+
     describe "numDivisors"     numDivisorsSpec
     describe "numDivisorsF"    numDivisorsFSpec
+    
     describe "sumDivisors"     sumDivisorsSpec
     describe "sumDivisorsF"    sumDivisorsFSpec
+
     describe "relativelyPrime" relativelyPrimeSpec
+    
     describe "totient"         totientSpec
     describe "totientF"        totientFSpec
 

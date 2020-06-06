@@ -9,58 +9,120 @@
 -}
 
 module Math.NumberTheory.Fibonacci
-    ( fibonacci
-    , fibonacciMod
+    ( -- * Fibonacci numbers
+      fibonaccis
+    , fibonaccisMod
     , fibonacciN
     , fibonacciModN
 
-    , lucasNum
-    , lucasNumMod
+    -- * Lucas numbers
+    , lucasNums
+    , lucasNumsMod
     , lucasNumN
     , lucasNumModN
 
+    -- * Generalized Lucas sequences
+    -- | See <https://en.wikipedia.org/wiki/Lucas_sequence Wikipedia> for a
+    --   definition of /U/ and /V/.
     , lucasSeq
     , lucasSeqMod
     , lucasSeqN
     , lucasSeqModN
     ) where
 
-fibonacci :: (Integral a) => [a]
-fibonacci = fst $ lucasSeq 1 (-1)
+{-| The Fibonacci numbers.
 
-fibonacciMod :: (Integral a) => a -> [a]
-fibonacciMod m = fst $ lucasSeqMod m 1 (-1)
+    >>> take 10 fibonaccis
+    [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+-}
+fibonaccis :: (Integral a) => [a]
+fibonaccis = fst $ lucasSeq 1 (-1)
 
+{-| The Fibonacci numbers, modulo some base. Calls 'error' when the base is 0.
+
+    >>> take 10 (fibonaccisMod 10)
+    [0, 1, 1, 2, 3, 5, 8, 3, 1, 4]
+-}
+fibonaccisMod :: (Integral a) => a -> [a]
+fibonaccisMod m = fst $ lucasSeqMod m 1 (-1)
+
+{-| The @n@th Fibonacci number. Calls 'error' when @n@ is less than 0.
+
+    >>> map fibonacciN [0..9]
+    [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+-}
 fibonacciN :: (Integral a) => a -> a
 fibonacciN = fst . lucasSeqN 1 (-1)
 
+{-| @fibonacciModN m n@ is the @n@th Fibonacci number, modulo @m@. Calls 'error'
+    when @m@ is zero or @n@ is less than 0.
+
+    >>> map (fibonacciModN 10) [0..9]
+    [0, 1, 1, 2, 3, 5, 8, 3, 1, 4]
+-}
 fibonacciModN :: (Integral a) => a -> a -> a
 fibonacciModN m = fst . lucasSeqModN m 1 (-1)
 
+{-| The Lucas numbers.
 
-lucasNum :: (Integral a) => [a]
-lucasNum = snd $ lucasSeq 1 (-1)
+    >>> take 10 lucasNums
+    [2, 1, 3, 4, 7, 11, 18, 29, 47, 76]
+-}
+lucasNums :: (Integral a) => [a]
+lucasNums = snd $ lucasSeq 1 (-1)
 
-lucasNumMod :: (Integral a) => a -> [a]
-lucasNumMod m = snd $ lucasSeqMod m 1 (-1)
+{-| The Lucas numbers, modulo some base. Calls 'error' when the base is 0.
 
+    >>> take 10 (lucasNumsMod 10)
+    [2, 1, 3, 4, 7, 1, 8, 9, 7, 6]
+-}
+lucasNumsMod :: (Integral a) => a -> [a]
+lucasNumsMod m = snd $ lucasSeqMod m 1 (-1)
+
+{-| The @n@th Lucas number. Calls 'error' when @n@ is less than 0.
+
+    >>> map lucasN [0..9]
+    [2, 1, 3, 4, 7, 11, 18, 29, 47, 76]
+-}
 lucasNumN :: (Integral a) => a -> a
 lucasNumN = snd . lucasSeqN 1 (-1)
 
+{-| @lucasModN m n@ is the @n@th Lucas number, modulo @m@. Calls 'error'
+    when @m@ is zero or @n@ is less than 0.
+
+    >>> map (lucasNumModN 10) [0..9]
+    [2, 1, 3, 4, 7, 1, 8, 9, 7, 6]
+-}
 lucasNumModN :: (Integral a) => a -> a -> a
 lucasNumModN m = snd . lucasSeqModN m 1 (-1)
-
 
 go :: (Integral a) => (a -> a -> a) -> a -> a -> [a]
 go f a b = a : seq c (go f b c)
   where
     c = f a b
 
+{-| The /U/ and /V/ sequences associated with seeds /p/ and /q/.
+    
+    >>> let (u, v) = lucasSeq 1 (-1)
+    >>> take 10 u
+    [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+    >>> take 10 v
+    [2, 1, 3, 4, 7, 11, 18, 29, 47, 76]
+-}
 lucasSeq :: (Integral a) => a -> a -> ([a], [a])
 lucasSeq p q = (go f 0 1, go f 2 p)
   where
     f x y = -q*x + p*y
 
+{-| The /U/ and /V/ sequences associated with seeds /p/ and /q/, modulo a base.
+
+    >>> let modulus = 10
+    >>> let (u, v) = lucasSeqMod modulus 1 (-1)
+    >>> take 10 u
+    [0, 1, 1, 2, 3, 5, 8, 3, 1, 4]
+    >>> take 10 v
+    [2, 1, 3, 4, 7, 1, 8, 9, 7, 6]
+-}
 lucasSeqMod :: (Integral a) => a -> a -> a -> ([a], [a])
 lucasSeqMod m p q = (go f 0 1, go f 2 p)
   where

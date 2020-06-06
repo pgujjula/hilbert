@@ -3,19 +3,19 @@ module Math.NumberTheory.FibonacciSpec (spec) where
 import Test.Hspec                  (Expectation, Spec, describe, it, shouldBe)
 import Test.QuickCheck             (Gen, Property, choose, forAll, (===))
 
-import Math.NumberTheory.Fibonacci (fibonacci, fibonacciMod, fibonacciModN,
-                                    fibonacciN, lucasNum, lucasNumMod,
-                                    lucasNumModN, lucasNumN)
+import Math.NumberTheory.Fibonacci (fibonacciModN, fibonacciN, fibonaccis,
+                                    fibonaccisMod, lucasNumModN, lucasNumN,
+                                    lucasNums, lucasNumsMod)
 
 spec :: Spec
 spec = do
-    describe "fibonacci"     fibonacciSpec
-    describe "fibonacciMod"  fibonacciModSpec
+    describe "fibonaccis"    fibonaccisSpec
+    describe "fibonaccisMod" fibonaccisModSpec
     describe "fibonacciN"    fibonacciNSpec
     describe "fibonacciModN" fibonacciModNSpec
 
-    describe "lucasNum"      lucasNumSpec
-    describe "lucasNumMod"   lucasNumModSpec
+    describe "lucasNums"     lucasNumsSpec
+    describe "lucasNumsMod"  lucasNumsModSpec
     describe "lucasNumN"     lucasNumNSpec
     describe "lucasNumModN"  lucasNumModNSpec
 
