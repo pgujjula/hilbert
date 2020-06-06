@@ -14,6 +14,9 @@ module Math.NumberTheory.Prime
     , primesTo
     , composites
     , compositesTo
+    , Prime
+    , unPrime
+    , unsafeMarkPrime
     ) where
 
 import           Data.IntMap             (IntMap)
@@ -25,6 +28,15 @@ import           Data.List.Ordered       (minus)
 
 import           Math.NumberTheory.Power (integralSqrt)
 
+newtype Prime a = Prime {unPrime :: a}
+    deriving (Show, Eq, Ord)
+
+instance Functor Prime where
+    fmap f (Prime a) = Prime (f a)
+
+unsafeMarkPrime :: a -> Prime a
+unsafeMarkPrime = Prime
+
 {-| Whether a number is prime.
 
     >>> filter isPrime [1..10]
@@ -34,15 +46,16 @@ isPrime :: (Integral a) => a -> Bool
 isPrime n
   | n < 2     = False
   | otherwise = not $ any (\p -> n `rem` p == 0)
-              $ takeWhile (<= integralSqrt n) $ map fromIntegral primes
+              $ takeWhile (<= integralSqrt n)
+              $ map (fromIntegral . unPrime) primes
 
 {-| A lazy infinite list of primes.
 
-    >>> take 10 primes
+    >>> take 10 $ map unPrime primes
     [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
 -}
-primes :: [Int]
-primes = 2 : sieve (IntMap.singleton 4 [2]) [3..]
+primes :: [Prime Int]
+primes = map unsafeMarkPrime (2 : sieve (IntMap.singleton 4 [2]) [3..])
   where
     sieve :: IntMap [Int] -> [Int] -> [Int]
     sieve mp (x:xs) =
@@ -81,12 +94,12 @@ primes = 2 : sieve (IntMap.singleton 4 [2]) [3..]
 
 {-| A lazy infinite list of primes, up to a limit. Will be faster than 'primes'.
 
-    >>> primesTo 30
+    >>> map unPrime $ primesTo 30
     [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
 -}
 -- TODO: Factor out commonalities between primes and primesTo
-primesTo :: Int -> [Int]
-primesTo m = 2 : sieve (IntMap.singleton 4 [2]) [3..]
+primesTo :: Int -> [Prime Int]
+primesTo m = map unsafeMarkPrime (2 : sieve (IntMap.singleton 4 [2]) [3..])
   where
     sieve :: IntMap [Int] -> [Int] -> [Int]
     sieve mp (x:xs) =
@@ -131,7 +144,7 @@ primesTo m = 2 : sieve (IntMap.singleton 4 [2]) [3..]
     [4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20]
 -}
 composites :: [Int]
-composites = [2..] `minus` primes
+composites = [2..] `minus` map unPrime primes
 
 {-| A lazy infinite list of composities, up to a limit. Will be faster than
     'composites'.
@@ -140,4 +153,4 @@ composites = [2..] `minus` primes
     [4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20]
 -}
 compositesTo :: Int -> [Int]
-compositesTo n = [2..n] `minus` primesTo n
+compositesTo n = [2..n] `minus` map unPrime (primesTo n)

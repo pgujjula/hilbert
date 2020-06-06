@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4ead036b80ed1beec338bc26deb076ae7ddd929f83ddb3db98953385c1f3bd5d
+-- hash: 77e2d3408b2edaa7d8dfd2fd1bd724582b14a2325cac643a4928b855acd1c039
 
 name:           hilbert
 version:        0.1.17.0
@@ -38,7 +38,6 @@ library
       Math.NumberTheory.Modular
       Math.NumberTheory.Power
       Math.NumberTheory.Prime
-      Math.NumberTheory.Prime.Count
       Math.NumberTheory.Prime.Factor
       Math.Polynomial
       Math.Probability
@@ -57,8 +56,6 @@ library
     , ghc-prim
     , integer-gmp
     , list-duplicate
-    , monad-memo
-    , mtl
     , vector
   default-language: Haskell2010
 
@@ -78,7 +75,6 @@ test-suite spec
       Math.NumberTheory.ModularSpec
       Math.NumberTheory.PowerSpec
       Math.NumberTheory.PrimeSpec
-      Math.NumberTheory.Prime.CountSpec
       Math.NumberTheory.Prime.FactorSpec
       Spec
   hs-source-dirs:

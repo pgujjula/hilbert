@@ -5,7 +5,7 @@ import Test.QuickCheck         (choose, forAll, (===))
 
 import Math.NumberTheory.Power (integralSqrt)
 import Math.NumberTheory.Prime (composites, compositesTo, isPrime, primes,
-                                primesTo)
+                                primesTo, unsafeMarkPrime, unPrime)
 
 spec :: Spec
 spec = do
@@ -37,14 +37,17 @@ isPrimeSpec = do
 primesSpec :: Spec
 primesSpec =
     it "correct for primes up to 10000" $
-        takeWhile (<= 10000) primes `shouldBe` filter naiveIsPrime [1..10000]
+        takeWhile (\x -> unPrime x <= 10000) primes
+            `shouldBe` map unsafeMarkPrime (filter naiveIsPrime [1..10000])
 
 primesToSpec :: Spec
 primesToSpec = do
     it "correct for primes up to 10000" $
-        primesTo 10000 `shouldBe` filter naiveIsPrime [1..10000]
+        primesTo 10000
+            `shouldBe` map unsafeMarkPrime (filter naiveIsPrime [1..10000])
     it "is inclusive" $
-        primesTo 97 `shouldBe` filter naiveIsPrime [1..97]
+        primesTo 97
+            `shouldBe` map unsafeMarkPrime (filter naiveIsPrime [1..97])
 
 compositesSpec :: Spec
 compositesSpec =

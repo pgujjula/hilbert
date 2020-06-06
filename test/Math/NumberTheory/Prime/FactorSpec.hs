@@ -6,6 +6,7 @@ import Data.Maybe                     (fromJust)
 import Test.Hspec                     (Spec, describe, it, shouldBe)
 import Test.QuickCheck                (Gen, choose, forAll, (===))
 
+import Math.NumberTheory.Prime        (unsafeMarkPrime)
 import Math.NumberTheory.Prime.Factor (factor, factorizations, multiply, pow,
                                        simplify)
 
@@ -44,18 +45,19 @@ simplifySpec = do
     it "empty list" $
         simplify [] == 1
     it "small input" $ do
-        simplify [(2, 3), (3, 1)] `shouldBe` 24
-        simplify [(3, 1), (7, 1), (11, 1)] `shouldBe` 231
+        let p = unsafeMarkPrime
+        simplify [(p 2, 3), (p 3, 1)] `shouldBe` 24
+        simplify [(p 3, 1), (p 7, 1), (p 11, 1)] `shouldBe` 231
 
 factorSpec :: Spec
-factorSpec =
-    it "correct up to limit" $
-        forM_ (zip factorizations [1..limit]) $ \(fact, x) ->
-            simplify fact `shouldBe` x
-
-factorizationsSpec :: Spec
-factorizationsSpec = do
+factorSpec = do
     it "can't factor 0" $
         factor 0 `shouldBe` Nothing
     it "correct up to limit" $
         zipWithM_ shouldBe (map (fromJust . factor) [1..limit]) factorizations
+
+factorizationsSpec :: Spec
+factorizationsSpec =
+    it "correct up to limit" $
+        forM_ (zip factorizations [1..limit]) $ \(fact, x) ->
+            simplify fact `shouldBe` x

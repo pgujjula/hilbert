@@ -31,6 +31,7 @@ import Control.Applicative            (liftA2)
 import Data.List                      (foldl')
 import Data.Maybe                     (fromJust)
 
+import Math.NumberTheory.Prime        (unPrime)
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
 
 {-| a `divides` b is True iff there is an integer k such that a*k == b.
@@ -64,7 +65,8 @@ divisors = maybe [] divisorsF . factor . abs
 {-| The positive divisors of an integer, from its factorization. Not necessarily
     in sorted order.
 
-    >>> divisorsF [(2, 1), (3, 1)]
+    >>> prime = unsafeMarkPrime
+    >>> divisorsF [(prime 2, 1), (prime 3, 1)]
     [1, 3, 2, 6]
     >>> divisors []
     [1]
@@ -72,7 +74,7 @@ divisors = maybe [] divisorsF . factor . abs
 divisorsF :: (Integral a) => Factorization a -> [a]
 divisorsF = foldl' (liftA2 (*)) [1] . map pows
   where
-    pows (p, e) = take (e + 1) $ iterate (*p) 1
+    pows (p, e) = take (e + 1) $ iterate (* unPrime p) 1
 
 {-| The positive divisors of an integer 'n', paired up such that every pair
     (a, b) satisfies a*b == abs n. Not in any particular order.
@@ -89,7 +91,8 @@ divisorPairs = mkPairs . divisors
     paired up such that every pair (a, b) satisfies a*b == abs n. Not in any
     particular order.
 
-    >>> divisorPairsF [(2, 1), (3, 1)]
+    >>> prime = unsafeMarkPrime
+    >>> divisorPairsF [(prime 2, 1), (prime 3, 1)]
     [(1, 6), (3, 2)]
     >>> divisorPairsF []
     [(1, 1)]
@@ -114,7 +117,8 @@ numDivisors = maybe 0 numDivisorsF . factor . abs
 
 {-| The number of positive divisors of n, from its factorization.
 
-    >>> numDivisorsF [(2, 2), (3, 1)]
+    >>> prime = unsafeMarkPrime
+    >>> numDivisorsF [(prime 2, 2), (prime 3, 1)]
     6
     >>> numDivisorsF []
     1
@@ -136,13 +140,18 @@ sumDivisors = maybe 0 sumDivisorsF . factor . abs
 
 {-| The sum of the positive divisors of n, from its factorization.
 
-    >>> sumDivisorsF [(2, 2), (3, 1)]
+    >>> prime = unsafeMarkPrime
+    >>> sumDivisorsF [(prime 2, 2), (prime 3, 1)]
     28
     >>> sumDivisorsF []
     1
 -}
 sumDivisorsF :: (Integral a) => Factorization a -> a
-sumDivisorsF = product . map (\(p, e) -> (p^(e + 1) - 1) `div` (p - 1))
+sumDivisorsF = product . map f
+  where
+    f (p, e) = (p'^(e + 1) - 1) `div` (p' - 1)
+      where
+        p' = unPrime p
 
 {-| @relativelyPrime m n@ is @True@ if @m@ and @n@ have no common positive
     divisors other than 1.
@@ -167,10 +176,13 @@ totient n
 {-| Like 'totient', but takes the factorization of @n@ to speed up the
     computation of the totient.
 
-    >>> totient 10 [(2, 1), (5, 1)]
+    >>> prime = unsafeMarkPrime
+    >>> totient 10 [(prime 2, 1), (prime 5, 1)]
     4
 -}
 totientF :: (Integral a) => a -> Factorization a -> a
 totientF = foldl' step
   where
-    step n (p, _) = n * (p - 1) `div` p
+    step n (p, _) = n * (p' - 1) `div` p'
+      where
+        p' = unPrime p

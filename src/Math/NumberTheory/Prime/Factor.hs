@@ -31,9 +31,9 @@ import qualified Data.Chimera            as Chimera
 import           Data.List.Duplicate     (groupAdj)
 
 import           Math.NumberTheory.Power (integralSqrt)
-import           Math.NumberTheory.Prime (primes)
+import           Math.NumberTheory.Prime (primes, Prime, unPrime, unsafeMarkPrime)
 
-type Factorization a = [(a, Int)]
+type Factorization a = [(Prime a, Int)]
 
 multiply :: (Integral a) => Factorization a -> Factorization a -> Factorization a
 multiply xs [] = xs
@@ -48,9 +48,9 @@ pow :: Factorization a -> Int -> Factorization a
 pow fs k = map (\(p, e) -> (p, e*k)) fs
 
 simplify :: (Integral a) => Factorization a -> a
-simplify = product . map (uncurry (^))
+simplify = product . map (\(p, e) -> unPrime p ^ e)
 
-count :: (Integral a) => [a] -> [(a, Int)]
+count :: (Ord a) => [a] -> [(a, Int)]
 count = map (\xs -> (head xs, length xs)) . groupAdj
 
 factor :: (Integral a) => a -> Maybe (Factorization a)
@@ -59,15 +59,16 @@ factor n
     | n == 1    = Just []
     | otherwise = Just
                 $ count
-                $ factorWith (map fromIntegral primes) (integralSqrt n) n
+                $ factorWith (map (fmap fromIntegral) primes) (integralSqrt n) n
 
-factorWith :: (Integral a) => [a] -> a -> a -> [a]
+factorWith :: (Integral a) => [Prime a] -> a -> a -> [Prime a]
 factorWith (p:ps) limit n
-    | p > limit = [n]
-    | r == 0    = p : factorWith (p:ps) (integralSqrt n') n'
-    | otherwise = factorWith ps limit n
+    | unP > limit = [unsafeMarkPrime n]
+    | r == 0      = p : factorWith (p:ps) (integralSqrt n') n'
+    | otherwise   = factorWith ps limit n
   where
-    (n', r) = n `quotRem` p
+    (n', r) = n `quotRem` unP
+    unP = unPrime p
 factorWith _ _ _ = error "ran out of primes, this is impossible"
 
 -- smallestFactor !! i is the smallest prime factor of i + 2.
@@ -122,7 +123,7 @@ factorizations' = Chimera.tabulateFix factorF
 
 factorizations :: [Factorization Int]
 factorizations = map count $ tail
-               $ map (map fromIntegral)
+               $ map (map (unsafeMarkPrime . fromIntegral))
                $ Chimera.toList factorizations'
 
 --factorizationsTo :: Int -> [Factorization Int]
