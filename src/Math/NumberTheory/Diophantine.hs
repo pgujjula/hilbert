@@ -74,10 +74,13 @@ scale :: (Integral a) => Triple a -> a -> Triple a
 scale (Triple (a, b, c)) k = Triple (k*a, k*b, k*c)
 
 {-| List of all integer triples (a, b, c) such that
-      * a^2 + b^2 == c^2
-      * 0 < a <= b <= c
+
+      \[a^2 + b^2 = c^2\]
+      \[0 < a \le b \le c\]
+
     Ordered by increasing c, and then by increasing b.
 -}
+-- TODO: Replace mergeAll with applyMerge
 pythagoreanTriples :: (Integral a) => [(a, a, a)]
 pythagoreanTriples = map unTriple $ mergeAll tripleLists
   where
@@ -85,9 +88,9 @@ pythagoreanTriples = map unTriple $ mergeAll tripleLists
     mkScales t = map (scale (Triple t)) [1..]
 
 {-| List of all integer triples (a, b, c) such that
-      * a^2 + b^2 == c^2
-      * 0 < a <= b <= c
-      * gcd(a, b, c) == 1
+      \[a^2 + b^2 = c^2\]
+      \[0 < a \le b \le c\]
+      \[\text{gcd}(a, b, c) = 1\]
     Ordered by increasing c, and then by increasing a.
 -}
 primitivePythagoreanTriples :: forall a. (Integral a) => [(a, a, a)]
