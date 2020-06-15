@@ -17,51 +17,41 @@ module Math.NumberTheory.Modular
 
 import Math.NumberTheory.Power (square)
 
-{-|
-    @modPow a b m @ efficiently computes @mod (a^b) m@.
+{-| @modPow a b m @ efficiently computes @mod (a^b) (abs m)@. 'error' is called
+    when preconditions are not met.
 
     __Preconditions:__
 
-        * a >= 0
-        * b >= 0
-        * m > 0
-
-
-    >>> modPow 3 4 7
-    4
-    >>> modPow 0 10 12
-    0
-    >>> modPow 13 0 23
-    1
-    >>> modPow 0 0 19
-    1
+        * @b@ ≥ 0
+        * @m@ ≠ 0
+    
+    >>> modPow 3 5 10   -- 3^5 `mod` 10 == 243 `mod` 10 == 3
+    3
 -}
 modPow :: (Integral a) => a -> a -> a -> a
-modPow a b m = fromIntegral $ modPowLowLevel (toInteger a) (toInteger b) (toInteger m)
+modPow a b m
+    | b < 0 = error "negative exponent"
+    | m == 0 = error "divide by zero"
+    | otherwise = fromIntegral $ unsafeModPow a' b' m'
+  where
+    a' = toInteger a `mod` m'
+    b' = toInteger b
+    m' = abs $ toInteger m
 
-{-
-   Compute modular power without worring about overflow.
--}
-modPowLowLevel :: Integer -> Integer -> Integer -> Integer
-modPowLowLevel a b m
-  -- Corner case
-  | b == 0                = 1
-  -- Ensure 0 <= a < m
-  | a >= m                = modPowLowLevel (a `rem` m) b m
-  -- Base case
-  | b == 1                = a
-  -- Recursive cases
-  | even b                = square (modPowLowLevel a b' m) `rem` m
-  | otherwise             = (a * square (modPowLowLevel a b' m)) `rem` m
-                                where b' = b `quot` 2
+unsafeModPow :: Integer -> Integer -> Integer -> Integer
+unsafeModPow a b m
+    -- Corner case
+    | b == 0                = 1 `rem` m
+    -- Base case
+    | b == 1                = a
+    -- Recursive cases
+    | even b                = square (unsafeModPow a b' m) `rem` m
+    | otherwise             = (a * square (unsafeModPow a b' m)) `rem` m
+  where
+    b' = b `quot` 2
 
-{-|
-    @egcd m n@ is the extended GCD of @m@ and @n@. It is a tuple @(g, (a, b))@
+{-| @egcd m n@ is the extended GCD of @m@ and @n@. It is a tuple @(g, (a, b))@
     such that @gcd m n == g@ and @a*m + b*n == g@.
-
-    __Preconditions:__
-
-      * None
 
     >>> egcd 3 5
     (1, (2, -1))
@@ -97,12 +87,7 @@ egcdRecursive m n m_coeffs n_coeffs
     (m0, m1) = m_coeffs
     (n0, n1) = n_coeffs
 
-{-|
-    @modInv a m@ is the modular inverse of @a@ modulo @m@, if it exists.
-
-    __Preconditions:__
-
-      * None
+{-| @modInv a m@ is the modular inverse of @a@ modulo @m@, if it exists.
 
     >>> modInv 3 5
     Just 2
@@ -117,5 +102,6 @@ egcdRecursive m n m_coeffs n_coeffs
 -}
 modInv :: (Integral a) => a -> a -> Maybe a
 modInv a m = if g == 1 then Just b' else Nothing
-  where (g, (b, _)) = egcd a m
-        b' = if b > 0 then b else b + m
+  where (g, (b, _)) = egcd a m'
+        b' = if b > 0 then b else b + m'
+        m' = abs m
