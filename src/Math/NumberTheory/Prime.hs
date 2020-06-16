@@ -9,14 +9,18 @@
 -}
 
 module Math.NumberTheory.Prime
-    ( isPrime
+    ( -- * The Prime newtype
+      Prime
+    , unPrime
+    , unsafeMarkPrime
+    , coercePrime
+
+    -- * Functions related to primes
+    , isPrime
     , primes
     , primesTo
     , composites
     , compositesTo
-    , Prime
-    , unPrime
-    , unsafeMarkPrime
     ) where
 
 import           Data.IntMap             (IntMap)
@@ -28,12 +32,17 @@ import           Data.List.Ordered       (minus)
 
 import           Math.NumberTheory.Power (integralSqrt)
 
-newtype Prime a = Prime {unPrime :: a}
+{-| A newtype wrapper around prime numbers, for added type safety -}
+newtype Prime a =
+    Prime { unPrime :: a  -- ^ Unwrap a prime number
+          }
     deriving (Show, Eq, Ord)
 
-instance Functor Prime where
-    fmap f (Prime a) = Prime (f a)
+{-| Change the underlying integral type of the Prime. -}
+coercePrime :: (Integral a, Integral b) => Prime a -> Prime b
+coercePrime (Prime x) = Prime (fromIntegral x)
 
+{-| Mark a number as Prime without any checks. -}
 unsafeMarkPrime :: a -> Prime a
 unsafeMarkPrime = Prime
 

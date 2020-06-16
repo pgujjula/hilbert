@@ -31,7 +31,7 @@ import qualified Data.Chimera            as Chimera
 import           Data.List.Duplicate     (groupAdj)
 
 import           Math.NumberTheory.Power (integralSqrt)
-import           Math.NumberTheory.Prime (primes, Prime, unPrime, unsafeMarkPrime)
+import           Math.NumberTheory.Prime (primes, Prime, unPrime, unsafeMarkPrime, coercePrime)
 
 type Factorization a = [(Prime a, Int)]
 
@@ -59,7 +59,7 @@ factor n
     | n == 1    = Just []
     | otherwise = Just
                 $ count
-                $ factorWith (map (fmap fromIntegral) primes) (integralSqrt n) n
+                $ factorWith (map coercePrime primes) (integralSqrt n) n
 
 factorWith :: (Integral a) => [Prime a] -> a -> a -> [Prime a]
 factorWith (p:ps) limit n
