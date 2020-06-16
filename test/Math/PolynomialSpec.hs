@@ -95,6 +95,8 @@ fromAssocListSpec = do
             `shouldBe` fromList [-2, 0, 0, 0, 0, 1]
         fromAssocList [(0, 3), (5, 1), (0, -2)]
             `shouldBe` fromList [-2, 0, 0, 0, 0, 1]
+        fromAssocList [(0, 3), (5, 1), (0, -2), (7, 0)]
+            `shouldBe` fromList [-2, 0, 0, 0, 0, 1]
 
 toAssocListSpec :: Spec
 toAssocListSpec = do
@@ -129,7 +131,7 @@ productSpec = do
         forAll polyGen $ \poly -> poly * zeroPoly `shouldBe` zeroPoly
     it "works for small polynomials" $ do
         fromList @Integer [-1, 1] * fromList [1, 1, 1, 1]
-            `shouldBe` fromList [1, 0, 0, 0, 1]
+            `shouldBe` fromList [-1, 0, 0, 0, 1]
         fromList @Integer [1, 2, 3] * fromList [4, 5, 6]
             `shouldBe` fromList [4, 13, 28, 27, 18]
     it "poly * 1 == poly for any poly" $

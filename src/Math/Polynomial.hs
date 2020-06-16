@@ -7,6 +7,7 @@
 
     Polynomial type and functions.
 -}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Math.Polynomial
     ( Poly
@@ -47,7 +48,7 @@ newtype Poly a = Poly {unPoly :: IntMap a}
     @-1@.
 -}
 degree :: Poly a -> Int
-degree = maybe 0 fst . IntMap.lookupMax . unPoly
+degree = maybe (-1) fst . IntMap.lookupMax . unPoly
 
 {-| The leading coefficient of the polynomial. The leading coefficient of the
     zero polynomial is taken to be 0.
@@ -55,18 +56,24 @@ degree = maybe 0 fst . IntMap.lookupMax . unPoly
 leadingCoefficient :: Num a => Poly a -> a
 leadingCoefficient = maybe 0 snd . IntMap.lookupMax . unPoly
 
+removeZeros :: (Num a, Eq a) => Poly a -> Poly a
+removeZeros = Poly . IntMap.filter (/= 0) . unPoly
+
 {-| Construct a polynomial from a list of coefficients, in order of increasing
     degree.
 -}
-fromList :: [a] -> Poly a
-fromList = Poly . IntMap.fromDistinctAscList . zip [0..]
+fromList :: (Num a, Eq a) => [a] -> Poly a
+fromList = removeZeros
+         . Poly
+         . IntMap.fromDistinctAscList . zip [0..]
+         . reverse . dropWhile (== 0) . reverse
 
 {-| Construct a polynomial from a list of (exponent, coefficient) terms. If an
     exponent is repeated, the latest instance is taken. No checks are performed
     for negative exponents.
 -}
-fromAssocList :: [(Int, a)] -> Poly a
-fromAssocList = Poly . IntMap.fromList
+fromAssocList :: (Num a, Eq a) => [(Int, a)] -> Poly a
+fromAssocList = removeZeros . Poly . IntMap.fromList
 
 {-| Get a list of coefficients from a polynomial.
 
@@ -74,8 +81,11 @@ fromAssocList = Poly . IntMap.fromList
     >>> toList poly
     [2, 0, 0, 0, 0, 1]
 -}
-toList :: (Num a) => Poly a -> [a]
-toList p = map (p !) [0..degree p]
+toList :: Num a => Poly a -> [a]
+toList p@(Poly mp) =
+    if IntMap.null mp
+    then []
+    else map (p !) [0..degree p]
 
 {-| Get a list of (exponent, coefficient) associations, in order of ascending
     exponent.
@@ -88,30 +98,56 @@ toList p = map (p !) [0..degree p]
 toAssocList :: Poly a -> [(Int, a)]
 toAssocList = IntMap.toAscList . unPoly
 
-trim :: (Eq a, Num a) => Poly a -> Poly a
-trim p
-    | degree p == 0             = p
-    | leadingCoefficient p /= 0 = p
-    | otherwise                 = trim (Poly . IntMap.deleteMax . unPoly $ p)
-
 instance (Show a, Num a) => Show (Poly a) where
     show p = "fromList " ++ show (toList p)
 
-instance (Eq a, Num a) => Num (Poly a) where
-    (+)         = trim . Poly .: IntMap.unionWith (+) `on` unPoly
-    (*) p q     = fromList $ map mkCoeff [0..dp + dq]
+shift :: Int -> Poly a -> Poly a
+shift x = Poly . IntMap.mapKeysMonotonic (+ x) . unPoly
+
+scale :: Num a => a -> Poly a -> Poly a
+scale x = Poly . IntMap.map (*x) . unPoly
+
+mul :: forall a. (Num a, Eq a) => Poly a -> Poly a -> Poly a
+mul p q = removeZeros
+        . unsafeAdd $ fmap ($ q) funcs
+  where
+    funcs :: [Poly a -> Poly a]
+    funcs = fmap (\(e, c) -> shift e . scale c) $ toAssocList p
+    
+    unsafeAdd :: [Poly a] -> Poly a
+    unsafeAdd = Poly . IntMap.unionsWith (+) . fmap unPoly
+
+instance forall a. (Eq a, Num a) => Num (Poly a) where
+    (+) = (Poly . IntMap.fromDistinctAscList . reverse)
+        .: unionAdd `on` (reverse . IntMap.toList . unPoly)
       where
-        dp = degree p
-        dq = degree q
-        mkCoeff i = sum
-                  $ map (\k -> (p ! k) * (q ! (i - k)))
-                        [max 0 (i - dq)..min i dp]
+        unionAdd :: [(Int, a)] -> [(Int, a)] -> [(Int, a)]
+        unionAdd xs [] = xs
+        unionAdd [] ys = ys
+        unionAdd ((e1, c1):xs) ((e2, c2):ys) =
+            case compare e1 e2 of
+                GT -> (e1, c1) : unionAdd xs ((e2, c2):ys)
+                LT -> (e2, c2) : unionAdd ((e1, c1):xs) ys
+                EQ -> let s = c1 + c2
+                       in if s == 0
+                          then unionAdd xs ys
+                          else (e1, s) : unionAdd xs ys
 
-    abs p       = Poly
-                . IntMap.map (* (signum $ leadingCoefficient p))
-                . unPoly
-                $ p
 
-    signum      = Poly . IntMap.singleton 0 . signum . leadingCoefficient
-    fromInteger = Poly . IntMap.singleton 0 . fromInteger
+    (*) p q = if degree p <= degree q then mul p q else mul q p
+
+    abs p = Poly
+          . IntMap.map (* (signum $ leadingCoefficient p))
+          . unPoly
+          $ p
+
+    signum p@(Poly mp)
+        | IntMap.null mp = p
+        | otherwise      = Poly . IntMap.singleton 0
+                         . signum . leadingCoefficient $ p
+
+    fromInteger x
+        | x == 0    = Poly IntMap.empty
+        | otherwise = Poly . IntMap.singleton 0 . fromInteger $ x
+
     negate      = Poly . IntMap.map negate . unPoly
