@@ -20,12 +20,12 @@ module Math.Polynomial
     , toAssocList
     ) where
 
-import           Data.Function    (on)
-import           Data.IntMap      (IntMap)
-import qualified Data.IntMap      as IntMap
-import           Data.Maybe       (fromMaybe)
+import           Data.Function      (on)
+import           Data.IntMap.Strict (IntMap)
+import qualified Data.IntMap.Strict as IntMap
+import           Data.Maybe         (fromMaybe)
 
-import           Data.Composition ((.:))
+import           Data.Composition   ((.:))
 
 {-| A type for univariate polynomials over type @a@. -}
 newtype Poly a = Poly {unPoly :: IntMap a}
@@ -113,7 +113,7 @@ mul p q = removeZeros
   where
     funcs :: [Poly a -> Poly a]
     funcs = fmap (\(e, c) -> shift e . scale c) $ toAssocList p
-    
+
     unsafeAdd :: [Poly a] -> Poly a
     unsafeAdd = Poly . IntMap.unionsWith (+) . fmap unPoly
 

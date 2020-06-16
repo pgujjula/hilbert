@@ -1,63 +1,127 @@
+{-| Module      : Math.Probability
+    Description : Discrete probability distributions
+    Copyright   : (c) Preetham Gujjula, 2020
+    License     : GPL-3
+    Maintainer  : preetham.gujjula@gmail.com
+    Stability   : experimental
+
+    Discrete probability distributions.
+-}
 module Math.Probability
     ( Distribution
     , fromList
     , certain
     , uniform
+    , toList
+
+    , prob
+    , expectedValue
+    , variance
+
     , map
     , lift2
     , bind
-    , toList
     ) where
 
-import           Data.List  (genericLength)
-import           Data.Map   (Map)
-import qualified Data.Map   as Map
-import           Prelude    hiding (map, pure)
+import           Prelude      hiding (map)
 
-import           Data.Ratio ((%))
+import           Data.Functor    ((<&>))
+import           Data.List       (genericLength, foldl')
+import           Data.Map.Strict (Map)
+import qualified Data.Map.Strict as Map
+import           Data.Maybe      (fromMaybe)
+import           Data.Ratio      ((%))
 
-newtype Distribution a = Distribution {getMap :: Map a Rational}
-    deriving (Show, Eq, Ord)
+{-| Discrete probablity distribution, with probabilities of type @p@ and events
+    of type @a@, backed by a 'Map' from @a@ to @p@.
+-}
+newtype Distribution a p = Distribution {getMap :: Map a p}
+    deriving (Eq, Ord)
 
-type Dist = Distribution
+instance (Show a, Show p) => Show (Distribution a p) where
+    show = show . getMap
 
-mkDist :: Map a Rational -> Distribution a
-mkDist = Distribution
-
-fromList :: (Ord a) => [(a, Rational)] -> Dist a
-fromList xs = norm $ mkDist $ Map.fromList xs
-
-certain :: a -> Dist a
-certain x = mkDist (Map.singleton x 1)
-
-uniform :: (Ord a) => [a] -> Dist a
-uniform xs = mkDist $ Map.fromList $ zip xs (repeat $ 1 % genericLength xs)
-
-norm :: Dist a -> Dist a
-norm dist = mkDist $ Map.map (/ total) mp
+normalize :: Fractional p => Map a p -> Map a p
+normalize mp = Map.map (/ total) mp
   where
     total = sum mp
-    mp = getMap dist
 
-toList :: Dist a -> [(a, Rational)]
+prune :: (Eq p, Num p) => Map a p -> Map a p
+prune = Map.filter (/= 0)
+
+{-| Convert a list of events and weights to a probability distribution. The
+    weights are normalized to sum to 1. Only the last appearance of each event
+    in the list is considered.
+-}
+fromList :: (Ord a, Fractional p, Eq p) => [(a, p)] -> Distribution a p
+fromList = Distribution . prune . normalize . Map.fromList
+
+{-| Probability distribution where there is only one event, with probability
+    1.
+-}
+certain :: Num p => a -> Distribution a p
+certain x = Distribution (Map.singleton x 1)
+
+{-| Distribution where each event is equally likely.
+
+    >>> uniform [1, 2, 3, 4]
+    fromList [(1,1 % 4),(2,1 % 4),(3,1 % 4),(4,1 % 4)]
+-}
+uniform :: (Ord a, Fractional p) => [a] -> Distribution a p
+uniform xs = Distribution $ Map.fromList
+           $ zip xs $ repeat (fromRational $ 1 % genericLength xs)
+
+{-| The probability of a specific event.
+
+    >>> die = uniform [1..6] :: Distribution Int Rational
+    >>> prob die 4
+    1 % 6
+-}
+prob :: (Ord a, Num p) => Distribution a p -> a -> p
+prob (Distribution mp) a = fromMaybe 0 $ Map.lookup a mp
+
+{-| The expected value of a distribution.
+
+    >>> expectedValue (uniform [1..6 :: Rational])
+    7 % 2 
+-}
+expectedValue :: (Fractional a, Real p) => Distribution a p -> a
+expectedValue = foldl' (+) 0
+              . fmap (\(e, p) -> e * (fromRational . toRational $ p))
+              . toList
+
+{-| The variance of a distribution.
+
+    >>> variance (uniform [1..6 :: Rational])
+    35 % 12
+-}
+variance :: (Fractional a, Ord a, Real p) => Distribution a p -> a
+variance dist = expectedValue (map (^(2 :: Int)) dist)
+              - expectedValue dist^(2 :: Int)
+
+{-| Convert a distribution to a list of events and weights. The weights sum to
+    1.
+-}
+toList :: Distribution a p -> [(a, p)]
 toList = Map.assocs . getMap
 
--- Functor-like
-map :: (Ord b) => (a -> b) -> Dist a -> Dist b
-map f = mkDist . Map.mapKeysWith (+) f . getMap
+{-| Functor-like map function. -}
+map :: (Ord b, Num p) => (a -> b) -> Distribution a p -> Distribution b p
+map f = Distribution . Map.mapKeysWith (+) f . getMap
 
-lift2 :: (Ord c) => (a -> b -> c) -> Dist a -> Dist b -> Dist c
-lift2 f distA distB = mkDist $ Map.unionsWith (+) maps
-  where
-    maps = fmap mkMap eventsA
-    mkMap (event, prob) = Map.map (*prob) $ Map.mapKeys (f event) mapB
-    mapB = getMap distB
-    eventsA = Map.assocs (getMap distA)
+{-| Applicative-like lifting function. -}
+lift2 :: (Ord c, Num p, Eq p)
+      => (a -> b -> c)
+      -> Distribution a p
+      -> Distribution b p
+      -> Distribution c p
+lift2 f dist1 dist2 =
+    Distribution . Map.unionsWith (+)
+  $ toList dist1 <&> \(x, px) ->
+      prune . Map.map (* px) . Map.mapKeys (f x) . getMap $ dist2
 
-bind :: (Ord b) => Dist a -> (a -> Dist b) -> Dist b
-bind dist f = mkDist $ Map.unionsWith (+) maps
-  where
-    mp = getMap dist
-    events = Map.assocs mp
-    maps = fmap mkMap events
-    mkMap (event, prob) = Map.map (*prob) . getMap . f $ event
+{-| Monad-like bind function. -}
+bind :: (Ord b, Num p, Eq p) => Distribution a p -> (a -> Distribution b p) -> Distribution b p
+bind dist f = Distribution . Map.unionsWith (+)
+            $ toList dist <&> \(event, p) ->
+                prune . Map.map (* p) $ getMap $ f event

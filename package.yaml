@@ -1,5 +1,5 @@
 name:                hilbert
-version:             0.1.18.0
+version:             0.1.19.0
 synopsis:            Number theory in pure Haskell
 github:              "pgujjula/hilbert"
 license:             GPL-3
