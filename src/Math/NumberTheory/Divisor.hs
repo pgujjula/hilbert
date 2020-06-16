@@ -34,7 +34,7 @@ import Data.Maybe                     (fromJust)
 import Math.NumberTheory.Prime        (unPrime)
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
 
-{-| a `divides` b is True iff there is an integer k such that a*k == b.
+{-| @a `divides` b@ is True iff there is an integer @k@ such that @a*k == b@.
 
     >>> 5 `divides` 30
     True
@@ -76,8 +76,8 @@ divisorsF = foldl' (liftA2 (*)) [1] . map pows
   where
     pows (p, e) = take (e + 1) $ iterate (* unPrime p) 1
 
-{-| The positive divisors of an integer 'n', paired up such that every pair
-    (a, b) satisfies a*b == abs n. Not in any particular order.
+{-| The positive divisors of an integer @n@, paired up such that every pair
+    @(a, b)@ satisfies @a*b == abs n@. Not in any particular order.
 
     >>> divisorPairs 6
     [(1, 6), (3, 2)]
@@ -87,8 +87,8 @@ divisorsF = foldl' (liftA2 (*)) [1] . map pows
 divisorPairs :: (Integral a) => a -> [(a, a)]
 divisorPairs = mkPairs . divisors
 
-{-| The positive divisors of an integer 'n', from its prime factorization,
-    paired up such that every pair (a, b) satisfies a*b == abs n. Not in any
+{-| The positive divisors of an integer @n@, from its prime factorization,
+    paired up such that every pair @(a, b)@ satisfies @a*b == abs n@. Not in any
     particular order.
 
     >>> prime = unsafeMarkPrime
@@ -103,7 +103,7 @@ divisorPairsF = mkPairs . divisorsF
 mkPairs :: [a] -> [(a, a)]
 mkPairs xs = take ((length xs + 1) `div` 2) $ zip xs (reverse xs)
 
-{-| The number of positive divisors of n.
+{-| The number of positive divisors of @n@.
 
     >>> numDivisors 12
     6
@@ -115,7 +115,7 @@ mkPairs xs = take ((length xs + 1) `div` 2) $ zip xs (reverse xs)
 numDivisors :: (Integral a) => a -> a
 numDivisors = maybe 0 numDivisorsF . factor . abs
 
-{-| The number of positive divisors of n, from its factorization.
+{-| The number of positive divisors of @n@, from its factorization.
 
     >>> prime = unsafeMarkPrime
     >>> numDivisorsF [(prime 2, 2), (prime 3, 1)]
@@ -126,7 +126,7 @@ numDivisors = maybe 0 numDivisorsF . factor . abs
 numDivisorsF :: (Integral a) => Factorization a -> a
 numDivisorsF = product . map (\(_, e) -> fromIntegral e + 1)
 
-{-| The sum of the positive divisors of n.
+{-| The sum of the positive divisors of @n@.
 
     >>> sumDivisors 12
     28
@@ -138,7 +138,7 @@ numDivisorsF = product . map (\(_, e) -> fromIntegral e + 1)
 sumDivisors :: (Integral a) => a -> a
 sumDivisors = maybe 0 sumDivisorsF . factor . abs
 
-{-| The sum of the positive divisors of n, from its factorization.
+{-| The sum of the positive divisors of @n@, from its factorization.
 
     >>> prime = unsafeMarkPrime
     >>> sumDivisorsF [(prime 2, 2), (prime 3, 1)]
@@ -155,11 +155,20 @@ sumDivisorsF = product . map f
 
 {-| @relativelyPrime m n@ is @True@ if @m@ and @n@ have no common positive
     divisors other than 1.
+
+    >>> relativelyPrime 3 5
+    True
+    >>> relativelyPrime 4 6
+    False
+    >>> relativelyPrime 0 1
+    True
+    >>> relativelyPrime 0 0
+    False
 -}
 relativelyPrime :: (Integral a) => a -> a -> Bool
 relativelyPrime m n = gcd m n == 1
 
-{-| @totient n@ is the number of integers in [1..n] that are relatively prime
+{-| @totient n@ is the number of integers in @[1..n]@ that are relatively prime
     to @n@. Also, @totient 0 == 1@ by convention.
 
     >>> totient 10

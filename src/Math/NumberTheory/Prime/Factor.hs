@@ -33,8 +33,10 @@ import           Data.List.Duplicate     (groupAdj)
 import           Math.NumberTheory.Power (integralSqrt)
 import           Math.NumberTheory.Prime (primes, Prime, unPrime, unsafeMarkPrime, coercePrime)
 
+{-| Type to represent factorizations -}
 type Factorization a = [(Prime a, Int)]
 
+{-| Multiply two factorizations together. -}
 multiply :: (Integral a) => Factorization a -> Factorization a -> Factorization a
 multiply xs [] = xs
 multiply [] ys = ys
@@ -44,15 +46,30 @@ multiply ((px, ex):xs) ((py, ey):ys) =
         EQ -> (px, ex + ey) : multiply xs ys
         GT -> (py, ey)      : multiply ((px, ex):xs) ys
 
+{-| Raise the number represented by the given factorization to the
+    specified power.
+-}
 pow :: Factorization a -> Int -> Factorization a
 pow fs k = map (\(p, e) -> (p, e*k)) fs
 
+{-| Multiply out a Factorization to get the number it represents. -}
 simplify :: (Integral a) => Factorization a -> a
 simplify = product . map (\(p, e) -> unPrime p ^ e)
 
 count :: (Ord a) => [a] -> [(a, Int)]
 count = map (\xs -> (head xs, length xs)) . groupAdj
 
+{-| Factor positive number.
+    
+    >>> factor 60
+    Just [(Prime 2,2),(Prime 3,1),(Prime 5,1)]
+    >>> factor 1
+    Just []
+    >>> factor 0
+    Nothing
+    >>> factor (-60)
+    Nothing
+-}
 factor :: (Integral a) => a -> Maybe (Factorization a)
 factor n
     | n <= 0    = Nothing
@@ -121,6 +138,16 @@ factorizations' = Chimera.tabulateFix factorF
       where
         p = Chimera.index smallestFactorC n
 
+{-| An infinite list of the factorizations of [1..].
+
+    >>> mapM_ print $ take 5 factorizations
+    []
+    [(Prime 2,1)]
+    [(Prime 3,1)]
+    [(Prime 2,2)]
+    [(Prime 5,1)]
+    [(Prime 2,1),(Prime 3,1)]
+-}
 factorizations :: [Factorization Int]
 factorizations = map count $ tail
                $ map (map (unsafeMarkPrime . fromIntegral))

@@ -33,10 +33,12 @@ import           Data.List.Ordered       (minus)
 import           Math.NumberTheory.Power (integralSqrt)
 
 {-| A newtype wrapper around prime numbers, for added type safety -}
-newtype Prime a =
-    Prime { unPrime :: a  -- ^ Unwrap a prime number
-          }
+newtype Prime a = Prime a 
     deriving (Show, Eq, Ord)
+
+{-| Unwrap a prime number. -}
+unPrime :: Prime a -> a
+unPrime (Prime n) = n
 
 {-| Change the underlying integral type of the Prime. -}
 coercePrime :: (Integral a, Integral b) => Prime a -> Prime b
