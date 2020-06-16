@@ -12,8 +12,10 @@
 module Math.NumberTheory.Power
     ( square
     , squares
+
     , cube
     , cubes
+
     , integralSqrt
     , isSquare
     , integralRoot
@@ -121,6 +123,9 @@ integralRoot k n = fromIntegral $ search 0 n'
 
 {-| @integralLogBase b n@ is the largest integer k such that b^k is less than or
     equal to n.
+
+    >>> integralLogBase 2 10
+    3
 -}
 integralLogBase :: (Integral b, Integral a) => b -> a -> Maybe Int
 integralLogBase b n

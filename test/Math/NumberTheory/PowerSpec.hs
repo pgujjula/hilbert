@@ -2,15 +2,17 @@ module Math.NumberTheory.PowerSpec (spec) where
 
 import Control.Monad           (forM_, zipWithM_)
 import Data.Int                (Int16)
+import Data.Maybe              (fromJust, isJust)
 import System.Random           (Random)
 
-import Test.Hspec              (Spec, describe, it, shouldBe, shouldSatisfy)
-import Test.QuickCheck         (Gen, arbitrary, choose, forAll, suchThat,
+import Test.Hspec              (Expectation, Spec, describe, it, shouldBe,
+                                shouldSatisfy)
+import Test.QuickCheck         (Gen, arbitrary, choose, forAll, oneof, suchThat,
                                 vectorOf, (===))
 
 import Math.NumberTheory.Digit (fromDigits)
-import Math.NumberTheory.Power (cubes, integralRoot, integralSqrt, isSquare,
-                                squares)
+import Math.NumberTheory.Power (cube, cubes, integralLogBase, integralRoot,
+                                integralSqrt, isSquare, square, squares)
 
 -- The maximum number of digits of any test case input
 maxNumDigits :: Int
@@ -18,19 +20,42 @@ maxNumDigits = 1000
 
 spec :: Spec
 spec = do
-    describe "squares" squareSpec
+    describe "square" squareSpec
+    describe "squares" squaresSpec
+
+    describe "cube" cubeSpec
     describe "cubes" cubesSpec
+
     describe "isSquare" isSquareSpec
     describe "integralSqrt" integralSqrtSpec
     describe "integralRoot" integralRootSpec
+    describe "integralLogBase" integralLogBaseSpec
+
+listLimit :: Int
+listLimit = 100
+
+compareList :: (Eq a, Show a) => [a] -> [a] -> Expectation
+compareList xs ys = take listLimit xs `shouldBe` take listLimit ys
 
 squareSpec :: Spec
 squareSpec =
-    it "first 10 correct" $ take 10 squares `shouldBe` map (^2) [0..9]
+    it ("first " ++ show listLimit ++ " correct") $
+        compareList (fmap square [0..]) (map (^2) [0..])
+
+squaresSpec :: Spec
+squaresSpec =
+    it ("first " ++ show listLimit ++ " correct") $
+        compareList squares (fmap (^2) [0..])
+
+cubeSpec :: Spec
+cubeSpec =
+    it ("first " ++ show listLimit ++ " correct") $
+        compareList (fmap cube [0..]) (fmap (^3) [0..])
 
 cubesSpec :: Spec
 cubesSpec =
-    it "first 10 correct" $ take 10 cubes `shouldBe` map (^3) [0..9]
+    it ("first " ++ show listLimit ++ " correct") $
+        take listLimit cubes `shouldBe` take listLimit (map (^3) [0..])
 
 isSquareSpec :: Spec
 isSquareSpec = do
@@ -135,3 +160,32 @@ integralRootSpec = do
         forAll fixedTestCase $ \(k, n) ->
             let root = integralRoot k n :: Int
              in root^k <= n && (toInteger root + 1)^k > toInteger n
+
+integralLogBaseSpec :: Spec
+integralLogBaseSpec = do
+    it "negative base yields Nothing" $ do
+        integralLogBase (-2) 3 `shouldBe` Nothing
+        integralLogBase (-5) 3 `shouldBe` Nothing
+    it "zero base yields Nothing" $
+        integralLogBase 0 3 `shouldBe` Nothing
+    it "base of 1 yields Nothing" $
+        integralLogBase 1 3 `shouldBe` Nothing
+    it "negative input yields Nothing" $ do
+        integralLogBase 3 (-5) `shouldBe` Nothing
+        integralLogBase 3 (-2) `shouldBe` Nothing
+    it "zero input yields Nothing" $
+        integralLogBase 3 0 `shouldBe` Nothing
+
+    it "valid for general input" $ do
+        let baseGen :: Gen Integer
+            baseGen = choose (2, 10)
+
+        let inputGen :: Gen Integer
+            inputGen = oneof [choose (1, 10), choose (1, 1000), choose (1, 10^100)]
+
+        forAll ((,) <$> baseGen <*> inputGen) $ \(b, n) -> do
+            let maybeE = integralLogBase b n
+            maybeE `shouldSatisfy` isJust
+            let e = fromJust maybeE
+            b^e `shouldSatisfy` (<= n)
+            b^(e + 1) `shouldSatisfy` (> n)
