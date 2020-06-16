@@ -78,6 +78,8 @@ tests:
       - Math.NumberTheory.PowerSpec
       - Math.NumberTheory.PrimeSpec
       - Math.NumberTheory.Prime.FactorSpec
+      - Math.PolynomialSpec
+      - Math.ProbabilitySpec
       - Spec
     dependencies:
       - hilbert
