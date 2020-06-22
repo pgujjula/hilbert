@@ -13,6 +13,7 @@ module Math.Probability
     , certain
     , uniform
     , toList
+    , toMap
 
     , prob
     , expectedValue
@@ -99,11 +100,15 @@ variance :: (Fractional a, Ord a, Real p) => Distribution a p -> a
 variance dist = expectedValue (map (^(2 :: Int)) dist)
               - expectedValue dist^(2 :: Int)
 
-{-| Convert a distribution to a list of events and weights. The weights sum to
-    1.
+{-| Convert a distribution to a list of events and probabilities. The weights
+    sum to 1.
 -}
 toList :: Distribution a p -> [(a, p)]
 toList = Map.assocs . getMap
+
+{-| Convert a distribution to a map from events to probabilities. -}
+toMap :: Distribution a p -> Map a p
+toMap = getMap
 
 {-| Functor-like map function. -}
 map :: (Ord b, Num p) => (a -> b) -> Distribution a p -> Distribution b p
