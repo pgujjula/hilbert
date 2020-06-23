@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6956049da6db14a3b490cdec1509a71f6ef1f75a789c12285685750cc506c383
+-- hash: e5d7e8fb973a8dff55bfc976152cebe7448d9bf764d73c7262c178c6be835fc2
 
 name:           hilbert
 version:        0.1.19.0
@@ -88,6 +88,7 @@ test-suite spec
     , base >=4.13 && <5.0
     , hilbert
     , hspec
+    , list-duplicate
     , quickcheck-assertions
     , random
   default-language: Haskell2010
