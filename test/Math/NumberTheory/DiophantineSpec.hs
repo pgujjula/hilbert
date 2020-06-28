@@ -1,8 +1,7 @@
 module Math.NumberTheory.DiophantineSpec (spec) where
 
 import Test.Hspec                    (Spec, describe, it, shouldBe)
-import Test.QuickCheck               (Gen, Property, arbitrary, choose, forAll,
-                                      suchThat, (===))
+import Test.QuickCheck               (Gen, choose, forAll, suchThat, (===))
 
 import Math.NumberTheory.Diophantine (primitivePythagoreanTriples,
                                       pythagoreanTriples, solvePell)

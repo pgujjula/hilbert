@@ -3,7 +3,7 @@ module Math.PolynomialSpec (spec) where
 
 import Control.Monad   (forM_, replicateM)
 import Test.Hspec      (Spec, describe, it, shouldBe)
-import Test.QuickCheck (Gen, choose, forAll, sample, suchThat, (===))
+import Test.QuickCheck (Gen, choose, forAll, suchThat)
 
 import Math.Polynomial (Poly, degree, fromAssocList, fromList,
                         leadingCoefficient, toAssocList, toList, (!))

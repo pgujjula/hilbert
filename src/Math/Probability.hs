@@ -24,10 +24,10 @@ module Math.Probability
     , bind
     ) where
 
-import           Prelude      hiding (map)
+import           Prelude         hiding (map)
 
 import           Data.Functor    ((<&>))
-import           Data.List       (genericLength, foldl')
+import           Data.List       (foldl', genericLength)
 import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import           Data.Maybe      (fromMaybe)
@@ -47,15 +47,12 @@ normalize mp = Map.map (/ total) mp
   where
     total = sum mp
 
-prune :: (Eq p, Num p) => Map a p -> Map a p
-prune = Map.filter (/= 0)
-
 {-| Convert a list of events and weights to a probability distribution. The
     weights are normalized to sum to 1. Only the last appearance of each event
     in the list is considered.
 -}
-fromList :: (Ord a, Fractional p, Eq p) => [(a, p)] -> Distribution a p
-fromList = Distribution . prune . normalize . Map.fromList
+fromList :: (Ord a, Fractional p) => [(a, p)] -> Distribution a p
+fromList = Distribution . normalize . Map.fromList
 
 {-| Probability distribution where there is only one event, with probability
     1.
@@ -63,7 +60,8 @@ fromList = Distribution . prune . normalize . Map.fromList
 certain :: Num p => a -> Distribution a p
 certain x = Distribution (Map.singleton x 1)
 
-{-| Distribution where each event is equally likely.
+{-| Distribution where each event is equally likely. Repetitions of an event are
+    removed.
 
     >>> uniform [1, 2, 3, 4]
     fromList [(1,1 % 4),(2,1 % 4),(3,1 % 4),(4,1 % 4)]
@@ -84,7 +82,7 @@ prob (Distribution mp) a = fromMaybe 0 $ Map.lookup a mp
 {-| The expected value of a distribution.
 
     >>> expectedValue (uniform [1..6 :: Rational])
-    7 % 2 
+    7 % 2
 -}
 expectedValue :: (Fractional a, Real p) => Distribution a p -> a
 expectedValue = foldl' (+) 0
@@ -115,7 +113,7 @@ map :: (Ord b, Num p) => (a -> b) -> Distribution a p -> Distribution b p
 map f = Distribution . Map.mapKeysWith (+) f . getMap
 
 {-| Applicative-like lifting function. -}
-lift2 :: (Ord c, Num p, Eq p)
+lift2 :: (Ord c, Num p)
       => (a -> b -> c)
       -> Distribution a p
       -> Distribution b p
@@ -123,10 +121,13 @@ lift2 :: (Ord c, Num p, Eq p)
 lift2 f dist1 dist2 =
     Distribution . Map.unionsWith (+)
   $ toList dist1 <&> \(x, px) ->
-      prune . Map.map (* px) . Map.mapKeys (f x) . getMap $ dist2
+      Map.map (* px) . Map.mapKeys (f x) . getMap $ dist2
 
 {-| Monad-like bind function. -}
-bind :: (Ord b, Num p, Eq p) => Distribution a p -> (a -> Distribution b p) -> Distribution b p
+bind :: (Ord b, Num p)
+     => Distribution a p
+     -> (a -> Distribution b p)
+     -> Distribution b p
 bind dist f = Distribution . Map.unionsWith (+)
             $ toList dist <&> \(event, p) ->
-                prune . Map.map (* p) $ getMap $ f event
+                Map.map (* p) $ getMap $ f event
