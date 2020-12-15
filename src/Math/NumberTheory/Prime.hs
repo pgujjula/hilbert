@@ -110,6 +110,8 @@ primes = map unsafeMarkPrime (2 : sieve (IntMap.singleton 4 [2]) [3..])
 -}
 -- TODO: Factor out commonalities between primes and primesTo
 primesTo :: Int -> [Prime Int]
+primesTo m | m < 2  = []
+primesTo m | m == 2 = [Prime 2]
 primesTo m = map unsafeMarkPrime (2 : sieve (IntMap.singleton 4 [2]) [3..])
   where
     sieve :: IntMap [Int] -> [Int] -> [Int]

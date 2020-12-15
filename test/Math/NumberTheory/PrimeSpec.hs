@@ -42,6 +42,12 @@ primesSpec =
 
 primesToSpec :: Spec
 primesToSpec = do
+    it "correct for degenerate cases" $ do
+        primesTo (-1) `shouldBe` []
+        primesTo 0 `shouldBe` []
+        primesTo 1 `shouldBe` []
+        primesTo 2 `shouldBe` [unsafeMarkPrime 2]
+        primesTo 3 `shouldBe` [unsafeMarkPrime 2, unsafeMarkPrime 3]
     it "correct for primes up to 10000" $
         primesTo 10000
             `shouldBe` map unsafeMarkPrime (filter naiveIsPrime [1..10000])
