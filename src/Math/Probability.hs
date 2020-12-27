@@ -60,15 +60,18 @@ fromList = Distribution . normalize . Map.fromList
 certain :: Num p => a -> Distribution a p
 certain x = Distribution (Map.singleton x 1)
 
-{-| Distribution where each event is equally likely. Repetitions of an event are
-    removed.
+{-| Distribution where each event is equally likely.
 
     >>> uniform [1, 2, 3, 4]
     fromList [(1,1 % 4),(2,1 % 4),(3,1 % 4),(4,1 % 4)]
+    >>> uniform [1, 2, 3, 1]
+    fromList [(1,1 % 2),(2,1 % 4),(3,1 % 4)]
 -}
 uniform :: (Ord a, Fractional p) => [a] -> Distribution a p
-uniform xs = Distribution $ Map.fromList
-           $ zip xs $ repeat (fromRational $ 1 % genericLength xs)
+uniform xs = Distribution
+           $ Map.fromListWith (+)
+           $ zip xs
+           $ repeat (fromRational $ 1 % genericLength xs)
 
 {-| The probability of a specific event.
 
