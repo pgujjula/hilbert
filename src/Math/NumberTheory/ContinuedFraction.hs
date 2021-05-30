@@ -25,6 +25,7 @@ module Math.NumberTheory.ContinuedFraction
     , isPeriodic
     , toList
     , convergent
+    , convergents
     , Math.NumberTheory.ContinuedFraction.Sqrt.sqrt
     ) where
 

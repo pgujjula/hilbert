@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 {-| Module      : Math.NumberTheory.ContinuedFraction.Core
     Description : Core continued fraction functionality.
     Copyright   : (c) Preetham Gujjula, 2016
@@ -17,6 +18,7 @@ module Math.NumberTheory.ContinuedFraction.Core
     , toList
     , isPeriodic
     , convergent
+    , convergents
     ) where
 
 import Data.Ratio
@@ -143,11 +145,25 @@ print (fromRational approximation)
     >>> convergent (mkPeriodic [] [1, 2]) 0
     0 % 1
 -}
-convergent :: (Integral a) => ContinuedFraction a -> Int -> Ratio a
+convergent :: Integral a => ContinuedFraction a -> Int -> Ratio a
 convergent cfrac n = convFromList $ take n $ toList cfrac
 
 -- Compute the convergent of a finite list representing a continued fraction.
-convFromList :: (Integral a) => [a] -> Ratio a
+convFromList :: Integral a => [a] -> Ratio a
 convFromList []     = 0 % 1
 convFromList [x]    = x % 1
 convFromList (x:xs) = (x % 1) + (1 / convFromList xs)
+
+{-| Generate the convergents of a given continued fraction @cfrac@ faster than
+    calling @fmap (convergent cfrac) [0..]@
+
+    >>> take 5 $ convergents (mkPeriodic [] [1, 2])
+    asfd
+-}
+convergents :: forall a. Integral a => ContinuedFraction a -> [Ratio a]
+convergents cfrac = trunc $ (0:) $ tail $ zipWith (%) numers denoms
+  where
+    numers = 1 : head as : zipWith (+) numers (zipWith (*) (tail numers) (tail as))
+    denoms = 0 : 1       : zipWith (+) denoms (zipWith (*) (tail denoms) (tail as))
+    as = toList cfrac
+    trunc xs = zipWith const xs (0:as)

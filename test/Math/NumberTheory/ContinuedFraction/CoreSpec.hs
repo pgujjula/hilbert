@@ -3,20 +3,22 @@ module Math.NumberTheory.ContinuedFraction.CoreSpec
   ) where
 
 import Control.Exception                   (evaluate)
+import Control.Monad                       (forM_)
 import Data.Ratio                          ((%))
+import Test.HUnit.Lang                     (assertFailure)
 import Test.Hspec                          (Spec, anyException, describe, it,
                                             shouldBe, shouldStartWith,
                                             shouldThrow)
-import Test.HUnit.Lang                     (assertFailure)
 
-import Math.NumberTheory.ContinuedFraction (convergent, isPeriodic, mkAperiodic,
-                                            mkPeriodic, nonRepeatingPart,
-                                            repeatingPart, toList)
+import Math.NumberTheory.ContinuedFraction (convergent, convergents, isPeriodic,
+                                            mkAperiodic, mkPeriodic,
+                                            nonRepeatingPart, repeatingPart,
+                                            toList)
 
 spec :: Spec
 spec = do
     describe "mkPeriodic" $
-        it "mkPeriodic _ [] throws an error" $ 
+        it "mkPeriodic _ [] throws an error" $
             evaluate (mkPeriodic ([1, 2, 3] :: [Int]) [])
                      `shouldThrow` anyException
 
@@ -65,3 +67,16 @@ spec = do
             convergent (mkAperiodic [1, 2, 3]) 2 `shouldBe` (3 % 2)
             convergent (mkAperiodic [1, 2, 3]) 4 `shouldBe` (10 % 7)
             convergent (mkAperiodic []) 5 `shouldBe` (0 % 1)
+
+    describe "convergents" $ do
+      it "matches behavior of convergent" $ do
+        let e = mkAperiodic $ (2:) $ concatMap (\x -> [1, x, 1]) [2, 4..]
+        let cfracs = [e, mkPeriodic [1, 2] [3, 4], mkPeriodic [] [3, 4], mkAperiodic [1, 2, 3], mkAperiodic []]
+        let maxNumTerms = 5 :: Int
+        forM_ cfracs $ \cfrac -> do
+          let numTerms = 1 + length (take maxNumTerms (toList cfrac))
+          take numTerms (convergents cfrac) `shouldBe` fmap (convergent cfrac) (take numTerms [0..])
+
+      it "ends gracefully on finite continued fractions" $ do
+        length (convergents (mkAperiodic [])) `shouldBe` 1
+        length (convergents (mkAperiodic [1, 2, 3])) `shouldBe` 4
