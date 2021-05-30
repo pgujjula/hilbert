@@ -1,0 +1,8 @@
+resolver: lts-17.12
+packages:
+  - .
+ghc-options:
+  "$everything": -O2
+
+extra-deps:
+  - list-duplicate-0.1.0.0@sha256:3ee5f883ae50d49919e582646d5afad757b9873f97ce9c0a0bd5079d77e9407a,1922
