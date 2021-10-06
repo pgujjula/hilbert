@@ -39,8 +39,9 @@ compareList xs ys = take listLimit xs `shouldBe` take listLimit ys
 
 squareSpec :: Spec
 squareSpec =
-    it ("first " ++ show listLimit ++ " correct") $
-        compareList (fmap square [0..]) (map (^2) [0..])
+    it ("first " ++ show listLimit ++ " correct") $ do
+        compareList (fmap square [(0 :: Int)..]) (map (^2) [0..])
+        compareList (fmap square [(0 :: Double)..]) (map (^2) [0..])
 
 squaresSpec :: Spec
 squaresSpec =

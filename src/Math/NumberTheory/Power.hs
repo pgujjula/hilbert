@@ -31,7 +31,7 @@ import Math.NumberTheory.Digit (numDigits)
     warning with -Wtype-defaults that the type of 2 is being inferred as
     Integer.
 -}
-square :: (Integral a) => a -> a
+square :: Num a => a -> a
 square a = a*a
 
 {-| The square numbers, starting from 0.
