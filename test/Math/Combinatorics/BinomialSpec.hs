@@ -1,11 +1,15 @@
 {-# LANGUAGE TypeApplications #-}
 module Math.Combinatorics.BinomialSpec (spec) where
 
-import           Test.Hspec                  (Spec, describe, it, shouldBe)
+import           Control.Exception           (evaluate)
+import           Control.Monad               (forM_)
+import           Test.Hspec                  (Spec, anyException, describe, it,
+                                              shouldBe, shouldThrow)
 import           Test.QuickCheck             (forAll, (===))
 import qualified Test.QuickCheck             as QuickCheck (choose)
 
-import           Math.Combinatorics.Binomial (factorial, choose, permute)
+import           Math.Combinatorics.Binomial (binomialCoeffs, choose, factorial,
+                                              permute)
 
 -- Limit for quickcheck inputs
 limit :: Integer
@@ -13,10 +17,11 @@ limit = 1000
 
 spec :: Spec
 spec = do
-    describe "factorial"  factorialSpec
-    describe "choose"     chooseSpec
-    describe "permute"    permuteSpec
-    describe "invariants" invariantSpec
+    describe "factorial"      factorialSpec
+    describe "choose"         chooseSpec
+    describe "binomialCoeffs" binomialCoeffsSpec
+    describe "permute"        permuteSpec
+    describe "invariants"     invariantSpec
 
 factorialSpec :: Spec
 factorialSpec = do
@@ -35,6 +40,15 @@ chooseSpec = do
         choose 3 (-1) `shouldBe` 0
     it "small input" $
         map (5 `choose`) [0..5] `shouldBe` [1, 5, 10, 10, 5, 1]
+
+binomialCoeffsSpec :: Spec
+binomialCoeffsSpec = do
+    it "out of bounds throws an error" $ do
+        evaluate (binomialCoeffs (-1 :: Int)) `shouldThrow` anyException
+        evaluate (binomialCoeffs (-5 :: Int)) `shouldThrow` anyException
+    it "matches behavior of choose" $ do
+        forM_ [(1 :: Int)..10] $ \n -> do
+          binomialCoeffs n `shouldBe` fmap (n `choose`) [0..n]
 
 permuteSpec :: Spec
 permuteSpec = do
