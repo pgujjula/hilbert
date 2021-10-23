@@ -19,6 +19,7 @@ module Math.NumberTheory.Prime
     , isPrime
     , primes
     , primesTo
+    , primesFromTo
     , composites
     , compositesTo
     ) where
@@ -142,6 +143,67 @@ primesTo m = map unsafeMarkPrime (2 : sieve (IntMap.singleton 4 [2]) [3..])
     insert :: (Int, Int) -> IntMap [Int] -> IntMap [Int]
     insert (n, p) mp
         | n > m     = mp
+        | otherwise = IntMap.alter (pushPrime p) n mp
+      where
+        pushPrime q xs = Just (q : fromMaybe [] xs)
+
+    -- After popping a number and its prime divisors, reinsert each prime back
+    -- into the map at its next multiple.
+    reinsert :: (Int, [Int]) -> IntMap [Int] -> IntMap [Int]
+    reinsert (d, ps) mp = foldl' (flip insert) mp (updates (d, ps))
+
+firstMultipleGE :: Int -> Int -> Int
+firstMultipleGE k p =
+  if r == 0
+  then k
+  else k + p - r
+  where
+    r = k `rem` p
+
+primesFromTo :: Int -> Int -> [Prime Int]
+primesFromTo lower upper | lower > upper = []
+primesFromTo lower upper | upper < 2     = []
+primesFromTo lower upper | lower < 2     = primesFromTo 2 upper
+primesFromTo lower upper | upper == 2    = [Prime 2]
+primesFromTo lower upper = fmap unsafeMarkPrime sieved
+  where
+    sieved :: [Int]
+    sieved = sieve initMap [lower..upper]
+
+    initMap :: IntMap [Int]
+    initMap = IntMap.fromListWith (++)
+      $ filter (\(k, p) -> k <= upper)
+      $ fmap (\p -> (max (p^2) (firstMultipleGE lower p), [p])) 
+      (takeWhile (<= integralSqrt upper) (fmap unPrime primes))
+
+    sieve :: IntMap [Int] -> [Int] -> [Int]
+    sieve mp [] = []
+    sieve mp (x:xs) =
+      case IntMap.minViewWithKey mp of
+        Nothing -> [x..upper]
+        Just ((n, ps), mp') ->
+          case compare n x of
+            -- The first number in the map was too small. Reinsert its prime
+            -- factors and try sieving the same list again.
+            LT -> sieve (reinsert (n, ps) mp') (x:xs)
+
+            -- Not a prime, and we have a list of witnesses ps to prove it.
+            -- Reinsert the primes at their next multiples.
+            EQ -> sieve (reinsert (n, ps) mp') xs
+
+            -- found a prime. yield it and insert it into the list at the first
+            -- multiple that matters: x^2
+            GT -> x : sieve (insert (x*x, x) mp) xs
+
+    -- Given a number and its prime divisors, generate a list of the next
+    -- multiple for each prime, so we can reinsert these into the map.
+    updates :: (Int, [Int]) -> [(Int, Int)]
+    updates (n, ps) = fmap (\p -> (n + p, p)) ps
+
+    -- Insert a (number, prime divisor) pair into a map
+    insert :: (Int, Int) -> IntMap [Int] -> IntMap [Int]
+    insert (n, p) mp
+        | n > upper = mp
         | otherwise = IntMap.alter (pushPrime p) n mp
       where
         pushPrime q xs = Just (q : fromMaybe [] xs)
