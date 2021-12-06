@@ -1,17 +1,19 @@
 module Math.NumberTheory.DivisorSpec (spec) where
 
-import Control.Monad                  (forM_)
+import Control.Exception              (evaluate)
+import Control.Monad                  (forM_, zipWithM_)
 import Data.List                      (sort)
 import Data.Maybe                     (fromJust)
 
-import Test.Hspec                     (Spec, describe, it, shouldBe)
+import Test.Hspec                     (Spec, anyException, describe, it,
+                                       shouldBe, shouldThrow)
 
 import Math.NumberTheory.Divisor      (divides, divisorPairs, divisorPairsF,
-                                       divisors, divisorsF, numDivisors,
-                                       numDivisorsF, relativelyPrime,
-                                       sumDivisors, sumDivisorsF, totient,
-                                       totientF)
-import Math.NumberTheory.Prime.Factor (factor)
+                                       divisors, divisorsF, mobius, mobiusF,
+                                       numDivisors, numDivisorsF,
+                                       relativelyPrime, sumDivisors,
+                                       sumDivisorsF, totient, totientF)
+import Math.NumberTheory.Prime.Factor (factor, factorizations)
 
 limit :: Int
 limit = 1000
@@ -26,14 +28,17 @@ spec = do
 
     describe "numDivisors"     numDivisorsSpec
     describe "numDivisorsF"    numDivisorsFSpec
-    
+
     describe "sumDivisors"     sumDivisorsSpec
     describe "sumDivisorsF"    sumDivisorsFSpec
 
     describe "relativelyPrime" relativelyPrimeSpec
-    
+
     describe "totient"         totientSpec
     describe "totientF"        totientFSpec
+
+    describe "mobius"          mobiusSpec
+    describe "mobiusF"         mobiusFSpec
 
 dividesSpec :: Spec
 dividesSpec = do
@@ -136,7 +141,22 @@ totientSpec = do
 
 totientFSpec :: Spec
 totientFSpec =
-    it ("correct for up to " ++ show limit) $
+    it ("correct up to " ++ show limit) $
         forM_ [1..limit] $ \n ->
             totientF n (fromJust $ factor n)
                 `shouldBe` length (filter (relativelyPrime n) [1..n])
+
+mobiusSpec :: Spec
+mobiusSpec = do
+  it "mobius of non-positive numbers is undefined" $ do
+    evaluate (mobius (-1)) `shouldThrow` anyException
+    evaluate (mobius 0) `shouldThrow` anyException
+  it "correct up to 10" $ do
+    zipWithM_ shouldBe (fmap mobius [1..10])
+                       [1,-1,-1,0,-1,1,-1,0,0,1]
+
+mobiusFSpec :: Spec
+mobiusFSpec = do
+  it "correct up to 10" $ do
+    zipWithM_ shouldBe (fmap mobiusF $ take 10 factorizations)
+                       [1,-1,-1,0,-1,1,-1,0,0,1]

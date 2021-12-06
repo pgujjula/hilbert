@@ -25,11 +25,14 @@ module Math.NumberTheory.Divisor
 
     , totient
     , totientF
+    
+    , mobius
+    , mobiusF
     ) where
 
 import Control.Applicative            (liftA2)
 import Data.List                      (foldl')
-import Data.Maybe                     (fromJust)
+import Data.Maybe                     (fromMaybe)
 
 import Math.NumberTheory.Prime        (unPrime)
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
@@ -101,7 +104,7 @@ divisorPairsF :: (Integral a) => Factorization a -> [(a, a)]
 divisorPairsF = mkPairs . divisorsF
 
 mkPairs :: [a] -> [(a, a)]
-mkPairs xs = take ((length xs + 1) `div` 2) $ zip xs (reverse xs)
+mkPairs xs = take ((length xs + 1) `quot` 2) $ zip xs (reverse xs)
 
 {-| The number of positive divisors of @n@.
 
@@ -149,7 +152,7 @@ sumDivisors = maybe 0 sumDivisorsF . factor . abs
 sumDivisorsF :: (Integral a) => Factorization a -> a
 sumDivisorsF = product . map f
   where
-    f (p, e) = (p'^(e + 1) - 1) `div` (p' - 1)
+    f (p, e) = (p'^(e + 1) - 1) `quot` (p' - 1)
       where
         p' = unPrime p
 
@@ -180,7 +183,7 @@ totient :: (Integral a) => a -> a
 totient n
     | n < 0     = 0
     | n == 0    = 1
-    | otherwise = totientF n (fromJust $ factor n)
+    | otherwise = totientF n $ fromMaybe (error "input not positive") $ factor n
 
 {-| Like 'totient', but takes the factorization of @n@ to speed up the
     computation of the totient.
@@ -192,6 +195,23 @@ totient n
 totientF :: (Integral a) => a -> Factorization a -> a
 totientF = foldl' step
   where
-    step n (p, _) = n * (p' - 1) `div` p'
+    step n (p, _) = n * (p' - 1) `quot` p'
       where
         p' = unPrime p
+
+{-| @mobius n@ is the Möbius function. It is defined as
+      * 0 if n is divisible by a square (that is not 1).
+      * 1 if n is square-free and has an even number of prime factors.
+      * -1 if n is square-free and has an odd number of prime factors.
+
+    It is not defined for @n <= 0@.
+-}
+mobius :: Integral a => a -> a
+mobius = mobiusF . fromMaybe (error "mobius: input not positive") . factor
+
+{-| Like 'mobius', but takes the factorization for faster computation. -}
+mobiusF :: Integral a => Factorization a -> a
+mobiusF fact
+  | any (> 1) (fmap snd fact) = 0
+  | even (length fact)        = 1
+  | otherwise                 = -1
