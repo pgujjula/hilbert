@@ -1,4 +1,5 @@
 {-# LANGUAGE MagicHash #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-| Module      : Math.NumberTheory.Power
     Description : Functions related to powers.
     Copyright   : (c) Preetham Gujjula, 2016
@@ -82,22 +83,25 @@ isSquare n
 {-| @integralSqrt n@ computes the largest integer less than or equal to square
     root of @n@.
 -}
-integralSqrt :: Integral a => a -> a
-integralSqrt n = search initial
+integralSqrt :: forall a. Integral a => a -> a
+integralSqrt n = fromIntegral $ search initial
   where
     -- To avoid overflow with fixed precision integers, we need to convert to
     -- Integer first.
+    n' :: Integer
     n' = toInteger n
 
     -- The initial approximation
+    initial :: Integer
     initial = 10^(toInteger (numDigits n') `quot` 2)
 
+    search :: Integer -> Integer
     search x
         | dy == doublex = x
         | dx == 0       = x
         | otherwise     = search (x + dx)
       where
-        dy = n - squarex
+        dy = n' - squarex
         dx = dy `div` doublex
 
         squarex = x*x

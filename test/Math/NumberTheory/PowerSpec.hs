@@ -3,6 +3,8 @@ module Math.NumberTheory.PowerSpec (spec) where
 import Control.Monad           (forM_, zipWithM_)
 import Data.Int                (Int16)
 import Data.Maybe              (fromJust, isJust)
+import Data.Proxy              (Proxy (..), asProxyTypeOf)
+import Data.Word               (Word16)
 import System.Random           (Random)
 
 import Test.Hspec              (Expectation, Spec, describe, it, shouldBe,
@@ -65,11 +67,15 @@ isSquareSpec = do
         filter isSquare [0..(limit^2)] `shouldBe` map (^2) [0..limit]
 
     it "fixed precision integers" $ do
-        let bound = maxBound :: Int16
-        let actual = filter isSquare [1..bound]
-        let expected = map fromIntegral $ takeWhile (<= fromIntegral bound)
-                                     $ map (^2) [(1 :: Integer)..]
-        actual `shouldBe` expected
+        let f proxy =
+              let bound = maxBound `asProxyTypeOf` proxy
+                  actual = filter isSquare [1..bound]
+                  expected = fmap fromIntegral
+                    $ takeWhile (<= fromIntegral bound)
+                    $ map (^2) [(1 :: Integer)..]
+               in actual `shouldBe` expected
+        f (Proxy :: Proxy Int16)
+        f (Proxy :: Proxy Word16)
 
     it "exact squares" $
         forAll numbersGen $ \x -> isSquare (x^2)
