@@ -8,7 +8,7 @@
 Counting partitions of an integer.
 -}
 
-module Math.Combinatorics.Partition (numPartitions) where
+module Math.Combinatorics.Partition (numPartitions, partitions) where
 
 import Data.Chimera (memoizeFix)
 
@@ -59,3 +59,19 @@ partFix p n
         alternate :: [a] -> [a] -> [a]
         alternate (x:xs) (y:ys) = x : y : alternate xs ys
         alternate _ _           = error "finite list"
+
+{-| Enumerate the partitions of n. 
+
+    >>> partitions 4
+    [[4],[3,1],[2,2],[2,1,1],[1,1,1,1]]
+-}
+partitions :: Integral a => a -> [[a]]
+partitions n = partitionsWithMax n n
+
+partitionsWithMax :: Integral a => a -> a -> [[a]]
+partitionsWithMax m n
+ | n < 0     = []
+ | n == 0    = [[]]
+ | otherwise =
+     [m, m-1..1] >>= \i ->
+       fmap (i:) (partitionsWithMax i (n - i))

@@ -2,10 +2,12 @@ module Math.Combinatorics.PartitionSpec (spec) where
 
 import Test.Hspec                   (Spec, describe, it, shouldBe)
 
-import Math.Combinatorics.Partition (numPartitions)
+import Math.Combinatorics.Partition (numPartitions, partitions)
 
 spec :: Spec
-spec = describe "numParititions" numPartitionsSpec
+spec = do
+  describe "numParititions" numPartitionsSpec
+  describe "partitions" partitionsSpec
 
 numPartitionsSpec :: Spec
 numPartitionsSpec = do
@@ -19,3 +21,18 @@ numPartitionsSpec = do
         numPartitions 100 `shouldBe` 190569292
     it "numPartitions 1000 correct" $
         numPartitions 1000 `shouldBe` 24061467864032622473692149727991
+
+partitionsSpec :: Spec
+partitionsSpec = do
+    it "no partitions of negative numbers" $ do
+      partitions (-1) `shouldBe` []
+      partitions (-3) `shouldBe` []
+    it "only partition of 0 is the empty set" $ do
+      partitions 0 `shouldBe` [[]]
+    it "works for small inputs" $ do
+      partitions 1 `shouldBe` [[1]]
+      partitions 2 `shouldBe` [[2], [1,1]]
+      partitions 3 `shouldBe` [[3], [2,1], [1,1,1]]
+      partitions 4 `shouldBe` [[4], [3,1], [2,2], [2,1,1], [1,1,1,1]]
+      partitions 5 `shouldBe`
+        [[5], [4,1], [3,2], [3,1,1], [2,2,1], [2,1,1,1], [1,1,1,1,1]]
