@@ -87,6 +87,7 @@ test-suite spec
     , hilbert
     , hspec
     , list-duplicate
+    , mod
     , quickcheck-assertions
     , random
   default-language: Haskell2010

@@ -82,6 +82,7 @@ tests:
       - Math.ProbabilitySpec
       - Spec
     dependencies:
+      - mod
       - hilbert
       - hspec
       - QuickCheck
