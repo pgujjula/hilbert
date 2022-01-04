@@ -18,6 +18,7 @@ module Math.NumberTheory.Digit
 where
 
 import Data.Char (chr, ord)
+import Math.NumberTheory.Power (integralLogBase)
 
 ordZero :: Int
 ordZero = ord '0'
@@ -31,7 +32,7 @@ ordZero = ord '0'
 --    >>> numDigits (-38417)
 --    5
 numDigits :: (Integral a) => a -> Int
-numDigits = length . show . toInteger . abs
+numDigits = maybe 1 (+1) . integralLogBase (10 :: Integer) . abs
 
 -- | @sumDigits n@ is the sum of the digits in @n@.
 --

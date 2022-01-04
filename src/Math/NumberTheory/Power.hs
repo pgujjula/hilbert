@@ -25,8 +25,7 @@ module Math.NumberTheory.Power
 
 import GHC.Integer.Logarithms  (integerLogBase#)
 import GHC.Types               (Int (..))
-
-import Math.NumberTheory.Digit (numDigits)
+import Data.Maybe (fromJust)
 
 {-| Square a number. Useful to have, instead of writing x^2 and getting a
     warning with -Wtype-defaults that the type of 2 is being inferred as
@@ -93,7 +92,7 @@ integralSqrt n = fromIntegral $ search initial
 
     -- The initial approximation
     initial :: Integer
-    initial = 10^(toInteger (numDigits n') `quot` 2)
+    initial = maybe 2 (2^) (integralLogBase (2 :: Integer) n')
 
     search :: Integer -> Integer
     search x
