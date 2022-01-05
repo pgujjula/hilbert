@@ -1,8 +1,12 @@
-resolver: lts-18.18
+resolver: lts-18.21
 packages:
   - .
 extra-deps:
-  - list-duplicate-0.1.0.0@sha256:3ee5f883ae50d49919e582646d5afad757b9873f97ce9c0a0bd5079d77e9407a,1922
-  - list-filter-0.1.1.0@sha256:cd08bf7218c364f5475ff0da9f8a80c7eb1216450fda02831f632519c9f87ce8,1870
+  - list-duplicate-0.1.0.0
+  - list-filter-0.1.1.0
   - git: https://github.com/pgujjula/apply-merge
     commit: 5c977e0de0d1ef0f757972378b2ee361b623436f
+  - git: git@github.com:pgujjula/chimera.git
+    commit: 7cba5f970a34483ce66d6b774416c8499feca4a4
+  - git: https://github.com/pgujjula/primesieve-haskell.git
+    commit: 95040e1c321b01d83ae1b2009d737bfb1028a2c8

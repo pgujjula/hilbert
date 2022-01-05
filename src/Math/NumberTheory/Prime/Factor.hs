@@ -31,10 +31,10 @@ import qualified Data.Chimera            as Chimera
 import           Data.List.Duplicate     (groupAdj)
 
 import           Math.NumberTheory.Power (integralSqrt)
-import           Math.NumberTheory.Prime (primes, Prime, unPrime, unsafeMarkPrime, coercePrime)
+import           Math.NumberTheory.Prime (primes)
 
 {-| Type to represent factorizations -}
-type Factorization a = [(Prime a, Int)]
+type Factorization a = [(a, Int)]
 
 {-| Multiply two factorizations together. -}
 multiply :: (Integral a) => Factorization a -> Factorization a -> Factorization a
@@ -54,7 +54,7 @@ pow fs k = map (\(p, e) -> (p, e*k)) fs
 
 {-| Multiply out a Factorization to get the number it represents. -}
 simplify :: (Integral a) => Factorization a -> a
-simplify = product . map (\(p, e) -> unPrime p ^ e)
+simplify = product . map (uncurry (^))
 
 count :: (Ord a) => [a] -> [(a, Int)]
 count = map (\xs -> (head xs, length xs)) . groupAdj
@@ -76,16 +76,15 @@ factor n
     | n == 1    = Just []
     | otherwise = Just
                 $ count
-                $ factorWith (map coercePrime primes) (integralSqrt n) n
+                $ factorWith (map fromIntegral primes) (integralSqrt n) n
 
-factorWith :: (Integral a) => [Prime a] -> a -> a -> [Prime a]
+factorWith :: (Integral a) => [a] -> a -> a -> [a]
 factorWith (p:ps) limit n
-    | unP > limit = [unsafeMarkPrime n]
+    | p > limit = [n]
     | r == 0      = p : factorWith (p:ps) (integralSqrt n') n'
     | otherwise   = factorWith ps limit n
   where
-    (n', r) = n `quotRem` unP
-    unP = unPrime p
+    (n', r) = n `quotRem` p
 factorWith _ _ _ = error "ran out of primes, this is impossible"
 
 -- smallestFactor !! i is the smallest prime factor of i + 2.
@@ -150,7 +149,7 @@ factorizations' = Chimera.tabulateFix factorF
 -}
 factorizations :: [Factorization Int]
 factorizations = map count $ tail
-               $ map (map (unsafeMarkPrime . fromIntegral))
+               $ map (map fromIntegral)
                $ Chimera.toList factorizations'
 
 --factorizationsTo :: Int -> [Factorization Int]

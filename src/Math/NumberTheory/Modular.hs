@@ -26,7 +26,6 @@ import Data.Foldable                  (foldl')
 import Data.List.Duplicate            (groupBy)
 
 import Math.NumberTheory.Power        (square)
-import Math.NumberTheory.Prime        (Prime, unPrime)
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
 
 {-| @modPow a b m @ efficiently computes @mod (a^b) (abs m)@. 'error' is called
@@ -141,7 +140,7 @@ chineseRemainderF :: Integral a => [(a, Factorization a)] -> Maybe (a, a)
 chineseRemainderF = breakUp >>> massage >>> fmap (uncurry solveAllPrime)
                 >>> sequence >>> fmap solveAll
 
-breakUp :: [(a, Factorization a)] -> [(a, (Prime a, Int))]
+breakUp :: [(a, Factorization a)] -> [(a, (a, Int))]
 breakUp = concatMap (\(x, fact) -> fmap (x,) fact)
 
 massage :: Ord b => [(a, (b, c))] -> [(b, [(a, c)])]
@@ -163,12 +162,12 @@ solve (a, m) (b, n) = (x, s)
 -- Given a prime p and a list of (xi, ki) representing a system of congruences
 --    x == xi (mod p^ki)
 -- solve for x, k such that x (mod p^k) is a solution to the system.
-solveAllPrime :: Integral a => Prime a -> [(a, Int)] -> Maybe (a, a)
-solveAllPrime p = fmap (\(x, k) -> (x, unPrime p^k))
+solveAllPrime :: Integral a => a -> [(a, Int)] -> Maybe (a, a)
+solveAllPrime p = fmap (\(x, k) -> (x, p^k))
                 . foldM (solvePrime p) (0, 0)
 
-solvePrime :: Integral a => Prime a -> (a, Int) -> (a, Int) -> Maybe (a, Int)
+solvePrime :: Integral a => a -> (a, Int) -> (a, Int) -> Maybe (a, Int)
 solvePrime p (x1, k1) (x2, k2)
     | k1 > k2 = solvePrime p (x2, k2) (x1, k1)
-    | (x2 - x1) `mod` (unPrime p^k1) /= 0 = Nothing
+    | (x2 - x1) `mod` (p^k1) /= 0 = Nothing
     | otherwise = Just (x2, k2)

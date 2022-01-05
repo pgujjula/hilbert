@@ -5,7 +5,7 @@ import Test.QuickCheck         (choose, forAll, (===))
 
 import Math.NumberTheory.Power (integralSqrt)
 import Math.NumberTheory.Prime (composites, compositesTo, isPrime, primes,
-                                primesTo, unsafeMarkPrime, unPrime, primesFromTo)
+                                primesTo, primesFromTo)
 
 spec :: Spec
 spec = do
@@ -38,8 +38,8 @@ isPrimeSpec = do
 primesSpec :: Spec
 primesSpec =
     it "correct for primes up to 10000" $
-        takeWhile (\x -> unPrime x <= 10000) primes
-            `shouldBe` map unsafeMarkPrime (filter naiveIsPrime [1..10000])
+        takeWhile (<= 10000) primes
+            `shouldBe` filter naiveIsPrime [1..10000]
 
 primesToSpec :: Spec
 primesToSpec = do
@@ -47,27 +47,27 @@ primesToSpec = do
         primesTo (-1) `shouldBe` []
         primesTo 0 `shouldBe` []
         primesTo 1 `shouldBe` []
-        primesTo 2 `shouldBe` [unsafeMarkPrime 2]
-        primesTo 3 `shouldBe` [unsafeMarkPrime 2, unsafeMarkPrime 3]
+        primesTo 2 `shouldBe` [2]
+        primesTo 3 `shouldBe` [2, 3]
     it "correct for primes up to 10000" $
         primesTo 10000
-            `shouldBe` map unsafeMarkPrime (filter naiveIsPrime [1..10000])
+            `shouldBe` filter naiveIsPrime [1..10000]
     it "is inclusive" $
         primesTo 97
-            `shouldBe` map unsafeMarkPrime (filter naiveIsPrime [1..97])
+            `shouldBe` filter naiveIsPrime [1..97]
 
 primesFromToSpec :: Spec
 primesFromToSpec = do
   it "correct for degenerate cases" $ do
     primesFromTo 5 3 `shouldBe` []
     primesFromTo 0 1 `shouldBe` []
-    primesFromTo 0 2 `shouldBe` [unsafeMarkPrime 2]
-    primesFromTo 0 3 `shouldBe` [unsafeMarkPrime 2, unsafeMarkPrime 3]
+    primesFromTo 0 2 `shouldBe` [2]
+    primesFromTo 0 3 `shouldBe` [2, 3]
   it "correct for random starts and stops" $ do
     let limit = 10000
     forAll (choose (1, limit)) $ \lower -> do
       forAll (choose (lower, limit)) $ \upper -> do
-        fmap unPrime (primesFromTo lower upper)
+        primesFromTo lower upper
         `shouldBe` filter isPrime [lower..upper]
 
 compositesSpec :: Spec

@@ -59,6 +59,7 @@ library:
     - integer-gmp
     - ghc-prim
     - composition
+    - primesieve
 
 tests:
   spec:

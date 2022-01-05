@@ -54,6 +54,7 @@ library
     , ghc-prim
     , integer-gmp
     , list-duplicate
+    , primesieve
     , vector
   default-language: Haskell2010
 

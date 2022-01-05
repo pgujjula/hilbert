@@ -34,7 +34,6 @@ import Control.Applicative            (liftA2)
 import Data.List                      (foldl')
 import Data.Maybe                     (fromMaybe)
 
-import Math.NumberTheory.Prime        (unPrime)
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
 
 {-| @a `divides` b@ is True iff there is an integer @k@ such that @a*k == b@.
@@ -77,7 +76,7 @@ divisors = maybe [] divisorsF . factor . abs
 divisorsF :: (Integral a) => Factorization a -> [a]
 divisorsF = foldl' (liftA2 (*)) [1] . map pows
   where
-    pows (p, e) = take (e + 1) $ iterate (* unPrime p) 1
+    pows (p, e) = take (e + 1) $ iterate (* p) 1
 
 {-| The positive divisors of an integer @n@, paired up such that every pair
     @(a, b)@ satisfies @a*b == abs n@. Not in any particular order.
@@ -152,9 +151,7 @@ sumDivisors = maybe 0 sumDivisorsF . factor . abs
 sumDivisorsF :: (Integral a) => Factorization a -> a
 sumDivisorsF = product . map f
   where
-    f (p, e) = (p'^(e + 1) - 1) `quot` (p' - 1)
-      where
-        p' = unPrime p
+    f (p, e) = (p^(e + 1) - 1) `quot` (p - 1)
 
 {-| @relativelyPrime m n@ is @True@ if @m@ and @n@ have no common positive
     divisors other than 1.
@@ -195,9 +192,7 @@ totient n
 totientF :: (Integral a) => a -> Factorization a -> a
 totientF = foldl' step
   where
-    step n (p, _) = n * (p' - 1) `quot` p'
-      where
-        p' = unPrime p
+    step n (p, _) = n * (p - 1) `quot` p
 
 {-| @mobius n@ is the Möbius function. It is defined as
       * 0 if n is divisible by a square (that is not 1).

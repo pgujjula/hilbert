@@ -6,7 +6,6 @@ import Data.Maybe                     (fromJust)
 import Test.Hspec                     (Spec, describe, it, shouldBe)
 import Test.QuickCheck                (Gen, choose, forAll, (===))
 
-import Math.NumberTheory.Prime        (unsafeMarkPrime)
 import Math.NumberTheory.Prime.Factor (factor, factorizations, multiply, pow,
                                        simplify)
 
@@ -45,9 +44,8 @@ simplifySpec = do
     it "empty list" $
         simplify [] == 1
     it "small input" $ do
-        let p = unsafeMarkPrime
-        simplify [(p 2, 3), (p 3, 1)] `shouldBe` 24
-        simplify [(p 3, 1), (p 7, 1), (p 11, 1)] `shouldBe` 231
+        simplify [(2, 3), (3, 1)] `shouldBe` 24
+        simplify [(3, 1), (7, 1), (11, 1)] `shouldBe` 231
 
 factorSpec :: Spec
 factorSpec = do
