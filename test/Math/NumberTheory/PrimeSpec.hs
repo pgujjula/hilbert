@@ -24,6 +24,9 @@ isPrimeSpec = do
     it "negative numbers not prime" $ do
         isPrime (-1) `shouldBe` False
         isPrime (-2) `shouldBe` False
+        -- (-1995) is prime when cast to a Word, so this checks that we are
+        -- checking for negative numbers before casting.
+        isPrime (-1995) `shouldBe` False
     it "0 not prime" $
         isPrime 0 `shouldBe` False
     it "1 not prime" $

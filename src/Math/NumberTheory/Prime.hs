@@ -42,16 +42,13 @@ primesFromTo a b =
 --    >>> filter isPrime [1..10]
 --    [2, 3, 5, 7]
 isPrime :: (Integral a) => a -> Bool
-isPrime = isPrime' . fromIntegral
-{-# INLINE isPrime #-}
+isPrime n | n < 2 = False
+isPrime n = isPrime' . fromIntegral $ n
 
 isPrime' :: Word64 -> Bool
-isPrime' n
-  | n < 2 = False
-  | otherwise =
-    not $
-      any (\p -> n `rem` p == 0) $
-        takeWhile (<= integralSqrt n) PS.primes
+isPrime' n = not $
+  any (\p -> n `rem` p == 0) $
+    takeWhile (<= integralSqrt n) PS.primes
 
 -- | A lazy infinite list of composities.
 --
