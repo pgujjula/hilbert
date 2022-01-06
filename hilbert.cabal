@@ -45,7 +45,8 @@ library
       src
   ghc-options: -Wall -Wcompat -Wmissing-export-lists -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Wmissing-home-modules -Werror=missing-home-modules -Widentities -Wredundant-constraints -Wmissing-export-lists
   build-depends:
-      base >=4.13 && <5.0
+      apply-merge
+    , base >=4.13 && <5.0
     , chimera
     , composition
     , containers

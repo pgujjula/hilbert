@@ -15,7 +15,7 @@ module Math.Combinatorics.Binomial
     , permute
     ) where
 
-import Data.List (foldl', genericTake)
+import Data.List (foldl', genericTake, scanl')
 
 {-| The factorial of a number. Undefined behavior for negative inputs.
 
@@ -50,9 +50,9 @@ choose' n k = foldl' (\i (p, q) -> i * p `quot` q) 1
 -}
 binomialCoeffs :: Integral a => a -> [a]
 binomialCoeffs n | n < 0 = error "binomialCoeffs: negative input"
-binomialCoeffs n = scanl step 1 [0..n - 1]
+binomialCoeffs n = scanl' step 1 [0..n - 1]
   where
-    step x k = x * (n - k) `div` (k + 1)
+    step x k = x * (n - k) `quot` (k + 1)
 
 {-| Number of permutations groups of size @k@, selected from a group of size
     @n@. @permute n k@ is defined as 0 for any @n < 0@ or @k > n@ or @k < 0@.

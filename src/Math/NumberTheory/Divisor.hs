@@ -126,7 +126,7 @@ numDivisors = maybe 0 numDivisorsF . factor . abs
     1
 -}
 numDivisorsF :: (Integral a) => Factorization a -> a
-numDivisorsF = product . map (\(_, e) -> fromIntegral e + 1)
+numDivisorsF = foldl' (*) 1 . map (\(_, e) -> fromIntegral e + 1)
 
 {-| The sum of the positive divisors of @n@.
 
@@ -149,7 +149,7 @@ sumDivisors = maybe 0 sumDivisorsF . factor . abs
     1
 -}
 sumDivisorsF :: (Integral a) => Factorization a -> a
-sumDivisorsF = product . map f
+sumDivisorsF = foldl' (*) 1 . map f
   where
     f (p, e) = (p^(e + 1) - 1) `quot` (p - 1)
 

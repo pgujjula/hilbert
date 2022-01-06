@@ -18,6 +18,7 @@ import Data.List                           (find)
 import Data.Maybe                          (fromJust)
 import Data.Ratio                          (denominator, numerator)
 
+import Data.List.Merge (applyMerge)
 import Data.List.Ordered                   (mergeAll)
 
 import Math.NumberTheory.ContinuedFraction as CF
@@ -80,12 +81,9 @@ scale (Triple (a, b, c)) k = Triple (k*a, k*b, k*c)
 
     Ordered by increasing c, and then by increasing b.
 -}
--- TODO: Replace mergeAll with applyMerge
 pythagoreanTriples :: (Integral a) => [(a, a, a)]
-pythagoreanTriples = map unTriple $ mergeAll tripleLists
-  where
-    tripleLists = map mkScales primitivePythagoreanTriples
-    mkScales t = map (scale (Triple t)) [1..]
+pythagoreanTriples = map unTriple $
+    applyMerge scale (map Triple primitivePythagoreanTriples) [1..]
 
 {-| List of all integer triples (a, b, c) such that
       \[a^2 + b^2 = c^2\]

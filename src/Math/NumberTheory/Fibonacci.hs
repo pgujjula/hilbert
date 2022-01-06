@@ -79,19 +79,19 @@ lucasSeq p q = (go f 0 1, go f 2 p)
 data Group a = Group !a !a !a !a
   deriving (Eq, Show, Ord)
 
-step :: (Num a) => (a -> a) -> a -> a -> Group a -> Group a
-step reduce p q (Group un un1 vn vn1) = Group un1 un2 vn1 vn2
+step :: (Num a) => a -> a -> Group a -> Group a
+step p q (Group un un1 vn vn1) = Group un1 un2 vn1 vn2
   where
-    un2 = reduce $ (-q)*un + p*un1
-    vn2 = reduce $ (-q)*vn + p*vn1
+    un2 = (-q)*un + p*un1
+    vn2 = (-q)*vn + p*vn1
 
-double :: Num a => (a -> a) -> (a -> b -> a) -> a -> a -> b -> Group a -> Group a
-double reduce pow p q n (Group un un1 vn vn1) = Group u2n u2n1 v2n v2n1
+double :: Num a => (a -> b -> a) -> a -> a -> b -> Group a -> Group a
+double pow p q n (Group un un1 vn vn1) = Group u2n u2n1 v2n v2n1
   where
-    u2n  = reduce $ un * vn
-    u2n1 = reduce $ un1*vn - qToN
-    v2n  = reduce $ vn*vn - 2 * qToN
-    v2n1 = reduce $ vn1*vn - p * qToN
+    u2n  = un * vn
+    u2n1 = un1*vn - qToN
+    v2n  = vn*vn - 2 * qToN
+    v2n1 = vn1*vn - p * qToN
     qToN = pow q n
 
 {-| The @n@th terms of the /U/ and /V/ sequences associated with seeds /p/ and
@@ -110,7 +110,7 @@ lucasSeqN p q = (\(Group u _ v _) -> (u, v)) . mkGroup
   where
     mkGroup n
         | n == 0    = Group 0 1 2 p
-        | odd n     = step id p q (mkGroup (n - 1))
-        | otherwise = double id (^) p q halfN (mkGroup halfN)
+        | odd n     = step p q (mkGroup (n - 1))
+        | otherwise = double (^) p q halfN (mkGroup halfN)
       where
         halfN = n `div` 2

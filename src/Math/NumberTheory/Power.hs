@@ -25,7 +25,6 @@ module Math.NumberTheory.Power
 
 import GHC.Integer.Logarithms  (integerLogBase#)
 import GHC.Types               (Int (..))
-import Data.Maybe (fromJust)
 
 {-| Square a number. Useful to have, instead of writing x^2 and getting a
     warning with -Wtype-defaults that the type of 2 is being inferred as

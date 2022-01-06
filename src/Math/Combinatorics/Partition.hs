@@ -11,6 +11,7 @@ Counting partitions of an integer.
 module Math.Combinatorics.Partition (numPartitions, partitions) where
 
 import Data.Chimera (memoizeFix)
+import Data.List (foldl')
 
 {-| The number of partitions of n. For example, since we can write 4 as
     1 + 1 + 1 + 1, 1 + 1 + 2, 1 + 3, 2 + 2, and 4, we have
@@ -38,7 +39,7 @@ part = memoizeFix partFix
 partFix :: (Word -> Integer) -> Word -> Integer
 partFix p n
   | n == 0    = 1
-  | otherwise = sum $ zipWith (*) weights $ map p recursiveArgs
+  | otherwise = foldl' (+) 0 $ zipWith (*) weights $ map p recursiveArgs
   where
     weights :: [Integer]
     weights = cycle [1, 1, -1, -1]

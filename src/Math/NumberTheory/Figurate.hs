@@ -12,6 +12,8 @@ module Math.NumberTheory.Figurate
     , triangularN
     ) where
 
+import Data.List (scanl')
+
 {-| Triangular numbers. Strict in the sense that evaluating a term result in the
     evaluation of all the terms behind it.
     
@@ -19,7 +21,7 @@ module Math.NumberTheory.Figurate
     [0, 1, 3, 6, 10, 15]
 -}
 triangular :: [Int]
-triangular = scanl1 (+) [0..]
+triangular = scanl' (+) 0 [1..]
 
 {-| The nth triangular number. Undefined for negative inputs.
 
