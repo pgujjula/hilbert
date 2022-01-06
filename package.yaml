@@ -45,7 +45,6 @@ library:
     - Math.NumberTheory.Prime
     - Math.NumberTheory.Prime.Factor
     - Math.Probability
-#    - Hilbert.Legendre
   other-modules:
     - Math.NumberTheory.ContinuedFraction.Core
     - Math.NumberTheory.ContinuedFraction.Sqrt
