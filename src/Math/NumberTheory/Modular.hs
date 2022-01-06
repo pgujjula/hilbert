@@ -9,14 +9,16 @@
     Functions to perform modular arithmetic.
 -}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Math.NumberTheory.Modular
-    ( modPow
-    , egcd
-    , modInv
+    ( egcd
     , chineseRemainder
     , chineseRemainderF
     ) where
+
+import Data.Mod (Mod, invertMod, unMod)
+import Data.Type.Natural (SNat, withSNat)
 
 import Control.Arrow                  ((>>>))
 import Control.Monad                  (foldM, (>=>))
@@ -25,41 +27,7 @@ import Data.Ord (comparing)
 import Data.Foldable                  (foldl')
 import Data.List.Duplicate            (groupBy)
 
-import Math.NumberTheory.Power        (square)
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
-
-{-| @modPow a b m @ efficiently computes @mod (a^b) (abs m)@. 'error' is called
-    when preconditions are not met.
-
-    __Preconditions:__
-
-        * @b@ ≥ 0
-        * @m@ ≠ 0
-
-    >>> modPow 3 5 10   -- 3^5 `mod` 10 == 243 `mod` 10 == 3
-    3
--}
-modPow :: (Integral a) => a -> a -> a -> a
-modPow a b m
-    | b < 0 = error "negative exponent"
-    | m == 0 = error "divide by zero"
-    | otherwise = fromIntegral $ unsafeModPow a' b' m'
-  where
-    a' = toInteger a `mod` m'
-    b' = toInteger b
-    m' = abs $ toInteger m
-
-unsafeModPow :: Integer -> Integer -> Integer -> Integer
-unsafeModPow a b m
-    -- Corner case
-    | b == 0                = 1 `rem` m
-    -- Base case
-    | b == 1                = a
-    -- Recursive cases
-    | even b                = square (unsafeModPow a b' m) `rem` m
-    | otherwise             = (a * square (unsafeModPow a b' m)) `rem` m
-  where
-    b' = b `quot` 2
 
 {-| @egcd m n@ is the extended GCD of @m@ and @n@. It is a tuple @(g, (a, b))@
     such that @gcd m n == g@ and @a*m + b*n == g@.
@@ -97,25 +65,6 @@ egcdRecursive m n m_coeffs n_coeffs
     (q, r) = quotRem n m
     (m0, m1) = m_coeffs
     (n0, n1) = n_coeffs
-
-{-| @modInv a m@ is the modular inverse of @a@ modulo @m@, if it exists.
-
-    >>> modInv 3 5
-    Just 2
-    >>> modInv 2 6
-    Nothing
-    >>> modInv 3 (-5)
-    Just 2
-    >>> modInv 16 7
-    Just 4
-    >>> modInv (-5) 1
-    Just 1
--}
-modInv :: (Integral a) => a -> a -> Maybe a
-modInv a m = if g == 1 then Just b' else Nothing
-  where (g, (b, _)) = egcd a m'
-        b' = if b > 0 then b else b + m'
-        m' = abs m
 
 {-| Solve a system of modular congruences. The input list is a list of pairs
     @(ai, mi)@, representing a system
@@ -158,6 +107,10 @@ solve (a, m) (b, n) = (x, s)
     x = ((a * (fromJust $ modInv n m)) * n
        + (b * (fromJust $ modInv m n)) * m)
        `rem` s
+
+modInv :: Integral a => a -> a -> Maybe a
+modInv a m = withSNat (fromIntegral m) $ \(_ :: SNat n) ->
+  fmap (fromIntegral . unMod) (invertMod (fromIntegral a :: Mod n))
 
 -- Given a prime p and a list of (xi, ki) representing a system of congruences
 --    x == xi (mod p^ki)

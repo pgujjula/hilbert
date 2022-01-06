@@ -50,6 +50,8 @@ library:
     - Math.NumberTheory.ContinuedFraction.Core
     - Math.NumberTheory.ContinuedFraction.Sqrt
   dependencies:
+    - mod
+    - type-natural
     - data-ordlist
     - chimera
     - containers
