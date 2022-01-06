@@ -37,7 +37,6 @@ library
       Math.NumberTheory.Power
       Math.NumberTheory.Prime
       Math.NumberTheory.Prime.Factor
-      Math.Polynomial
       Math.Probability
   other-modules:
       Math.NumberTheory.ContinuedFraction.Core
@@ -75,7 +74,6 @@ test-suite spec
       Math.NumberTheory.PowerSpec
       Math.NumberTheory.PrimeSpec
       Math.NumberTheory.Prime.FactorSpec
-      Math.PolynomialSpec
       Math.ProbabilitySpec
       Spec
   hs-source-dirs:

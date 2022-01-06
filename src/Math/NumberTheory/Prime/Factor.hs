@@ -62,7 +62,7 @@ count = map (\xs -> (head xs, length xs)) . groupAdj
 {-| Factor positive number.
     
     >>> factor 60
-    Just [(Prime 2,2),(Prime 3,1),(Prime 5,1)]
+    Just [(2,2),(3,1),(5,1)]
     >>> factor 1
     Just []
     >>> factor 0
@@ -141,11 +141,11 @@ factorizations' = Chimera.tabulateFix factorF
 
     >>> mapM_ print $ take 5 factorizations
     []
-    [(Prime 2,1)]
-    [(Prime 3,1)]
-    [(Prime 2,2)]
-    [(Prime 5,1)]
-    [(Prime 2,1),(Prime 3,1)]
+    [(2,1)]
+    [(3,1)]
+    [(2,2)]
+    [(5,1)]
+    [(2,1),(3,1)]
 -}
 factorizations :: [Factorization Int]
 factorizations = map count $ tail
