@@ -48,10 +48,8 @@ library
       apply-merge
     , base >=4.13 && <5.0
     , chimera
-    , composition
     , containers
     , data-ordlist
-    , ghc-prim
     , integer-gmp
     , list-duplicate
     , mod
@@ -92,18 +90,4 @@ test-suite spec
     , mod
     , quickcheck-assertions
     , random
-  default-language: Haskell2010
-
-benchmark fib
-  type: exitcode-stdio-1.0
-  main-is: Main.hs
-  other-modules:
-      Paths_hilbert
-  hs-source-dirs:
-      bench/fib
-  ghc-options: -Wall -Wcompat -Wmissing-export-lists -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Wmissing-home-modules -Werror=missing-home-modules -Widentities -Wredundant-constraints -Wmissing-export-lists -O2
-  build-depends:
-      base >=4.13 && <5.0
-    , criterion
-    , hilbert
   default-language: Haskell2010

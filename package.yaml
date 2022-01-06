@@ -49,18 +49,16 @@ library:
     - Math.NumberTheory.ContinuedFraction.Core
     - Math.NumberTheory.ContinuedFraction.Sqrt
   dependencies:
-    - mod
-    - type-natural
-    - data-ordlist
-    - chimera
-    - containers
-    - vector
-    - list-duplicate
-    - integer-gmp
-    - ghc-prim
-    - composition
-    - primesieve
     - apply-merge
+    - containers
+    - chimera
+    - data-ordlist
+    - integer-gmp
+    - list-duplicate
+    - mod
+    - primesieve
+    - type-natural
+    - vector
 
 tests:
   spec:
