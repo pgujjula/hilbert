@@ -93,13 +93,3 @@ tests:
       - list-duplicate
     ghc-options:
       - -Wno-type-defaults
-
-benchmarks:
-    fib:
-        source-dirs: bench/fib
-        main: Main.hs
-        dependencies:
-        - criterion
-        - hilbert
-        ghc-options:
-        - -O2
