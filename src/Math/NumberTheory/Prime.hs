@@ -22,7 +22,7 @@ import Data.Function ((&))
 import Data.List.Ordered (minus)
 import Data.Word (Word64)
 import Math.NumberTheory.Power (integralSqrt)
-import Math.NumberTheory.PrimeSieve qualified as PS
+import Math.NumberTheory.Prime.Sieve qualified as PS
 
 primes :: [Int]
 primes = fmap fromIntegral PS.primes
