@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 {-| Module      : Math.NumberTheory.Digit
     Description : Functions related to the binomial coefficient.
     Copyright   : (c) Preetham Gujjula, 2020
@@ -15,15 +16,19 @@ module Math.Combinatorics.Binomial
     , permute
     ) where
 
-import Data.List (foldl', genericTake, scanl')
+import Prelude hiding (quot)
+import Data.List (foldl', scanl')
+import Data.Euclidean (Euclidean, quot)
+import Data.Semiring (Semiring, product', fromNatural, one, zero, times)
 
 {-| The factorial of a number. Undefined behavior for negative inputs.
 
     >>> factorial 5
     120
 -}
-factorial :: (Integral a) => a -> a
-factorial n = foldl' (*) 1 [1..n]
+factorial :: (Integral a, Semiring b) => a -> b
+factorial n | n <= 0 = one
+factorial n = product' $ map (fromNatural . fromIntegral) [1..n]
 
 {-| The binomial coefficient. @choose n k@ is defined as 0 for any @n < 0@ or
     @k > n@ or @k < 0@.
@@ -31,28 +36,38 @@ factorial n = foldl' (*) 1 [1..n]
     >>> 5 `choose` 2
     10
 -}
-choose :: (Integral a) => a -> a -> a
+choose :: (Integral a, Euclidean b) => a -> a -> b
 choose n k
-    | n < 0          = 0
-    | k > n          = 0
-    | k < 0          = 0
-    | k > n `quot` 2 = choose' n (n - k)
-    | otherwise      = choose' n k
+    | n < 0     = zero
+    | k > n     = zero
+    | k < 0     = zero
+    | 2*k > n   = choose' n (n - k)
+    | otherwise = choose' n k
 
 -- no preconditions are checked
-choose' :: (Integral a) => a -> a -> a
-choose' n k = foldl' (\i (p, q) -> i * p `quot` q) 1
-            $ genericTake k
-            $ zip [n, n - 1..] [1..]
+choose' :: forall a b. (Integral a, Euclidean b) => a -> a -> b
+choose' n k =
+  foldl' (\i (p, q) -> (i `times` p) `quot` q) one
+  $ zip nums denoms
+    where
+      nums :: [b]
+      nums = map (fromNatural . fromIntegral) [n, n - 1..n-k+1] 
+
+      denoms :: [b]
+      denoms = map (fromNatural . fromIntegral) [1..k]
 
 {-| Given n, yields the binomial coefficients of exponent n. More efficent than
     mapping 'choose'. Undefined behavior if @n < 0@.
 -}
-binomialCoeffs :: Integral a => a -> [a]
+binomialCoeffs :: forall a b. (Integral a, Euclidean b) => a -> [b]
 binomialCoeffs n | n < 0 = error "binomialCoeffs: negative input"
-binomialCoeffs n = scanl' step 1 [0..n - 1]
+binomialCoeffs n = scanl' step one [0..n - 1]
   where
-    step x k = x * (n - k) `quot` (k + 1)
+    step :: b -> a -> b
+    step x k = (x `times` aToB (n - k)) `quot` aToB (k + 1)
+
+    aToB :: a -> b
+    aToB = fromNatural . fromIntegral
 
 {-| Number of permutations groups of size @k@, selected from a group of size
     @n@. @permute n k@ is defined as 0 for any @n < 0@ or @k > n@ or @k < 0@.
@@ -60,9 +75,9 @@ binomialCoeffs n = scanl' step 1 [0..n - 1]
     >>> 5 `permute` 2
     20
 -}
-permute :: (Integral a) => a -> a -> a
+permute :: (Integral a, Semiring b) => a -> a -> b
 permute n k
-    | n < 0     = 0
-    | k > n     = 0
-    | k < 0     = 0
-    | otherwise = foldl' (*) 1 $ genericTake k [n, n - 1..]
+    | n < 0     = zero
+    | k > n     = zero
+    | k < 0     = zero
+    | otherwise = product' $ map (fromNatural . fromIntegral) [n, n - 1..n-k+1]

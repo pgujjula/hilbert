@@ -55,8 +55,10 @@ library:
     - data-ordlist
     - integer-gmp
     - list-duplicate
+    - list-filter
     - mod
     - primesieve
+    - semirings
     - type-natural
     - vector
 
