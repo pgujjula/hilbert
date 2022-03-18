@@ -1,10 +1,10 @@
 name:                hilbert
 version:             0.1.20.0
-synopsis:            Number theory in pure Haskell
+synopsis:            Mathematics in pure Haskell
 github:              "pgujjula/hilbert"
 license:             GPL-3
 author:              "Preetham Gujjula"
-maintainer:          "pgujjula+hilbert@protonmail.com"
+maintainer:          "libraries@mail.preetham.io"
 copyright:           "2020 Preetham Gujjula"
 
 category: Math
