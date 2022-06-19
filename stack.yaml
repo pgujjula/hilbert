@@ -1,4 +1,4 @@
-resolver: lts-19.11
+resolver: lts-19.12
 packages:
   - .
 extra-deps:
@@ -9,4 +9,4 @@ extra-deps:
   - git: git@github.com:pgujjula/chimera.git
     commit: 7cba5f970a34483ce66d6b774416c8499feca4a4
   - git: https://github.com/pgujjula/primesieve-haskell.git
-    commit: 2facb3215b1a277137f83e9cda53cce15855e47f
+    commit: e433c2e8693fc0a35ac65f1a4f2e08a305ce5acf
