@@ -15,6 +15,7 @@ module Math.NumberTheory.Prime.Factor
     , simplify
     , factor
     , factorizations
+    , smallestFactor
 --    , factorizationsTo
     ) where
 
@@ -125,7 +126,7 @@ smallestFactor = 2 : sieve (IntMap.singleton 4 [2]) [3..]
     reinsert (d, ps) mp = foldl' (flip insert) mp (updates (d, ps))
 
 smallestFactorC :: Chimera Vector Word
-smallestFactorC = Chimera.mapSubvectors (Vector.map (fromIntegral . head)) $ Chimera.iterate tail (0:0:smallestFactor)
+smallestFactorC = Chimera.fromList (map fromIntegral (0:0:smallestFactor))
 
 factorizations' :: Chimera Vector [Word]
 factorizations' = Chimera.tabulateFix factorF
@@ -151,6 +152,3 @@ factorizations :: [Factorization Int]
 factorizations = map count $ tail
                $ map (map fromIntegral)
                $ Chimera.toList factorizations'
-
---factorizationsTo :: Int -> [Factorization Int]
---factorizationsTo = undefined
