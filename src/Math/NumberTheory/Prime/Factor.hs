@@ -8,6 +8,11 @@
     Prime factorization.
 -}
 
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE ImportQualifiedPost #-}
+{-# LANGUAGE BangPatterns #-}
+
 module Math.NumberTheory.Prime.Factor
     ( Factorization
     , multiply
@@ -16,22 +21,24 @@ module Math.NumberTheory.Prime.Factor
     , factor
     , factorizations
     , smallestFactor
---    , factorizationsTo
     ) where
 
+import Control.Monad (forM_)
+import Data.Ratio ((%))
+import Data.Tuple (swap)
 import           Data.IntMap             (IntMap)
 import qualified Data.IntMap             as IntMap
-import           Data.List               (foldl')
+import           Data.List               (foldl', mapAccumL)
 import           Data.Maybe              (fromMaybe)
 import           Data.Vector             (Vector)
 import qualified Data.Vector             as Vector
 
-import           Data.Chimera            (Chimera)
-import qualified Data.Chimera            as Chimera
-
 import           Data.List.Duplicate     (groupAdj)
+import Data.Function ((&))
+import Control.Monad.ST (runST)
+import Data.Vector.Mutable qualified as MVector
 
-import           Math.NumberTheory.Power (integralSqrt)
+import           Math.NumberTheory.Power (integralSqrt, square)
 import           Math.NumberTheory.Prime (primes)
 
 {-| Type to represent factorizations -}
@@ -125,19 +132,6 @@ smallestFactor = 2 : sieve (IntMap.singleton 4 [2]) [3..]
     reinsert :: (Int, [Int]) -> IntMap [Int] -> IntMap [Int]
     reinsert (d, ps) mp = foldl' (flip insert) mp (updates (d, ps))
 
-smallestFactorC :: Chimera Vector Word
-smallestFactorC = Chimera.fromList (map fromIntegral (0:0:smallestFactor))
-
-factorizations' :: Chimera Vector [Word]
-factorizations' = Chimera.tabulateFix factorF
-  where
-    factorF :: (Word -> [Word]) -> Word -> [Word]
-    factorF f n
-        | n <= 1    = []
-        | otherwise = p : f (n `quot` p)
-      where
-        p = Chimera.index smallestFactorC n
-
 {-| An infinite list of the factorizations of [1..].
 
     >>> mapM_ print $ take 5 factorizations
@@ -149,6 +143,85 @@ factorizations' = Chimera.tabulateFix factorF
     [(2,1),(3,1)]
 -}
 factorizations :: [Factorization Int]
-factorizations = map count $ tail
-               $ map (map fromIntegral)
-               $ Chimera.toList factorizations'
+factorizations = zipWith mkFactorization [1..] smallFactors
+
+mkFactorization :: Int -> [Int] -> Factorization Int
+mkFactorization n ps =
+  case divideOutAll n ps of
+    (1, fs) -> fs
+    (p, fs) -> fs ++ [(p, 1)]
+  where
+    divideOutAll :: Int -> [Int] -> (Int, [(Int, Int)])
+    divideOutAll = mapAccumL divideOut 
+
+    divideOut :: Int -> Int -> (Int, (Int, Int))
+    divideOut k p = go 0 k
+      where
+        go :: Int -> Int -> (Int, (Int, Int))
+        go !i k' =
+          let (q, r) = k' `quotRem` p
+           in if r == 0
+              then go (i+1) q
+              else (k', (p, i))
+
+-- Generate the small prime factors (i.e. <=sqrt(n)) of the positive integers
+-- in a streaming fashion.
+--
+-- The idea is that we split the positive integers into intervals of the form
+-- [n .. n + O(sqrt(n))], and use the Sieve of Erastosthenes to factor the
+-- numbers in each interval.
+--
+-- For a given interval, we only need to mark the multiples of primes up to
+-- O(sqrt(n)). Since the interval width is O(sqrt(n)), each prime will have
+-- at least O(1) multiple in the interval.
+--
+-- If the interval width is smaller than O(sqrt(n)), then many primes will have
+-- less than O(1) expected multiples in the interval, and the efficiency of the
+-- sieve drops. As an extreme case, if the interval width was 1, then the sieve
+-- behavior degrades to trying every prime on every positive integer: this is
+-- trial division!
+--
+-- We want to keep the interval width as small as possible to avoid excessive
+-- memory use, so we don't want an interval width larger than O(sqrt(n)).
+
+-- Each chunk represents an interval [n..m] as (sqrt m, n, m)
+type Chunk = (Int, Int, Int)
+
+smallFactors :: [[Int]]
+smallFactors =
+  sieveAllChunks smallFactorSieve
+  & concatMap Vector.toList
+  where
+    -- Split the positive integers into chunks [n0..m0], [n1..m1], ..
+    chunks :: [Chunk]
+    chunks = map (\a -> (a+1, square a + 1, square (a+1))) [0..]
+
+    -- For all i, concat (take i primeGroups) are all the primes that are
+    -- <= sqrt mi
+    primeGroups :: [[Int]]
+    primeGroups = snd (mapAccumL f primes chunks)
+      where
+        f :: [Int] -> (Int, Int, Int) -> ([Int], [Int])
+        f ps (sqrtm, _, _) = swap (span (<= sqrtm) ps)
+
+    -- Given a chunk [ni..mi] and all primes <= sqrt(mi), generate a Vector
+    -- containing the small prime factors of each integer in [ni..mi].
+    smallFactorSieve :: [Int] -> Chunk -> Vector [Int]
+    smallFactorSieve ps (_, n, m) = runST $ do
+      v <- MVector.replicate (m - n + 1) []
+      forM_ ps $ \p -> do
+        let lower = p*ceiling (n % p)
+            upper = p*(m `quot` p)
+         in forM_ [lower, lower+p..upper] $ \i ->
+              MVector.modify v (p:) (i-n)
+      Vector.unsafeFreeze v
+
+    -- Given a sieve that operates on a single chunk, sieve all the chunks in
+    -- order
+    sieveAllChunks :: forall a. ([Int] -> Chunk -> a) -> [a]
+    sieveAllChunks sieve = snd $ mapAccumL go [] (zip primeGroups chunks)
+      where
+        go :: [Int] -> ([Int], Chunk) -> ([Int], a)
+        go oldPrimes (freshPrimes, chunk) =
+          let newPrimes = reverse freshPrimes ++ oldPrimes
+           in (newPrimes, sieve newPrimes chunk)
