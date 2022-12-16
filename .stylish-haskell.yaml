@@ -203,6 +203,8 @@ steps:
       # Default: false
       space_surround: false
 
+      post_qualify: true
+
   # Language pragmas
   - language_pragmas:
       # We can generate different styles of language pragma lists.
