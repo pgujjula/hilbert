@@ -1,12 +1,15 @@
+{-# LANGUAGE MultiWayIf #-}
 module Math.NumberTheory.Prime.FactorSpec (spec) where
 
+import Control.Arrow                  ((>>>))
 import Control.Monad                  (forM_, zipWithM_)
+import Data.List.Duplicate            (groupAdj)
 import Data.Maybe                     (fromJust)
-
+import Math.NumberTheory.Prime.Sieve  (primes)
 import Test.Hspec                     (Spec, describe, it, shouldBe)
 import Test.QuickCheck                (Gen, choose, forAll, (===))
 
-import Math.NumberTheory.Prime.Factor (factor, factorizations,
+import Math.NumberTheory.Prime.Factor (Factorization, factor, factorizations,
                                        factorizationsFrom, multiply, pow,
                                        simplify)
 
@@ -59,8 +62,7 @@ factorSpec = do
 factorizationsSpec :: Spec
 factorizationsSpec =
     it "correct up to limit" $
-        forM_ (zip factorizations [1..limit]) $ \(fact, x) ->
-            simplify fact `shouldBe` x
+      zipWithM_ shouldBe (take limit factorizations) (map factorNaive [1..limit])
 
 factorizationsFromSpec :: Spec
 factorizationsFromSpec =
@@ -68,3 +70,20 @@ factorizationsFromSpec =
       forM_ [1..30] $ \i ->
         take limit (factorizationsFrom i)
         `shouldBe` take limit (drop (i-1) factorizations)
+
+factorNaive :: Int -> Factorization Int
+factorNaive =
+  findFactors
+  >>> groupAdj
+  >>> map (\x -> (head x, length x))
+
+findFactors :: Int -> [Int]
+findFactors n = findFactorsWith n (map fromIntegral primes)
+
+findFactorsWith :: Int -> [Int] -> [Int]
+findFactorsWith _ [] = error "impossible"
+findFactorsWith n (p:ps) =
+  let (q, r) = n `quotRem` p
+   in if | p > n     -> []
+         | r == 0    -> p : findFactorsWith q (p:ps)
+         | otherwise -> findFactorsWith n ps
