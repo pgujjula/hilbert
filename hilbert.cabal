@@ -36,6 +36,7 @@ library
       Math.NumberTheory.Modular
       Math.NumberTheory.Power
       Math.NumberTheory.Prime
+      Math.NumberTheory.Prime.SegmentedSieve
       Math.NumberTheory.Prime.Factor
       Math.Probability
   other-modules:

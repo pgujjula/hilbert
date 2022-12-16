@@ -6,6 +6,7 @@
 module Main (main) where
 
 import Data.Function                  ((&))
+import Math.NumberTheory.Divisor      (mobiusesFrom)
 import Math.NumberTheory.Prime.Factor (factorizationsFrom)
 import Test.Tasty.Bench
 
@@ -26,5 +27,23 @@ factorizationsFromBenchmark = bgroup "factorizationsFrom" (fmap mkBench [1..7])
       & map (sum . map (uncurry (+)))
       & sum
 
+mobiusesFromBenchmark :: Benchmark
+mobiusesFromBenchmark = bgroup "mobiusesFrom" (map mkBench [1..8])
+  where
+    mkBench :: Int -> Benchmark
+    mkBench expo =
+      bench
+        ("take (10^" ++ show expo ++ ") (factorizationsFrom 1)")
+        (nf collapseMobiuses (10^expo))
+
+    collapseMobiuses :: Int -> Int
+    collapseMobiuses n =
+      mobiusesFrom ((n `quot` maxBound)+1)
+      & take n
+      & sum
+
 main :: IO ()
-main = defaultMain [factorizationsFromBenchmark]
+main = defaultMain
+  [ factorizationsFromBenchmark
+  , mobiusesFromBenchmark
+  ]

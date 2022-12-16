@@ -10,9 +10,10 @@ import Test.Hspec                     (Spec, anyException, describe, it,
 
 import Math.NumberTheory.Divisor      (divides, divisorPairs, divisorPairsF,
                                        divisors, divisorsF, mobius, mobiusF,
-                                       numDivisors, numDivisorsF,
-                                       relativelyPrime, sumDivisors,
-                                       sumDivisorsF, totient, totientF)
+                                       mobiuses, mobiusesFrom, numDivisors,
+                                       numDivisorsF, relativelyPrime,
+                                       sumDivisors, sumDivisorsF, totient,
+                                       totientF)
 import Math.NumberTheory.Prime.Factor (factor, factorizations)
 
 limit :: Int
@@ -39,6 +40,8 @@ spec = do
 
     describe "mobius"          mobiusSpec
     describe "mobiusF"         mobiusFSpec
+    describe "mobiuses"        mobiusesSpec
+    describe "mobiusesFrom"    mobiusesFromSpec
 
 dividesSpec :: Spec
 dividesSpec = do
@@ -158,5 +161,17 @@ mobiusSpec = do
 mobiusFSpec :: Spec
 mobiusFSpec = do
   it "correct up to 10" $ do
-    zipWithM_ shouldBe (fmap mobiusF $ take 10 factorizations)
+    zipWithM_ shouldBe (mobiusF <$> take 10 factorizations)
                        [1,-1,-1,0,-1,1,-1,0,0,1]
+
+mobiusesSpec :: Spec
+mobiusesSpec = do
+  it "matches mobius up to limit" $ do
+    zipWithM_ shouldBe (take limit mobiuses) (map mobius [1..limit])
+
+mobiusesFromSpec :: Spec
+mobiusesFromSpec = do
+  it "correct up to limit, for many start points" $
+    forM_ [1..30] $ \i ->
+      take limit (mobiusesFrom i)
+      `shouldBe` take limit (drop (i-1) mobiuses)

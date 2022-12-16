@@ -8,11 +8,9 @@
     Prime factorization.
 -}
 
-{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE BangPatterns        #-}
 {-# LANGUAGE ImportQualifiedPost #-}
-{-# LANGUAGE BangPatterns #-}
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase          #-}
 
 module Math.NumberTheory.Prime.Factor
     ( Factorization
@@ -25,22 +23,24 @@ module Math.NumberTheory.Prime.Factor
     , smallestFactor
     ) where
 
-import Control.Monad (forM_)
-import Data.Tuple (swap)
-import           Data.IntMap             (IntMap)
-import qualified Data.IntMap             as IntMap
-import           Data.List               (foldl', mapAccumL)
-import           Data.Maybe              (fromMaybe)
-import           Data.Vector             (Vector)
-import qualified Data.Vector             as Vector
+import Control.Monad                          (forM_)
+import Data.IntMap                            (IntMap)
+import Data.IntMap                            qualified as IntMap
+import Data.List                              (foldl')
+import Data.Maybe                             (fromMaybe)
+import Data.Vector                            (Vector)
+import Data.Vector                            qualified as Vector
 
-import           Data.List.Duplicate     (groupAdj)
-import Data.Function ((&))
-import Control.Monad.ST (runST)
-import Data.Vector.Mutable qualified as MVector
+import Control.Monad.ST                       (runST)
+import Data.Function                          ((&))
+import Data.List.Duplicate                    (groupAdj)
+import Data.Vector.Mutable                    qualified as MVector
 
-import           Math.NumberTheory.Power (integralSqrt, square)
-import           Math.NumberTheory.Prime (primes)
+import Math.NumberTheory.Power                (integralSqrt)
+import Math.NumberTheory.Prime                (primes)
+import Math.NumberTheory.Prime.SegmentedSieve (Chunk, largestMultipleLE,
+                                               sieveAllChunks,
+                                               smallestMultipleGE)
 
 {-| Type to represent factorizations -}
 type Factorization a = [(a, Int)]
@@ -192,7 +192,6 @@ factorizationsFrom n = zipWith mkFactorization [n..] smallFactors
 -- memory use, so we don't want an interval width larger than O(sqrt(n)).
 
 -- Each chunk represents an interval [n..m] as (sqrt m, n, m)
-type Chunk = (Int, Int, Int)
 
 -- Given a chunk [ni..mi] and all primes <= sqrt(mi), generate a Vector
 -- containing the small prime factors of each integer in [ni..mi].
@@ -201,8 +200,8 @@ smallFactorSieve ps (_, n, m) = runST $ do
   v <- MVector.replicate (m - n + 1) []
   forM_ ps $ \p ->
     forM_ (takeWhile (<= m) $ iterate (*p) p) $ \pk ->
-      let lower = pk*(((n-1) `quot` pk) + 1)
-          upper = pk*(m `quot` pk)
+      let lower = smallestMultipleGE pk n
+          upper = largestMultipleLE pk m
        in forM_ [lower, lower+pk..upper] $ \i ->
             MVector.modify v (\case
                 [] -> [(p, 1)]
@@ -212,34 +211,3 @@ smallFactorSieve ps (_, n, m) = runST $ do
                   else (p,1):qes
               ) (i-n)
   Vector.unsafeFreeze v
-
--- Split the positive integers into chunks [start..m0], [n1..m1], ..
-mkChunks :: Int -> [Chunk]
-mkChunks start = map (\a -> (a+1, square a + 1, square (a+1))) [a0..]
-       & truncateHead
-  where
-    a0 = integralSqrt (start-1)
-    truncateHead ((sqrtm, _, m):xs) = (sqrtm, start, m) : xs
-
--- For all i, concat (take i primeGroups) are all the primes that are
--- <= sqrt mi
-mkPrimeGroups :: [Chunk] -> [[Int]]
-mkPrimeGroups chunks = snd (mapAccumL f primes chunks)
-  where
-    f :: [Int] -> (Int, Int, Int) -> ([Int], [Int])
-    f ps (sqrtm, _, _) = swap (span (<= sqrtm) ps)
-
--- Given a sieve that operates on a single chunk, sieve all the chunks in order
-sieveAllChunks :: forall a. Int -> ([Int] -> Chunk -> a) -> [a]
-sieveAllChunks start sieve = snd $ mapAccumL go [] (zip primeGroups chunks)
-  where
-    primeGroups :: [[Int]]
-    primeGroups = mkPrimeGroups chunks
-
-    chunks :: [Chunk]
-    chunks = mkChunks start
-
-    go :: [Int] -> ([Int], Chunk) -> ([Int], a)
-    go oldPrimes (freshPrimes, chunk) =
-      let newPrimes = reverse freshPrimes ++ oldPrimes
-       in (newPrimes, sieve newPrimes chunk)

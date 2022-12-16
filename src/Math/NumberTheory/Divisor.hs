@@ -8,6 +8,8 @@
     Divisors of integers.
 -}
 
+{-# LANGUAGE ImportQualifiedPost #-}
+
 module Math.NumberTheory.Divisor
     ( divides
     , divisors
@@ -25,16 +27,28 @@ module Math.NumberTheory.Divisor
 
     , totient
     , totientF
-    
+
     , mobius
     , mobiusF
+    , mobiuses
+    , mobiusesFrom
     ) where
 
-import Control.Applicative            (liftA2)
-import Data.List                      (foldl')
-import Data.Maybe                     (fromMaybe)
+import Control.Applicative                    (liftA2)
+import Control.Monad                          (forM_)
+import Control.Monad.ST                       (runST)
+import Data.Function                          ((&))
+import Data.List                              (foldl')
+import Data.Maybe                             (fromMaybe)
+import Data.Vector.Unboxed                    (Vector)
+import Data.Vector.Unboxed                    qualified as Vector
+import Data.Vector.Unboxed.Mutable            qualified as MVector
 
-import Math.NumberTheory.Prime.Factor (Factorization, factor)
+import Math.NumberTheory.Power                (square)
+import Math.NumberTheory.Prime.Factor         (Factorization, factor)
+import Math.NumberTheory.Prime.SegmentedSieve (Chunk, largestMultipleLE,
+                                               sieveAllChunks,
+                                               smallestMultipleGE)
 
 {-| @a `divides` b@ is True iff there is an integer @k@ such that @a*k == b@.
 
@@ -210,3 +224,36 @@ mobiusF fact
   | any (> 1) (fmap snd fact) = 0
   | even (length fact)        = 1
   | otherwise                 = -1
+
+-- The mobius function on the postive integers
+mobiuses :: [Int]
+mobiuses = mobiusesFrom 1
+
+mobiusesFrom :: Int -> [Int]
+mobiusesFrom start =
+  sieveAllChunks start mobiusSieve
+  & concatMap Vector.toList
+  & zipWith mkMobius [start..]
+    where
+      mkMobius :: Int -> (Int, Int) -> Int
+      mkMobius n (prod, mob)
+        | mob == 0  = 0
+        | prod == n = mob
+        | otherwise = -mob
+
+      mobiusSieve :: [Int] -> Chunk -> Vector (Int, Int)
+      mobiusSieve ps (_, n, m) = runST $ do
+        v <- MVector.replicate (m - n + 1) (1, 1)
+        forM_ ps $ \p -> do
+           let lower = smallestMultipleGE p n
+           let upper = largestMultipleLE p m
+           forM_ [lower, lower+p..upper] $ \i ->
+             flip (MVector.modify v) (i-n) $ \(prod, mob) -> (p*prod, -mob)
+
+           forM_ (takeWhile (<= m) $ iterate (*p) (square p)) $ \pk ->
+              let lower' = smallestMultipleGE pk n
+                  upper' = largestMultipleLE pk m
+               in forM_ [lower', lower'+pk..upper'] $ \i -> do
+                    flip (MVector.modify v) (i-n) $ \(prod, _) -> (p*prod, 0)
+
+        Vector.unsafeFreeze v
