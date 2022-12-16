@@ -12,6 +12,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE ImportQualifiedPost #-}
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE LambdaCase #-}
 
 module Math.NumberTheory.Prime.Factor
     ( Factorization
@@ -20,6 +21,7 @@ module Math.NumberTheory.Prime.Factor
     , simplify
     , factor
     , factorizations
+    , factorizationsFrom
     , smallestFactor
     ) where
 
@@ -68,7 +70,7 @@ count :: (Ord a) => [a] -> [(a, Int)]
 count = map (\xs -> (head xs, length xs)) . groupAdj
 
 {-| Factor positive number.
-    
+
     >>> factor 60
     Just [(2,2),(3,1),(5,1)]
     >>> factor 1
@@ -134,7 +136,7 @@ smallestFactor = 2 : sieve (IntMap.singleton 4 [2]) [3..]
 
 {-| An infinite list of the factorizations of [1..].
 
-    >>> mapM_ print $ take 5 factorizations
+    >>> mapM_ print $ take 6 factorizations
     []
     [(2,1)]
     [(3,1)]
@@ -143,26 +145,44 @@ smallestFactor = 2 : sieve (IntMap.singleton 4 [2]) [3..]
     [(2,1),(3,1)]
 -}
 factorizations :: [Factorization Int]
-factorizations = zipWith mkFactorization [1..] smallFactors
+factorizations = factorizationsFrom 1
 
-mkFactorization :: Int -> [Int] -> Factorization Int
-mkFactorization n ps =
-  case divideOutAll n ps of
-    (1, fs) -> fs
-    (p, fs) -> fs ++ [(p, 1)]
+{-| An infinite list of the factorizations of [n..].
+
+    >>> mapM_ print $ take 6 (factorizationsFrom 3)
+    [(3,1)]
+    [(2,2)]
+    [(5,1)]
+    [(2,1),(3,1)]
+    [(7,1)]
+    [(2,3)]
+-}
+factorizationsFrom :: Int -> [Factorization Int]
+factorizationsFrom n = zipWith mkFactorization [n..] smallFactors
   where
-    divideOutAll :: Int -> [Int] -> (Int, [(Int, Int)])
-    divideOutAll = mapAccumL divideOut 
+    smallFactors :: [[Int]]
+    smallFactors =
+      sieveAllChunks n smallFactorSieve
+      & concatMap Vector.toList
 
-    divideOut :: Int -> Int -> (Int, (Int, Int))
-    divideOut k p = go 0 k
+    mkFactorization :: Int -> [Int] -> Factorization Int
+    mkFactorization k ps =
+      case divideOutAll k ps of
+        (1, fs) -> fs
+        (p, fs) -> fs ++ [(p, 1)]
       where
-        go :: Int -> Int -> (Int, (Int, Int))
-        go !i k' =
-          let (q, r) = k' `quotRem` p
-           in if r == 0
-              then go (i+1) q
-              else (k', (p, i))
+        divideOutAll :: Int -> [Int] -> (Int, [(Int, Int)])
+        divideOutAll = mapAccumL divideOut
+
+        divideOut :: Int -> Int -> (Int, (Int, Int))
+        divideOut t p = go 0 t
+          where
+            go :: Int -> Int -> (Int, (Int, Int))
+            go !i t' =
+              let (q, r) = t' `quotRem` p
+               in if r == 0
+                  then go (i+1) q
+                  else (t', (p, i))
 
 -- Generate the small prime factors (i.e. <=sqrt(n)) of the positive integers
 -- in a streaming fashion.
@@ -187,41 +207,45 @@ mkFactorization n ps =
 -- Each chunk represents an interval [n..m] as (sqrt m, n, m)
 type Chunk = (Int, Int, Int)
 
-smallFactors :: [[Int]]
-smallFactors =
-  sieveAllChunks smallFactorSieve
-  & concatMap Vector.toList
+-- Given a chunk [ni..mi] and all primes <= sqrt(mi), generate a Vector
+-- containing the small prime factors of each integer in [ni..mi].
+smallFactorSieve :: [Int] -> Chunk -> Vector [Int]
+smallFactorSieve ps (_, n, m) = runST $ do
+  v <- MVector.replicate (m - n + 1) []
+  forM_ ps $ \p -> do
+    let lower = p*ceiling (n % p)
+        upper = p*(m `quot` p)
+     in forM_ [lower, lower+p..upper] $ \i ->
+          MVector.modify v (p:) (i-n)
+  Vector.unsafeFreeze v
+
+-- Split the positive integers into chunks [start..m0], [n1..m1], ..
+mkChunks :: Int -> [Chunk]
+mkChunks start = map (\a -> (a+1, square a + 1, square (a+1))) [a0..]
+       & truncateHead
   where
-    -- Split the positive integers into chunks [n0..m0], [n1..m1], ..
-    chunks :: [Chunk]
-    chunks = map (\a -> (a+1, square a + 1, square (a+1))) [0..]
+    a0 = integralSqrt (start-1)
+    truncateHead ((sqrtm, _, m):xs) = (sqrtm, start, m) : xs
 
-    -- For all i, concat (take i primeGroups) are all the primes that are
-    -- <= sqrt mi
+-- For all i, concat (take i primeGroups) are all the primes that are
+-- <= sqrt mi
+mkPrimeGroups :: [Chunk] -> [[Int]]
+mkPrimeGroups chunks = snd (mapAccumL f primes chunks)
+  where
+    f :: [Int] -> (Int, Int, Int) -> ([Int], [Int])
+    f ps (sqrtm, _, _) = swap (span (<= sqrtm) ps)
+
+-- Given a sieve that operates on a single chunk, sieve all the chunks in order
+sieveAllChunks :: forall a. Int -> ([Int] -> Chunk -> a) -> [a]
+sieveAllChunks start sieve = snd $ mapAccumL go [] (zip primeGroups chunks)
+  where
     primeGroups :: [[Int]]
-    primeGroups = snd (mapAccumL f primes chunks)
-      where
-        f :: [Int] -> (Int, Int, Int) -> ([Int], [Int])
-        f ps (sqrtm, _, _) = swap (span (<= sqrtm) ps)
+    primeGroups = mkPrimeGroups chunks
 
-    -- Given a chunk [ni..mi] and all primes <= sqrt(mi), generate a Vector
-    -- containing the small prime factors of each integer in [ni..mi].
-    smallFactorSieve :: [Int] -> Chunk -> Vector [Int]
-    smallFactorSieve ps (_, n, m) = runST $ do
-      v <- MVector.replicate (m - n + 1) []
-      forM_ ps $ \p -> do
-        let lower = p*ceiling (n % p)
-            upper = p*(m `quot` p)
-         in forM_ [lower, lower+p..upper] $ \i ->
-              MVector.modify v (p:) (i-n)
-      Vector.unsafeFreeze v
+    chunks :: [Chunk]
+    chunks = mkChunks start
 
-    -- Given a sieve that operates on a single chunk, sieve all the chunks in
-    -- order
-    sieveAllChunks :: forall a. ([Int] -> Chunk -> a) -> [a]
-    sieveAllChunks sieve = snd $ mapAccumL go [] (zip primeGroups chunks)
-      where
-        go :: [Int] -> ([Int], Chunk) -> ([Int], a)
-        go oldPrimes (freshPrimes, chunk) =
-          let newPrimes = reverse freshPrimes ++ oldPrimes
-           in (newPrimes, sieve newPrimes chunk)
+    go :: [Int] -> ([Int], Chunk) -> ([Int], a)
+    go oldPrimes (freshPrimes, chunk) =
+      let newPrimes = reverse freshPrimes ++ oldPrimes
+       in (newPrimes, sieve newPrimes chunk)

@@ -6,7 +6,8 @@ import Data.Maybe                     (fromJust)
 import Test.Hspec                     (Spec, describe, it, shouldBe)
 import Test.QuickCheck                (Gen, choose, forAll, (===))
 
-import Math.NumberTheory.Prime.Factor (factor, factorizations, multiply, pow,
+import Math.NumberTheory.Prime.Factor (factor, factorizations,
+                                       factorizationsFrom, multiply, pow,
                                        simplify)
 
 spec :: Spec
@@ -16,6 +17,7 @@ spec = do
     describe "simplify" simplifySpec
     describe "factor" factorSpec
     describe "factorizations" factorizationsSpec
+    describe "factorizationsFrom" factorizationsFromSpec
 
 limit :: (Integral a) => a
 limit = 5000
@@ -59,3 +61,10 @@ factorizationsSpec =
     it "correct up to limit" $
         forM_ (zip factorizations [1..limit]) $ \(fact, x) ->
             simplify fact `shouldBe` x
+
+factorizationsFromSpec :: Spec
+factorizationsFromSpec =
+    it "correct up to limit, for many start points" $
+      forM_ [1..30] $ \i ->
+        take limit (factorizationsFrom i)
+        `shouldBe` take limit (drop (i-1) factorizations)
