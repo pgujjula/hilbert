@@ -26,7 +26,6 @@ module Math.NumberTheory.Prime.Factor
     ) where
 
 import Control.Monad (forM_)
-import Data.Ratio ((%))
 import Data.Tuple (swap)
 import           Data.IntMap             (IntMap)
 import qualified Data.IntMap             as IntMap
@@ -160,29 +159,17 @@ factorizations = factorizationsFrom 1
 factorizationsFrom :: Int -> [Factorization Int]
 factorizationsFrom n = zipWith mkFactorization [n..] smallFactors
   where
-    smallFactors :: [[Int]]
+    smallFactors :: [[(Int, Int)]]
     smallFactors =
       sieveAllChunks n smallFactorSieve
       & concatMap Vector.toList
 
-    mkFactorization :: Int -> [Int] -> Factorization Int
-    mkFactorization k ps =
-      case divideOutAll k ps of
-        (1, fs) -> fs
-        (p, fs) -> fs ++ [(p, 1)]
-      where
-        divideOutAll :: Int -> [Int] -> (Int, [(Int, Int)])
-        divideOutAll = mapAccumL divideOut
-
-        divideOut :: Int -> Int -> (Int, (Int, Int))
-        divideOut t p = go 0 t
-          where
-            go :: Int -> Int -> (Int, (Int, Int))
-            go !i t' =
-              let (q, r) = t' `quotRem` p
-               in if r == 0
-                  then go (i+1) q
-                  else (t', (p, i))
+    mkFactorization :: Int -> [(Int, Int)] -> Factorization Int
+    mkFactorization k pes =
+      let p = k `quot` simplify pes
+       in if p == 1
+          then pes
+          else pes ++ [(p, 1)]
 
 -- Generate the small prime factors (i.e. <=sqrt(n)) of the positive integers
 -- in a streaming fashion.
@@ -209,14 +196,21 @@ type Chunk = (Int, Int, Int)
 
 -- Given a chunk [ni..mi] and all primes <= sqrt(mi), generate a Vector
 -- containing the small prime factors of each integer in [ni..mi].
-smallFactorSieve :: [Int] -> Chunk -> Vector [Int]
+smallFactorSieve :: [Int] -> Chunk -> Vector [(Int, Int)]
 smallFactorSieve ps (_, n, m) = runST $ do
   v <- MVector.replicate (m - n + 1) []
-  forM_ ps $ \p -> do
-    let lower = p*ceiling (n % p)
-        upper = p*(m `quot` p)
-     in forM_ [lower, lower+p..upper] $ \i ->
-          MVector.modify v (p:) (i-n)
+  forM_ ps $ \p ->
+    forM_ (takeWhile (<= m) $ iterate (*p) p) $ \pk ->
+      let lower = pk*(((n-1) `quot` pk) + 1)
+          upper = pk*(m `quot` pk)
+       in forM_ [lower, lower+pk..upper] $ \i ->
+            MVector.modify v (\case
+                [] -> [(p, 1)]
+                qes@((q,!e):qes') ->
+                  if p == q
+                  then (q,e+1):qes'
+                  else (p,1):qes
+              ) (i-n)
   Vector.unsafeFreeze v
 
 -- Split the positive integers into chunks [start..m0], [n1..m1], ..
