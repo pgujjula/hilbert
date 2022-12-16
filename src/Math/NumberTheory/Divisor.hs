@@ -235,25 +235,25 @@ mobiusesFrom start =
   & concatMap Vector.toList
   & zipWith mkMobius [start..]
     where
-      mkMobius :: Int -> (Int, Int) -> Int
-      mkMobius n (prod, mob)
-        | mob == 0  = 0
-        | prod == n = mob
-        | otherwise = -mob
+      mkMobius :: Int -> Int -> Int
+      mkMobius n signedProd
+        | signedProd == 0     = 0
+        | abs signedProd == n = signum signedProd
+        | otherwise           = -signum signedProd
 
-      mobiusSieve :: [Int] -> Chunk -> Vector (Int, Int)
+      mobiusSieve :: [Int] -> Chunk -> Vector Int
       mobiusSieve ps (_, n, m) = runST $ do
-        v <- MVector.replicate (m - n + 1) (1, 1)
+        v <- MVector.replicate (m - n + 1) 1
         forM_ ps $ \p -> do
            let lower = smallestMultipleGE p n
            let upper = largestMultipleLE p m
            forM_ [lower, lower+p..upper] $ \i ->
-             flip (MVector.modify v) (i-n) $ \(prod, mob) -> (p*prod, -mob)
+             MVector.unsafeModify v ((-p)*) (i-n)
 
            forM_ (takeWhile (<= m) $ iterate (*p) (square p)) $ \pk ->
               let lower' = smallestMultipleGE pk n
                   upper' = largestMultipleLE pk m
                in forM_ [lower', lower'+pk..upper'] $ \i -> do
-                    flip (MVector.modify v) (i-n) $ \(prod, _) -> (p*prod, 0)
+                    MVector.unsafeWrite v (i-n) 0
 
         Vector.unsafeFreeze v
