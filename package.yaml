@@ -84,6 +84,7 @@ tests:
       - Spec
     dependencies:
       - mod
+      - primesieve
       - hilbert
       - hspec
       - QuickCheck
@@ -93,3 +94,11 @@ tests:
       - list-duplicate
     ghc-options:
       - -Wno-type-defaults
+
+benchmarks:
+  primecount-bench:
+    source-dirs: bench
+    main: Main.hs
+    dependencies:
+    - hilbert
+    - tasty-bench

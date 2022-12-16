@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -90,6 +90,21 @@ test-suite spec
     , hspec
     , list-duplicate
     , mod
+    , primesieve
     , quickcheck-assertions
     , random
+  default-language: Haskell2010
+
+benchmark primecount-bench
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_hilbert
+  hs-source-dirs:
+      bench
+  ghc-options: -Wall -Wcompat -Wmissing-export-lists -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Wmissing-home-modules -Werror=missing-home-modules -Widentities -Wredundant-constraints -Wmissing-export-lists
+  build-depends:
+      base >=4.13 && <5.0
+    , hilbert
+    , tasty-bench
   default-language: Haskell2010
