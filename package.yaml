@@ -1,14 +1,14 @@
-name:                hilbert
-version:             0.1.20.0
-synopsis:            Mathematics in pure Haskell
-github:              "pgujjula/hilbert"
-license:             GPL-3
-author:              "Preetham Gujjula"
-maintainer:          "libraries@mail.preetham.io"
-copyright:           "2020 Preetham Gujjula"
-
-category: Math
-description: Please see the README on GitHub at <https://github.com/pgujjula/hilbert#readme>
+name:        hilbert
+version:     0.1.20.0
+synopsis:    Mathematics in Haskell
+github:      "pgujjula/hilbert"
+license:     GPL-3
+author:      "Preetham Gujjula"
+maintainer:  "libraries@mail.preetham.io"
+copyright:   "2020 Preetham Gujjula"
+category:    Math
+description: Please see the README on GitHub at
+             <https://github.com/pgujjula/hilbert#readme>
 
 extra-source-files:
 - README.md
@@ -32,69 +32,69 @@ dependencies:
 library:
   source-dirs: src
   exposed-modules:
-    - Math.Combinatorics.Binomial
-    - Math.Combinatorics.Partition
-    - Math.NumberTheory.ContinuedFraction
-    - Math.NumberTheory.Digit
-    - Math.NumberTheory.Diophantine
-    - Math.NumberTheory.Divisor
-    - Math.NumberTheory.Fibonacci
-    - Math.NumberTheory.Figurate
-    - Math.NumberTheory.Modular
-    - Math.NumberTheory.Power
-    - Math.NumberTheory.Prime
-    - Math.NumberTheory.Prime.SegmentedSieve
-    - Math.NumberTheory.Prime.Factor
-    - Math.Probability
+  - Math.Combinatorics.Binomial
+  - Math.Combinatorics.Partition
+  - Math.NumberTheory.ContinuedFraction
+  - Math.NumberTheory.Digit
+  - Math.NumberTheory.Diophantine
+  - Math.NumberTheory.Divisor
+  - Math.NumberTheory.Fibonacci
+  - Math.NumberTheory.Figurate
+  - Math.NumberTheory.Modular
+  - Math.NumberTheory.Power
+  - Math.NumberTheory.Prime
+  - Math.NumberTheory.Prime.SegmentedSieve
+  - Math.NumberTheory.Prime.Factor
+  - Math.Probability
   other-modules:
-    - Math.NumberTheory.ContinuedFraction.Core
-    - Math.NumberTheory.ContinuedFraction.Sqrt
+  - Math.NumberTheory.ContinuedFraction.Core
+  - Math.NumberTheory.ContinuedFraction.Sqrt
   dependencies:
-    - apply-merge
-    - containers
-    - chimera
-    - data-ordlist
-    - integer-gmp
-    - list-duplicate
-    - list-filter
-    - mod
-    - primesieve
-    - semirings
-    - type-natural
-    - vector
+  - apply-merge
+  - containers
+  - chimera
+  - data-ordlist
+  - integer-gmp
+  - list-duplicate
+  - list-filter
+  - mod
+  - primesieve
+  - semirings
+  - type-natural
+  - vector
 
 tests:
   spec:
     source-dirs: test
     main: Main.hs
     other-modules:
-      - Math.Combinatorics.BinomialSpec
-      - Math.Combinatorics.PartitionSpec
-      - Math.NumberTheory.ContinuedFraction.CoreSpec
-      - Math.NumberTheory.ContinuedFraction.SqrtSpec
-      - Math.NumberTheory.DigitSpec
-      - Math.NumberTheory.DiophantineSpec
-      - Math.NumberTheory.DivisorSpec
-      - Math.NumberTheory.FigurateSpec
-      - Math.NumberTheory.FibonacciSpec
-      - Math.NumberTheory.ModularSpec
-      - Math.NumberTheory.PowerSpec
-      - Math.NumberTheory.PrimeSpec
-      - Math.NumberTheory.Prime.FactorSpec
-      - Math.ProbabilitySpec
-      - Spec
+    - Math.Combinatorics.BinomialSpec
+    - Math.Combinatorics.PartitionSpec
+    - Math.NumberTheory.ContinuedFraction.CoreSpec
+    - Math.NumberTheory.ContinuedFraction.SqrtSpec
+    - Math.NumberTheory.DigitSpec
+    - Math.NumberTheory.DiophantineSpec
+    - Math.NumberTheory.DivisorSpec
+    - Math.NumberTheory.FigurateSpec
+    - Math.NumberTheory.FibonacciSpec
+    - Math.NumberTheory.ModularSpec
+    - Math.NumberTheory.PowerSpec
+    - Math.NumberTheory.PrimeSpec
+    - Math.NumberTheory.Prime.FactorSpec
+    - Math.ProbabilitySpec
+    - Spec
     dependencies:
-      - mod
-      - primesieve
-      - hilbert
-      - hspec
-      - QuickCheck
-      - quickcheck-assertions
-      - random
-      - HUnit
-      - list-duplicate
+    - mod
+    - primesieve
+    - hilbert
+    - hspec
+    - QuickCheck
+    - quickcheck-assertions
+    - random
+    - HUnit
+    - list-duplicate
     ghc-options:
-      - -Wno-type-defaults
+    - -Wno-type-defaults
 
 benchmarks:
   primecount-bench:
