@@ -9,7 +9,7 @@ import           Test.QuickCheck             (forAll, (===))
 import qualified Test.QuickCheck             as QuickCheck (choose)
 
 import           Math.Combinatorics.Binomial (binomialCoeffs, choose, factorial,
-                                              permute)
+                                              permute, pascalDiagonal)
 
 -- Limit for quickcheck inputs
 limit :: Integer
@@ -22,6 +22,7 @@ spec = do
     describe "binomialCoeffs" binomialCoeffsSpec
     describe "permute"        permuteSpec
     describe "invariants"     invariantSpec
+    describe "pascalDiagonal" pascalDiagonalSpec
 
 factorialSpec :: Spec
 factorialSpec = do
@@ -67,3 +68,10 @@ invariantSpec =
                 k <- QuickCheck.choose (0, n)
                 return (n, k)
          in forAll gen $ \(n, k) -> permute n k === choose n k * (factorial k :: Integer)
+
+pascalDiagonalSpec :: Spec
+pascalDiagonalSpec =
+  it "equivalent to map (\\m -> (n+m) `choose` m) [0..]" $
+    forM_ [0..(10 :: Int)] $ \n ->
+      take 10 (pascalDiagonal n :: [Integer]) `shouldBe`
+      take 10 (map (\m -> (n+m) `choose` m) [0..])

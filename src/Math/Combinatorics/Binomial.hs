@@ -13,13 +13,15 @@ module Math.Combinatorics.Binomial
     ( factorial
     , choose
     , binomialCoeffs
+    , pascalDiagonal
     , permute
     ) where
 
+import Numeric.Natural (Natural)
 import Prelude hiding (quot)
 import Data.List (foldl', scanl')
 import Data.Euclidean (Euclidean, quot)
-import Data.Semiring (Semiring, product', fromNatural, one, zero, times)
+import Data.Semiring (Semiring, product', fromNatural, one, zero, times, plus)
 
 {-| The factorial of a number. Undefined behavior for negative inputs.
 
@@ -68,6 +70,27 @@ binomialCoeffs n = scanl' step one [0..n - 1]
 
     aToB :: a -> b
     aToB = fromNatural . fromIntegral
+
+-- | The @n@th diagonal of Pascal's triangle. So,
+--
+-- > pascalDiagonal n == map (\m -> (n+m) `choose` m) [0..]
+--
+-- but more efficient
+--
+-- n `choose` 0    = n! / n! 0!      = 1
+-- n+1 `choose` 1  = (n+1)! / n! 1!  = (n+1) `quot` 1
+-- n+2 `choose` 2  = (n+2)! / n! 2!  = (n+2)*(n+1) `quot` 1*2
+--                                   = (n+3)*(n+2)*(n+1) `quot` 1*2*3
+pascalDiagonal :: forall a b. (Integral a, Euclidean b) => a -> [b]
+pascalDiagonal n = scanl' step one [1..]
+  where
+    n' :: b
+    n' = fromNatural . fromIntegral $ n
+
+    step :: b -> Natural -> b
+    step term m =
+      let m' = fromNatural m
+       in ((n' `plus` m') `times` term) `quot` m'
 
 {-| Number of permutations groups of size @k@, selected from a group of size
     @n@. @permute n k@ is defined as 0 for any @n < 0@ or @k > n@ or @k < 0@.
