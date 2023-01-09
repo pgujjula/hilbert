@@ -60,6 +60,7 @@ library:
   - mod
   - primesieve
   - semirings
+  - ghc-typelits-knownnat
   - type-natural
   - vector
 
@@ -91,6 +92,8 @@ tests:
     - QuickCheck
     - quickcheck-assertions
     - random
+    - type-natural
+    - ghc-typelits-knownnat
     - HUnit
     - list-duplicate
     ghc-options:
