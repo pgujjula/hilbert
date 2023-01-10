@@ -5,14 +5,14 @@
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fplugin GHC.TypeLits.KnownNat.Solver #-}
 
--- | Module      : Math.NumberTheory.Digit
---    Description : Functions related to the binomial coefficient.
---    Copyright   : (c) Preetham Gujjula, 2020
---    License     : GPL-3
---    Maintainer  : preetham.gujjula@gmail.com
---    Stability   : experimental
+-- | Module      : Math.Combinatorics.Binomial
+--   Description : Functions related to the binomial coefficient.
+--   Copyright   : (c) Preetham Gujjula, 2020
+--   License     : GPL-3
+--   Maintainer  : preetham.gujjula@gmail.com
+--   Stability   : experimental
 --
--- Functions related to the binomial coefficient.
+--   Functions related to the binomial coefficient.
 module Math.Combinatorics.Binomial
   ( factorial,
     choose,
@@ -20,7 +20,7 @@ module Math.Combinatorics.Binomial
     pascalDiagonal,
     permute,
 
-    -- * Binomial coefficients \(\mod p\)
+    -- * Binomial coefficients \(\text{mod } p\)
     FactorialModP,
     mkFactorialModP,
     factorialModP,
@@ -28,7 +28,7 @@ module Math.Combinatorics.Binomial
     factorialNoPModP,
     chooseModP,
 
-    -- * Binomail coefficients \(\mod p^2\)
+    -- * Binomial coefficients \(\text{mod } p^2\)
     FactorialModP2,
     mkFactorialModP2,
     factorialRelPrimeModP2,
@@ -38,7 +38,6 @@ module Math.Combinatorics.Binomial
 where
 
 import Data.Euclidean (Euclidean, quot)
-import Math.NumberTheory.Power (square)
 import Data.Function ((&))
 import Data.List (foldl', scanl')
 import Data.Mod (Mod)
@@ -47,22 +46,23 @@ import Data.Type.Natural (KnownNat, SNat, sNat, toNatural, type (^))
 import Data.Vector (Vector, (!))
 import Data.Vector qualified as Vector
 import GHC.Real qualified as Integral (quot)
+import Math.NumberTheory.Power (square)
 import Numeric.Natural (Natural)
 import Prelude hiding (quot)
 
 -- | The factorial of a number. Undefined behavior for negative inputs.
 --
---    >>> factorial 5
---    120
+--   >>> factorial 5
+--   120
 factorial :: (Integral a, Semiring b) => a -> b
 factorial n | n <= 0 = one
 factorial n = product' $ map (fromNatural . fromIntegral) [1 .. n]
 
 -- | The binomial coefficient. @choose n k@ is defined as 0 for any @n < 0@ or
---    @k > n@ or @k < 0@.
+--   @k > n@ or @k < 0@.
 --
---    >>> 5 `choose` 2
---    10
+--   >>> 5 `choose` 2
+--   10
 choose :: (Integral a, Euclidean b) => a -> a -> b
 choose n k
   | n < 0 = zero
@@ -84,7 +84,7 @@ choose' n k =
     denoms = map (fromNatural . fromIntegral) [1 .. k]
 
 -- | Given n, yields the binomial coefficients of exponent n. More efficent than
---    mapping 'choose'. Undefined behavior if @n < 0@.
+--   mapping 'choose'. Undefined behavior if @n < 0@.
 binomialCoeffs :: forall a b. (Integral a, Euclidean b) => a -> [b]
 binomialCoeffs n | n < 0 = error "binomialCoeffs: negative input"
 binomialCoeffs n = scanl' step one [0 .. n - 1]
@@ -117,10 +117,10 @@ pascalDiagonal n = scanl' step one [1 ..]
        in ((n' `plus` m') `times` term) `quot` m'
 
 -- | Number of permutations groups of size @k@, selected from a group of size
---    @n@. @permute n k@ is defined as 0 for any @n < 0@ or @k > n@ or @k < 0@.
+--   @n@. @permute n k@ is defined as 0 for any @n < 0@ or @k > n@ or @k < 0@.
 --
---    >>> 5 `permute` 2
---    20
+--   >>> 5 `permute` 2
+--   20
 permute :: (Integral a, Semiring b) => a -> a -> b
 permute n k
   | n < 0 = zero
@@ -154,7 +154,8 @@ factorialModP (FactorialModP vec) n =
           | n >= toInteger p -> 0
           | otherwise -> vec ! fromInteger n
 
--- The product of the numbers less than n relatively prime to p, modulo p.
+-- | The product of the numbers less than @n@ relatively prime to @p@, modul
+--   @p@.
 factorialRelPrimeModP :: KnownNat p => FactorialModP p -> Integer -> Mod p
 factorialRelPrimeModP (FactorialModP vec) n =
   if n < 0
@@ -164,7 +165,7 @@ factorialRelPrimeModP (FactorialModP vec) n =
           (q, r) = n `quotRem` toInteger p
        in (-1) ^ q * (vec ! fromInteger r)
 
--- The factorial of n, without the factors of p, modulo p.
+-- | The factorial of @n@, without the factors of @p@, modulo @p@.
 factorialNoPModP :: KnownNat p => FactorialModP p -> Integer -> Mod p
 factorialNoPModP fmp n =
   let p = toInteger (Vector.length (unFactorialModP fmp))
@@ -200,7 +201,7 @@ data FactorialModP2 p = FactorialModP2
     -- | (inv 1 + inv 2 + .. + inv i) (mod (p^2))
     fmp2SigmaRecip :: Vector (Mod (p ^ 2)),
     -- | product from j = 0..i-1 of (1 + j*p*sigmaRecip (p1))
-    fmp2Magic :: Vector (Mod (p^2))
+    fmp2Magic :: Vector (Mod (p ^ 2))
   }
   deriving (Eq, Show, Ord)
 
@@ -218,10 +219,10 @@ mkFactorialModP2 =
           scanl' (+) 0 $
             map (quot 1) [1 ..]
       magicVec =
-        Vector.fromListN (p+1) $
-          scanl' (*) 1 $ 
-            flip map [(0 :: Integer)..] $ \j ->
-              1 + fromIntegral j*fromIntegral p*(sigmaRecipVec ! (p-1))
+        Vector.fromListN (p + 1) $
+          scanl' (*) 1 $
+            flip map [(0 :: Integer) ..] $ \j ->
+              1 + fromIntegral j * fromIntegral p * (sigmaRecipVec ! (p - 1))
    in FactorialModP2 factVec sigmaRecipVec magicVec
 
 quotRem2 :: Integer -> Integer -> (Integer, Integer, Integer)
@@ -230,36 +231,38 @@ quotRem2 n p = (a, b, c)
     (a, bc) = n `quotRem` square p
     (b, c) = bc `quotRem` p
 
--- The product of the numbers less than n relatively prime to p, modulo p^2.
-factorialRelPrimeModP2 :: forall p. KnownNat p => FactorialModP2 p -> Integer -> Mod (p ^ 2)
+-- | The product of the numbers less than @n@ relatively prime to @p@, modulo
+--   @p^2@.
+factorialRelPrimeModP2 ::
+  forall p. KnownNat p => FactorialModP2 p -> Integer -> Mod (p ^ 2)
 factorialRelPrimeModP2 fmp2 n =
   let p = getP fmp2
       (a, b, c) = quotRem2 n p
-      p', b':: Mod (p^2)
+      p', b' :: Mod (p ^ 2)
       p' = fromInteger p
       b' = fromInteger b
 
-      fmpFact :: Integer -> Mod (p^2)
+      fmpFact :: Integer -> Mod (p ^ 2)
       fmpFact i = fmp2Factorial fmp2 ! fromInteger i
 
-      fmpSigmaRecip :: Integer -> Mod (p^2)
+      fmpSigmaRecip :: Integer -> Mod (p ^ 2)
       fmpSigmaRecip i = fmp2SigmaRecip fmp2 ! fromInteger i
 
-      fmpMagic :: Integer -> Mod (p^2)
+      fmpMagic :: Integer -> Mod (p ^ 2)
       fmpMagic i = fmp2Magic fmp2 ! fromInteger i
 
-      part1 :: Mod (p^2)
-      part1 = fmpFact (p-1)^p * fmpMagic p
+      part1 :: Mod (p ^ 2)
+      part1 = fmpFact (p - 1) ^ p * fmpMagic p
 
-      part2 :: Mod (p^2)
-      part2 = fmpFact (p-1)^b * fmpMagic b
+      part2 :: Mod (p ^ 2)
+      part2 = fmpFact (p - 1) ^ b * fmpMagic b
 
-      part3 :: Mod (p^2)
-      part3 = fmpFact c * (1 + b'*p'*fmpSigmaRecip c)
+      part3 :: Mod (p ^ 2)
+      part3 = fmpFact c * (1 + b' * p' * fmpSigmaRecip c)
    in part3 * part2 * (part1 ^ a)
 
--- The factorial of n, without the factors of p, modulo (p^2).
-factorialNoPModP2 :: KnownNat p => FactorialModP2 p -> Integer -> Mod (p^2)
+-- | The factorial of @n@, without the factors of @p@, modulo @p^2@.
+factorialNoPModP2 :: KnownNat p => FactorialModP2 p -> Integer -> Mod (p ^ 2)
 factorialNoPModP2 fmp2 n =
   let p = getP fmp2
    in iterate (`quot` p) n
@@ -267,17 +270,22 @@ factorialNoPModP2 fmp2 n =
         & map (factorialRelPrimeModP2 fmp2)
         & product
 
--- | Compute @(n `'choose'`  m) `'mod'` p@ in \(O(\log n)\) time.
-chooseModP2 :: KnownNat p => FactorialModP2 p -> Integer -> Integer -> Mod (p^2)
+-- | Compute @(n `'choose'`  m) `'mod'` p@ in \(O(\log p)\) time.
+chooseModP2 ::
+  KnownNat p => FactorialModP2 p -> Integer -> Integer -> Mod (p ^ 2)
 chooseModP2 _ n m | n < 0 || m < 0 || m > n = 0
 chooseModP2 fmp2 n m =
   let p = getP fmp2
    in case divideOutFactorialP n p
-       - (divideOutFactorialP m p + divideOutFactorialP (n - m) p) of
-        0 -> factorialNoPModP2 fmp2 n
-             `quot` (factorialNoPModP2 fmp2 m * factorialNoPModP2 fmp2 (n - m))
-        1 -> fromIntegral p * (
+        - (divideOutFactorialP m p + divideOutFactorialP (n - m) p) of
+        0 ->
           factorialNoPModP2 fmp2 n
-                       `quot` (factorialNoPModP2 fmp2 m * factorialNoPModP2 fmp2 (n - m))
-                 )
+            `quot` (factorialNoPModP2 fmp2 m * factorialNoPModP2 fmp2 (n - m))
+        1 ->
+          fromIntegral p
+            * ( factorialNoPModP2 fmp2 n
+                  `quot` ( factorialNoPModP2 fmp2 m
+                             * factorialNoPModP2 fmp2 (n - m)
+                         )
+              )
         _ -> 0

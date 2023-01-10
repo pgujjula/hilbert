@@ -3,13 +3,13 @@
 {-# LANGUAGE LambdaCase #-}
 
 -- | Module      : Math.NumberTheory.Prime.Factor
---    Description : Prime factorization.
---    Copyright   : (c) Preetham Gujjula, 2020
---    License     : GPL-3
---    Maintainer  : preetham.gujjula@gmail.com
---    Stability   : experimental
+--   Description : Prime factorization.
+--   Copyright   : (c) Preetham Gujjula, 2020
+--   License     : GPL-3
+--   Maintainer  : preetham.gujjula@gmail.com
+--   Stability   : experimental
 --
---    Prime factorization.
+--   Prime factorization.
 module Math.NumberTheory.Prime.Factor
   ( Factorization,
     multiply,
@@ -69,14 +69,14 @@ count = map (\xs -> (head xs, length xs)) . groupAdj
 
 -- | Factor positive number.
 --
---    >>> factor 60
---    Just [(2,2),(3,1),(5,1)]
---    >>> factor 1
---    Just []
---    >>> factor 0
---    Nothing
---    >>> factor (-60)
---    Nothing
+--   >>> factor 60
+--   Just [(2,2),(3,1),(5,1)]
+--   >>> factor 1
+--   Just []
+--   >>> factor 0
+--   Nothing
+--   >>> factor (-60)
+--   Nothing
 factor :: (Integral a) => a -> Maybe (Factorization a)
 factor n
   | n <= 0 = Nothing
@@ -132,25 +132,25 @@ smallestFactor = 2 : sieve (IntMap.singleton 4 [2]) [3 ..]
 
 -- | An infinite list of the factorizations of [1..].
 --
---    >>> mapM_ print $ take 6 factorizations
---    []
---    [(2,1)]
---    [(3,1)]
---    [(2,2)]
---    [(5,1)]
---    [(2,1),(3,1)]
+--   >>> mapM_ print $ take 6 factorizations
+--   []
+--   [(2,1)]
+--   [(3,1)]
+--   [(2,2)]
+--   [(5,1)]
+--   [(2,1),(3,1)]
 factorizations :: [Factorization Int]
 factorizations = factorizationsFrom 1
 
 -- | An infinite list of the factorizations of [n..].
 --
---    >>> mapM_ print $ take 6 (factorizationsFrom 3)
---    [(3,1)]
---    [(2,2)]
---    [(5,1)]
---    [(2,1),(3,1)]
---    [(7,1)]
---    [(2,3)]
+--   >>> mapM_ print $ take 6 (factorizationsFrom 3)
+--   [(3,1)]
+--   [(2,2)]
+--   [(5,1)]
+--   [(2,1),(3,1)]
+--   [(7,1)]
+--   [(2,3)]
 factorizationsFrom :: Int -> [Factorization Int]
 factorizationsFrom n = zipWith mkFactorization [n ..] smallFactors
   where

@@ -1,15 +1,17 @@
-{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-module Math.NumberTheory.Prime.SegmentedSieve
-   ( sieveAllChunks
-   , Chunk
-   , smallestMultipleGE
-   , largestMultipleLE
-   ) where
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
-import Data.Function           ((&))
-import Data.List               (mapAccumL)
-import Data.Tuple              (swap)
+module Math.NumberTheory.Prime.SegmentedSieve
+  ( sieveAllChunks,
+    Chunk,
+    smallestMultipleGE,
+    largestMultipleLE,
+  )
+where
+
+import Data.Function ((&))
+import Data.List (mapAccumL)
+import Data.Tuple (swap)
 import Math.NumberTheory.Power (integralSqrt, square)
 import Math.NumberTheory.Prime (primes)
 
@@ -17,11 +19,12 @@ type Chunk = (Int, Int, Int)
 
 -- Split the positive integers into chunks [start..m0], [n1..m1], ..
 mkChunks :: Int -> [Chunk]
-mkChunks start = map (\a -> (a+1, square a + 1, square (a+1))) [a0..]
-       & truncateHead
+mkChunks start =
+  map (\a -> (a + 1, square a + 1, square (a + 1))) [a0 ..]
+    & truncateHead
   where
-    a0 = integralSqrt (start-1)
-    truncateHead ((sqrtm, _, m):xs) = (sqrtm, start, m) : xs
+    a0 = integralSqrt (start - 1)
+    truncateHead ((sqrtm, _, m) : xs) = (sqrtm, start, m) : xs
 
 -- For all i, concat (take i primeGroups) are all the primes that are
 -- <= sqrt mi
@@ -47,7 +50,7 @@ sieveAllChunks start sieve = snd $ mapAccumL go [] (zip primeGroups chunks)
        in (newPrimes, sieve newPrimes chunk)
 
 smallestMultipleGE :: Integral a => a -> a -> a
-smallestMultipleGE p n = p*(((n-1) `quot` p) + 1)
+smallestMultipleGE p n = p * (((n - 1) `quot` p) + 1)
 
 largestMultipleLE :: Integral a => a -> a -> a
-largestMultipleLE p n = p*(n `quot` p)
+largestMultipleLE p n = p * (n `quot` p)
