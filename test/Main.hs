@@ -1,9 +1,8 @@
 module Main (main) where
 
+import Spec (spec)
 import Test.Hspec.Formatters (Formatter, specdoc)
-import Test.Hspec.Runner     (configFormatter, defaultConfig, hspecWith)
-
-import Spec                  (spec)
+import Test.Hspec.Runner (configFormatter, defaultConfig, hspecWith)
 
 customFormatter :: Formatter
 customFormatter = specdoc

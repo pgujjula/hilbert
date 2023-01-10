@@ -1,29 +1,40 @@
 {-# LANGUAGE TypeApplications #-}
+
 module Math.ProbabilitySpec (spec) where
 
-import Prelude          hiding (map)
-
-import Control.Monad    (forM_, replicateM)
-import Test.Hspec       (Spec, describe, it, shouldBe)
-import Test.QuickCheck  (Gen, choose, forAll, sample, suchThat, (===))
-
-import Math.Probability (Distribution, bind, certain, expectedValue, fromList,
-                         lift2, map, prob, toList, toMap, uniform, variance)
+import Control.Monad (forM_, replicateM)
+import Math.Probability
+  ( Distribution,
+    bind,
+    certain,
+    expectedValue,
+    fromList,
+    lift2,
+    map,
+    prob,
+    toList,
+    toMap,
+    uniform,
+    variance,
+  )
+import Test.Hspec (Spec, describe, it, shouldBe)
+import Test.QuickCheck (Gen, choose, forAll, sample, suchThat, (===))
+import Prelude hiding (map)
 
 spec :: Spec
 spec = do
-    describe "fromToList" fromToListSpec
-    describe "certain" certainSpec
-    describe "uniform" uniformSpec
-    describe "toMap" toMapSpec
+  describe "fromToList" fromToListSpec
+  describe "certain" certainSpec
+  describe "uniform" uniformSpec
+  describe "toMap" toMapSpec
 
-    describe "prob" probSpec
-    describe "expectedValue" expectedValueSpec
-    describe "variance" varianceSpec
+  describe "prob" probSpec
+  describe "expectedValue" expectedValueSpec
+  describe "variance" varianceSpec
 
-    describe "map" mapSpec
-    describe "lift2" lift2Spec
-    describe "bind" bindSpec
+  describe "map" mapSpec
+  describe "lift2" lift2Spec
+  describe "bind" bindSpec
 
 fromToListSpec :: Spec
 fromToListSpec = it "1 == 1" $ 1 `shouldBe` 1

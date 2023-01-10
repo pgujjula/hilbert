@@ -1,30 +1,35 @@
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE ImportQualifiedPost #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE ImportQualifiedPost #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fplugin GHC.TypeLits.KnownNat.Solver #-}
 
 module Math.Combinatorics.BinomialSpec (spec) where
 
 import Control.Exception (evaluate)
 import Control.Monad (forM_)
+import Data.Function ((&))
+import Data.Mod (Mod)
+import Data.Type.Natural (SNat, withSNat)
 import Math.Combinatorics.Binomial
   ( binomialCoeffs,
     choose,
+    chooseModP,
+    chooseModP2,
     factorial,
-    pascalDiagonal,
-    permute,
-    mkFactorialModP,
-    mkFactorialModP2,
     factorialModP,
-    factorialRelPrimeModP,
-    factorialRelPrimeModP2,
     factorialNoPModP,
     factorialNoPModP2,
-    chooseModP,
-    chooseModP2
+    factorialRelPrimeModP,
+    factorialRelPrimeModP2,
+    mkFactorialModP,
+    mkFactorialModP2,
+    pascalDiagonal,
+    permute,
   )
+import Math.NumberTheory.Divisor (divides)
+import Math.NumberTheory.Prime (primesTo)
 import Test.Hspec
   ( Spec,
     anyException,
@@ -33,12 +38,7 @@ import Test.Hspec
     shouldBe,
     shouldThrow,
   )
-import Math.NumberTheory.Prime (primesTo)
-import Math.NumberTheory.Divisor (divides)
-import Data.Type.Natural (withSNat, SNat)
-import Data.Mod (Mod)
 import Test.QuickCheck (forAll, (===))
-import Data.Function ((&))
 import Test.QuickCheck qualified as QuickCheck (choose)
 
 -- Limit for quickcheck inputs
@@ -117,11 +117,11 @@ pascalDiagonalSpec =
 
 factorialModPSpec :: Spec
 factorialModPSpec =
-  it "equivalent to n! (mod p)" $ 
+  it "equivalent to n! (mod p)" $
     forM_ (primesTo 100) $ \p ->
       withSNat (fromIntegral p) $ \(_ :: SNat p) ->
         let cmod = mkFactorialModP @p
-         in forM_ [0..100] $ \k ->
+         in forM_ [0 .. 100] $ \k ->
               factorialModP cmod k `shouldBe` (factorial k :: Mod p)
 
 factorialRelPrimeModPSpec :: Spec
@@ -130,9 +130,10 @@ factorialRelPrimeModPSpec =
     forM_ (map toInteger (primesTo 100)) $ \p ->
       withSNat (fromIntegral p) $ \(_ :: SNat p) ->
         let cmod = mkFactorialModP @p
-         in forM_ [1..(100 :: Integer)] $ \k ->
-              let expected = fromIntegral $
-                    product (filter (not . (p `divides`)) [1..k])
+         in forM_ [1 .. (100 :: Integer)] $ \k ->
+              let expected =
+                    fromIntegral $
+                      product (filter (not . (p `divides`)) [1 .. k])
                in factorialRelPrimeModP cmod k `shouldBe` expected
 
 divideOut :: Integral a => a -> a -> a
@@ -147,58 +148,63 @@ factorialNoPModPSpec =
     forM_ (map toInteger (primesTo 100)) $ \p ->
       withSNat (fromIntegral p) $ \(_ :: SNat p) ->
         let cmod = mkFactorialModP @p
-         in forM_ [1..(100 :: Integer)] $ \k ->
-              let expected = fromIntegral $
-                    (factorial k `divideOut` p)
-               in (k, p, factorialNoPModP cmod k) `shouldBe`
-                  (k, p, expected)
+         in forM_ [1 .. (100 :: Integer)] $ \k ->
+              let expected =
+                    fromIntegral $
+                      (factorial k `divideOut` p)
+               in (k, p, factorialNoPModP cmod k)
+                    `shouldBe` (k, p, expected)
 
 chooseModPSpec :: Spec
 chooseModPSpec =
-  it "works for small n, m, p" $ 
+  it "works for small n, m, p" $
     forM_ (map toInteger (primesTo 100)) $ \p ->
-    withSNat (fromIntegral p) $ \(_ :: SNat p) ->
-      let fmp = mkFactorialModP @p
-       in forM_ [1..(30 :: Integer)] $ \n ->
-          forM_ [1..(30 :: Integer)] $ \m ->
-            let expected = fromIntegral ((n `choose` m) :: Integer)
-                actual = chooseModP fmp n m
-             in actual `shouldBe` expected
+      withSNat (fromIntegral p) $ \(_ :: SNat p) ->
+        let fmp = mkFactorialModP @p
+         in forM_ [1 .. (30 :: Integer)] $ \n ->
+              forM_ [1 .. (30 :: Integer)] $ \m ->
+                let expected = fromIntegral ((n `choose` m) :: Integer)
+                    actual = chooseModP fmp n m
+                 in actual `shouldBe` expected
 
 factorialRelPrimeModP2Spec :: Spec
 factorialRelPrimeModP2Spec =
   it "works for small n, p" $
     forM_ (map toInteger (primesTo 100)) $ \p ->
-    withSNat (fromIntegral p) $ \(_ :: SNat p) ->
-      let fmp2 = mkFactorialModP2 @p
-       in forM_ [1..(100 :: Integer)] $ \n ->
-            let actual = factorialRelPrimeModP2 fmp2 n
-                expected = fromIntegral $ [1..n]
-                  & filter (not . (p `divides`))
-                  & product
-             in (n, p, actual) `shouldBe` (n, p, expected)
+      withSNat (fromIntegral p) $ \(_ :: SNat p) ->
+        let fmp2 = mkFactorialModP2 @p
+         in forM_ [1 .. (100 :: Integer)] $ \n ->
+              let actual = factorialRelPrimeModP2 fmp2 n
+                  expected =
+                    fromIntegral $
+                      [1 .. n]
+                        & filter (not . (p `divides`))
+                        & product
+               in (n, p, actual) `shouldBe` (n, p, expected)
 
 factorialNoPModP2Spec :: Spec
 factorialNoPModP2Spec =
   it "works for small n, p" $
     forM_ (map toInteger (primesTo 100)) $ \p ->
-    withSNat (fromIntegral p) $ \(_ :: SNat p) ->
-      let fmp2 = mkFactorialModP2 @p
-       in forM_ [1..(100 :: Integer)] $ \n ->
-            let actual = factorialNoPModP2 fmp2 n
-                expected = fromIntegral $ [1..n]
-                  & product
-                  & (`divideOut` p)
-             in (n, p, actual) `shouldBe` (n, p, expected)
+      withSNat (fromIntegral p) $ \(_ :: SNat p) ->
+        let fmp2 = mkFactorialModP2 @p
+         in forM_ [1 .. (100 :: Integer)] $ \n ->
+              let actual = factorialNoPModP2 fmp2 n
+                  expected =
+                    fromIntegral $
+                      [1 .. n]
+                        & product
+                        & (`divideOut` p)
+               in (n, p, actual) `shouldBe` (n, p, expected)
 
 chooseModP2Spec :: Spec
 chooseModP2Spec =
-  it "works for small n, m, p" $ 
+  it "works for small n, m, p" $
     forM_ (map toInteger (primesTo 10)) $ \p ->
-    withSNat (fromIntegral p) $ \(_ :: SNat p) ->
-      let fmp = mkFactorialModP2 @p
-       in forM_ [1..(100 :: Integer)] $ \n ->
-          forM_ [1..(100 :: Integer)] $ \m ->
-            let expected = fromIntegral ((n `choose` m) :: Integer)
-                actual = chooseModP2 fmp n m
-             in actual `shouldBe` expected
+      withSNat (fromIntegral p) $ \(_ :: SNat p) ->
+        let fmp = mkFactorialModP2 @p
+         in forM_ [1 .. (100 :: Integer)] $ \n ->
+              forM_ [1 .. (100 :: Integer)] $ \m ->
+                let expected = fromIntegral ((n `choose` m) :: Integer)
+                    actual = chooseModP2 fmp n m
+                 in actual `shouldBe` expected
