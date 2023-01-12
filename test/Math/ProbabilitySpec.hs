@@ -1,24 +1,6 @@
-{-# LANGUAGE TypeApplications #-}
-
 module Math.ProbabilitySpec (spec) where
 
-import Control.Monad (forM_, replicateM)
-import Math.Probability
-  ( Distribution,
-    bind,
-    certain,
-    expectedValue,
-    fromList,
-    lift2,
-    map,
-    prob,
-    toList,
-    toMap,
-    uniform,
-    variance,
-  )
 import Test.Hspec (Spec, describe, it, shouldBe)
-import Test.QuickCheck (Gen, choose, forAll, sample, suchThat, (===))
 import Prelude hiding (map)
 
 spec :: Spec

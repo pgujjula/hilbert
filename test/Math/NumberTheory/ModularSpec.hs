@@ -1,19 +1,13 @@
 module Math.NumberTheory.ModularSpec (spec) where
 
-import Control.Exception (evaluate)
-import Data.Int (Int8)
-import Data.Maybe (fromJust, isJust)
 import Math.NumberTheory.Modular (egcd)
 import Test.Hspec
   ( Spec,
-    anyException,
     describe,
     it,
     shouldBe,
-    shouldSatisfy,
-    shouldThrow,
   )
-import Test.QuickCheck (Gen, choose, forAll, suchThat)
+import Test.QuickCheck (Gen, choose, forAll)
 
 spec :: Spec
 spec = do

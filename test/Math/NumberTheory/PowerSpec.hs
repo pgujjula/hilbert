@@ -1,11 +1,6 @@
 module Math.NumberTheory.PowerSpec (spec) where
 
-import Control.Monad (forM_, zipWithM_)
-import Data.Int (Int16)
 import Data.Maybe (fromJust, isJust)
-import Data.Proxy (Proxy (..), asProxyTypeOf)
-import Data.Word (Word16)
-import Math.NumberTheory.Digit (fromDigits)
 import Math.NumberTheory.Power
   ( cube,
     cubes,
@@ -13,7 +8,6 @@ import Math.NumberTheory.Power
     square,
     squares,
   )
-import System.Random (Random)
 import Test.Hspec
   ( Expectation,
     Spec,
@@ -24,18 +18,10 @@ import Test.Hspec
   )
 import Test.QuickCheck
   ( Gen,
-    arbitrary,
     choose,
     forAll,
     oneof,
-    suchThat,
-    vectorOf,
-    (===),
   )
-
--- The maximum number of digits of any test case input
-maxNumDigits :: Int
-maxNumDigits = 1000
 
 spec :: Spec
 spec = do
