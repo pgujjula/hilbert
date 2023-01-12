@@ -3,9 +3,10 @@ module Main (main) where
 import Spec (spec)
 import Test.Hspec.Formatters (Formatter, specdoc)
 import Test.Hspec.Runner (configFormatter, defaultConfig, hspecWith)
-
-customFormatter :: Formatter
-customFormatter = specdoc
+import Test.Tasty (TestTree, defaultMain, testGroup)
+import Test.Tasty.Hspec (testSpec)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFormatter = Just customFormatter} Spec.spec
+main = do
+  ts <- testSpec "" Spec.spec
+  defaultMain ts

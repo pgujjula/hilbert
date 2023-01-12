@@ -96,6 +96,8 @@ test-suite spec
     , primesieve
     , quickcheck-assertions
     , random
+    , tasty
+    , tasty-hspec
     , type-natural
   default-language: Haskell2010
 

@@ -96,6 +96,8 @@ tests:
     - ghc-typelits-knownnat
     - HUnit
     - list-duplicate
+    - tasty-hspec
+    - tasty
     ghc-options:
     - -Wno-type-defaults
 
