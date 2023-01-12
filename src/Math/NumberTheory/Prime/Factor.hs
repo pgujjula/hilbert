@@ -95,7 +95,10 @@ factorWith (p : ps) limit n
     (n', r) = n `quotRem` p
 factorWith _ _ _ = error "ran out of primes, this is impossible"
 
--- smallestFactor !! i is the smallest prime factor of i + 2.
+-- | @'smallestFactor' !! i@ is the smallest prime factor of @i + 2@.
+--
+--   >>> take 10 smallestFactor
+--   [2,3,2,5,2,7,2,3,2,11]
 smallestFactor :: [Int]
 smallestFactor = 2 : sieve (IntMap.singleton 4 [2]) [3 ..]
   where
