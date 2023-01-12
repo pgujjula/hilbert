@@ -25,6 +25,7 @@ ghc-options:
 - -Widentities
 - -Wredundant-constraints
 - -Wmissing-export-lists
+- -Wunused-packages
 
 dependencies:
 - base >= 4.13 && < 5.0
@@ -54,10 +55,8 @@ library:
   - containers
   - chimera
   - data-ordlist
-  - integer-gmp
   - integer-roots
   - list-duplicate
-  - list-filter
   - mod
   - primesieve
   - semirings
@@ -92,7 +91,6 @@ tests:
     - hilbert
     - hspec
     - QuickCheck
-    - quickcheck-assertions
     - random
     - type-natural
     - ghc-typelits-knownnat
