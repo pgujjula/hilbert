@@ -3,7 +3,7 @@
 -- | Module      : Math.NumberTheory.ContinuedFraction.Core
 --   Description : Core continued fraction functionality.
 --   Copyright   : (c) Preetham Gujjula, 2016
---   License     : GPL-3
+--   License     : BSD-3-Clause
 --   Maintainer  : preetham.gujjula@gmail.com
 --   Stability   : experimental
 --

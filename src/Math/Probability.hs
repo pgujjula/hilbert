@@ -3,7 +3,7 @@
 -- | Module      : Math.Probability
 --   Description : Discrete probability distributions
 --   Copyright   : (c) Preetham Gujjula, 2020
---   License     : GPL-3
+--   License     : BSD-3-Clause
 --   Maintainer  : preetham.gujjula@gmail.com
 --   Stability   : experimental
 --

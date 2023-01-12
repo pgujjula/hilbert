@@ -2,10 +2,10 @@ name:        hilbert
 version:     0.1.20.0
 synopsis:    Mathematics in Haskell
 github:      "pgujjula/hilbert"
-license:     GPL-3
+license:     BSD-3-Clause
 author:      "Preetham Gujjula"
 maintainer:  "libraries@mail.preetham.io"
-copyright:   "2020 Preetham Gujjula"
+copyright:   "2023 Preetham Gujjula"
 category:    Math
 description: Please see the README on GitHub at
              <https://github.com/pgujjula/hilbert#readme>

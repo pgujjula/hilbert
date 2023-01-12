@@ -8,7 +8,7 @@
 -- | Module      : Math.Combinatorics.Binomial
 --   Description : Functions related to the binomial coefficient.
 --   Copyright   : (c) Preetham Gujjula, 2020
---   License     : GPL-3
+--   License     : BSD-3-Clause
 --   Maintainer  : preetham.gujjula@gmail.com
 --   Stability   : experimental
 --

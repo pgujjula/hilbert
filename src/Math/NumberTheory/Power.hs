@@ -4,7 +4,7 @@
 -- | Module      : Math.NumberTheory.Power
 --   Description : Functions related to powers.
 --   Copyright   : (c) Preetham Gujjula, 2016
---   License     : GPL-3
+--   License     : BSD-3-Clause
 --   Maintainer  : preetham.gujjula@gmail.com
 --   Stability   : experimental
 --

@@ -1,7 +1,7 @@
 -- | Module      : Math.NumberTheory.ContinuedFraction.Sqrt
 --   Description : Compute the square root of an integer as a continued fraction.
 --   Copyright   : (c) Preetham Gujjula, 2016
---   License     : GPL-3
+--   License     : BSD-3-Clause
 --   Maintainer  : preetham.gujjula@gmail.com
 --   Stability   : experimental
 --

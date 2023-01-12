@@ -1,7 +1,7 @@
 -- | Module      : Math.NumberTheory.ContinuedFraction
 --   Description : Handle continued fractions.
 --   Copyright   : (c) Preetham Gujjula, 2016 - 2020
---   License     : GPL-3
+--   License     : BSD-3-Clause
 --   Maintainer  : preetham.gujjula@gmail.com
 --   Stability   : experimental
 --

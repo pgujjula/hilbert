@@ -4,7 +4,7 @@
 -- | Module      : Math.NumberTheory.Modular
 --   Description : Functions to perform modular arithmetic.
 --   Copyright   : (c) Preetham Gujjula, 2016 - 2020
---   License     : GPL-3
+--   License     : BSD-3-Clause
 --   Maintainer  : pgujjula+hilbert@protonmail.com
 --   Stability   : experimental
 --
