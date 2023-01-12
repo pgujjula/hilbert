@@ -4,7 +4,7 @@
 --   Description : Divisors of integers.
 --   Copyright   : (c) Preetham Gujjula, 2020
 --   License     : BSD-3-Clause
---   Maintainer  : preetham.gujjula@gmail.com
+--   Maintainer  : libraries@mail.preetham.io
 --   Stability   : experimental
 --
 --   Divisors of integers.

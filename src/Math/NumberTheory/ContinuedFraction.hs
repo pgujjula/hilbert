@@ -2,7 +2,7 @@
 --   Description : Handle continued fractions.
 --   Copyright   : (c) Preetham Gujjula, 2016 - 2020
 --   License     : BSD-3-Clause
---   Maintainer  : preetham.gujjula@gmail.com
+--   Maintainer  : libraries@mail.preetham.io
 --   Stability   : experimental
 --
 --   Handle continued fractions. This module uses mathematics described in

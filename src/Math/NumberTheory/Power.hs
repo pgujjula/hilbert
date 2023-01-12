@@ -5,7 +5,7 @@
 --   Description : Functions related to powers.
 --   Copyright   : (c) Preetham Gujjula, 2016
 --   License     : BSD-3-Clause
---   Maintainer  : preetham.gujjula@gmail.com
+--   Maintainer  : libraries@mail.preetham.io
 --   Stability   : experimental
 --
 --   Functions related to powers.

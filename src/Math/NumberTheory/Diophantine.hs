@@ -4,7 +4,7 @@
 --   Description : Solve diophantine equations
 --   Copyright   : (c) Preetham Gujjula, 2020
 --   License     : BSD-3-Clause
---   Maintainer  : preetham.gujjula@gmail.com
+--   Maintainer  : libraries@mail.preetham.io
 --   Stability   : experimental
 --
 --   Solve diophantine equations.

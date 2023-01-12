@@ -5,7 +5,7 @@
 --   Description : Functions to perform modular arithmetic.
 --   Copyright   : (c) Preetham Gujjula, 2016 - 2020
 --   License     : BSD-3-Clause
---   Maintainer  : pgujjula+hilbert@protonmail.com
+--   Maintainer  : libraries@mail.preetham.io
 --   Stability   : experimental
 --
 --   Functions to perform modular arithmetic.

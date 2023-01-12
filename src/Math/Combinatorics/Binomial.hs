@@ -9,7 +9,7 @@
 --   Description : Functions related to the binomial coefficient.
 --   Copyright   : (c) Preetham Gujjula, 2020
 --   License     : BSD-3-Clause
---   Maintainer  : preetham.gujjula@gmail.com
+--   Maintainer  : libraries@mail.preetham.io
 --   Stability   : experimental
 --
 --   Functions related to the binomial coefficient.

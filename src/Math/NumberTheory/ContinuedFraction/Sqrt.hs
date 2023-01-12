@@ -2,7 +2,7 @@
 --   Description : Compute the square root of an integer as a continued fraction.
 --   Copyright   : (c) Preetham Gujjula, 2016
 --   License     : BSD-3-Clause
---   Maintainer  : preetham.gujjula@gmail.com
+--   Maintainer  : libraries@mail.preetham.io
 --   Stability   : experimental
 --
 --   Compute the square root of an integer as a continued fraction.

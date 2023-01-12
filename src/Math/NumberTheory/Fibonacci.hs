@@ -2,7 +2,7 @@
 --   Description : Fibonacci and Lucas numbers, and their generalization.
 --   Copyright   : (c) Preetham Gujjula, 2020
 --   License     : BSD-3-Clause
---   Maintainer  : preetham.gujjula@gmail.com
+--   Maintainer  : libraries@mail.preetham.io
 --   Stability   : experimental
 --
 --   Fibonacci and Lucas numbers, and their generalization.
