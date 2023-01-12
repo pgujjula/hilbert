@@ -1,4 +1,4 @@
-module Test.Math.NumberTheory.Diophantine (spec) where
+module Test.Math.NumberTheory.Diophantine (spec, tests) where
 
 import Math.NumberTheory.Diophantine
   ( primitivePythagoreanTriples,
@@ -8,6 +8,11 @@ import Math.NumberTheory.Diophantine
 import Math.NumberTheory.Roots (integerSquareRoot, isSquare)
 import Test.Hspec (Spec, describe, it, shouldBe)
 import Test.QuickCheck (Gen, choose, forAll, suchThat, (===))
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.Diophantine" spec
 
 spec :: Spec
 spec = do

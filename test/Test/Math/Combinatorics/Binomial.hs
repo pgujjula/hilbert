@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fplugin GHC.TypeLits.KnownNat.Solver #-}
 
-module Test.Math.Combinatorics.Binomial (spec) where
+module Test.Math.Combinatorics.Binomial (tests,spec) where
 
 import Control.Exception (evaluate)
 import Control.Monad (forM_)
@@ -40,10 +40,15 @@ import Test.Hspec
   )
 import Test.QuickCheck (forAll, (===))
 import Test.QuickCheck qualified as QuickCheck (choose)
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
 
 -- Limit for quickcheck inputs
 limit :: Integer
 limit = 1000
+
+tests :: IO TestTree
+tests = testSpec "Math.Combinatorics.Binomial" spec
 
 spec :: Spec
 spec = do

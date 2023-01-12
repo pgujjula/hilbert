@@ -1,6 +1,6 @@
 {-# LANGUAGE MultiWayIf #-}
 
-module Test.Math.NumberTheory.Prime.Factor (spec) where
+module Test.Math.NumberTheory.Prime.Factor (spec, tests) where
 
 import Control.Arrow ((>>>))
 import Control.Monad (forM_, zipWithM_)
@@ -18,6 +18,11 @@ import Math.NumberTheory.Prime.Factor
 import Math.NumberTheory.Prime.Sieve (primes)
 import Test.Hspec (Spec, describe, it, shouldBe)
 import Test.QuickCheck (Gen, choose, forAll, (===))
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.Prime.Factor" spec
 
 spec :: Spec
 spec = do

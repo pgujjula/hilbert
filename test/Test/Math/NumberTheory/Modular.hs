@@ -1,4 +1,4 @@
-module Test.Math.NumberTheory.Modular (spec) where
+module Test.Math.NumberTheory.Modular (spec, tests) where
 
 import Math.NumberTheory.Modular (egcd)
 import Test.Hspec
@@ -8,6 +8,11 @@ import Test.Hspec
     shouldBe,
   )
 import Test.QuickCheck (Gen, choose, forAll)
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.Modular" spec
 
 spec :: Spec
 spec = do

@@ -1,4 +1,4 @@
-module Test.Math.NumberTheory.Prime (spec) where
+module Test.Math.NumberTheory.Prime (spec, tests) where
 
 import Math.NumberTheory.Roots (integerSquareRoot)
 import Math.NumberTheory.Prime
@@ -11,6 +11,11 @@ import Math.NumberTheory.Prime
   )
 import Test.Hspec (Spec, describe, it, shouldBe)
 import Test.QuickCheck (choose, forAll, (===))
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.Prime" spec
 
 spec :: Spec
 spec = do

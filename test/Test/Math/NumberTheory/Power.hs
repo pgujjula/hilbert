@@ -1,4 +1,4 @@
-module Test.Math.NumberTheory.Power (spec) where
+module Test.Math.NumberTheory.Power (spec, tests) where
 
 import Data.Maybe (fromJust, isJust)
 import Math.NumberTheory.Power
@@ -22,6 +22,11 @@ import Test.QuickCheck
     forAll,
     oneof,
   )
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.Power" spec
 
 spec :: Spec
 spec = do

@@ -1,5 +1,5 @@
 {-# LANGUAGE ImportQualifiedPost #-}
-module Test.Math.NumberTheory.ContinuedFraction.Sqrt (spec) where
+module Test.Math.NumberTheory.ContinuedFraction.Sqrt (spec, tests) where
 
 import Control.Monad (zipWithM_)
 import Math.NumberTheory.ContinuedFraction
@@ -14,6 +14,11 @@ import Test.Hspec
     it,
     shouldBe,
   )
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.ContinuedFraction.Sqrt" spec
 
 spec :: Spec
 spec =

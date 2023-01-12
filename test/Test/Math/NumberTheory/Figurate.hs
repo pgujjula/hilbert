@@ -1,7 +1,12 @@
-module Test.Math.NumberTheory.Figurate (spec) where
+module Test.Math.NumberTheory.Figurate (spec, tests) where
 
 import Math.NumberTheory.Figurate (triangular, triangularN)
 import Test.Hspec (Spec, describe, it, shouldBe)
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.Figurate" spec
 
 spec :: Spec
 spec = do

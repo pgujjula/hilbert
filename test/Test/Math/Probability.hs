@@ -1,7 +1,12 @@
-module Test.Math.Probability (spec) where
+module Test.Math.Probability (spec, tests) where
 
 import Test.Hspec (Spec, describe, it, shouldBe)
 import Prelude hiding (map)
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.Probability" spec
 
 spec :: Spec
 spec = do

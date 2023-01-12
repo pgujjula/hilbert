@@ -1,5 +1,5 @@
 module Test.Math.NumberTheory.ContinuedFraction.Core
-  ( spec,
+  ( spec, tests
   )
 where
 
@@ -26,6 +26,11 @@ import Test.Hspec
     shouldStartWith,
     shouldThrow,
   )
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.ContinuedFraction.Core" spec
 
 spec :: Spec
 spec = do

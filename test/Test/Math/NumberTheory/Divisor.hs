@@ -1,4 +1,4 @@
-module Test.Math.NumberTheory.Divisor (spec) where
+module Test.Math.NumberTheory.Divisor (spec, tests) where
 
 import Control.Exception (evaluate)
 import Control.Monad (forM_, zipWithM_)
@@ -31,6 +31,11 @@ import Test.Hspec
     shouldBe,
     shouldThrow,
   )
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.Divisor" spec
 
 limit :: Int
 limit = 1000

@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Test.Math.NumberTheory.Digit (spec) where
+module Test.Math.NumberTheory.Digit (spec, tests) where
 
 import Control.Monad (forM_)
 import Data.Proxy (Proxy (Proxy))
@@ -29,9 +29,14 @@ import Test.QuickCheck
     suchThat,
     (===),
   )
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
 
 maxNumDigits :: Int
 maxNumDigits = 50
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.Digit" spec
 
 spec :: Spec
 spec = do

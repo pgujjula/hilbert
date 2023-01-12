@@ -1,7 +1,12 @@
-module Test.Math.Combinatorics.Partition (spec) where
+module Test.Math.Combinatorics.Partition (spec, tests) where
 
 import Math.Combinatorics.Partition (numPartitions, partitions)
 import Test.Hspec (Spec, describe, it, shouldBe)
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
+
+tests :: IO TestTree
+tests = testSpec "Math.Combinatorics.Partition" spec
 
 spec :: Spec
 spec = do

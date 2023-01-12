@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeApplications #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Test.Math.NumberTheory.Fibonacci (spec) where
+module Test.Math.NumberTheory.Fibonacci (spec, tests) where
 
 import Data.Mod (Mod, unMod)
 import Data.Proxy (Proxy (Proxy), asProxyTypeOf)
@@ -27,6 +27,8 @@ import System.Random.Stateful
   )
 import Test.Hspec (Expectation, Spec, describe, it, shouldBe)
 import Test.QuickCheck (Gen, Property, choose, forAll, (.&&.))
+import Test.Tasty (TestTree)
+import Test.Tasty.Hspec (testSpec)
 
 instance Uniform (Mod 5) where
   uniformM g = do
@@ -39,6 +41,9 @@ instance UniformRange (Mod 5) where
     pure (fromIntegral n)
 
 instance Random (Mod 5)
+
+tests :: IO TestTree
+tests = testSpec "Math.NumberTheory.Fibonacci" spec
 
 spec :: Spec
 spec = do
