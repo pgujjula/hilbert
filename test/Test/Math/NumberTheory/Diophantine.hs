@@ -1,4 +1,4 @@
-module Math.NumberTheory.DiophantineSpec (spec) where
+module Test.Math.NumberTheory.Diophantine (spec) where
 
 import Math.NumberTheory.Diophantine
   ( primitivePythagoreanTriples,

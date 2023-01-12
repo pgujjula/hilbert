@@ -1,4 +1,4 @@
-module Math.Combinatorics.PartitionSpec (spec) where
+module Test.Math.Combinatorics.Partition (spec) where
 
 import Math.Combinatorics.Partition (numPartitions, partitions)
 import Test.Hspec (Spec, describe, it, shouldBe)

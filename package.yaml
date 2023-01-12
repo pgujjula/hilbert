@@ -69,21 +69,20 @@ tests:
     source-dirs: test
     main: Main.hs
     other-modules:
-    - Math.Combinatorics.BinomialSpec
-    - Math.Combinatorics.PartitionSpec
-    - Math.NumberTheory.ContinuedFraction.CoreSpec
-    - Math.NumberTheory.ContinuedFraction.SqrtSpec
-    - Math.NumberTheory.DigitSpec
-    - Math.NumberTheory.DiophantineSpec
-    - Math.NumberTheory.DivisorSpec
-    - Math.NumberTheory.FigurateSpec
-    - Math.NumberTheory.FibonacciSpec
-    - Math.NumberTheory.ModularSpec
-    - Math.NumberTheory.PowerSpec
-    - Math.NumberTheory.PrimeSpec
-    - Math.NumberTheory.Prime.FactorSpec
-    - Math.ProbabilitySpec
-    - Spec
+    - Test.Math.Combinatorics.Binomial
+    - Test.Math.Combinatorics.Partition
+    - Test.Math.NumberTheory.ContinuedFraction.Core
+    - Test.Math.NumberTheory.ContinuedFraction.Sqrt
+    - Test.Math.NumberTheory.Digit
+    - Test.Math.NumberTheory.Diophantine
+    - Test.Math.NumberTheory.Divisor
+    - Test.Math.NumberTheory.Figurate
+    - Test.Math.NumberTheory.Fibonacci
+    - Test.Math.NumberTheory.Modular
+    - Test.Math.NumberTheory.Power
+    - Test.Math.NumberTheory.Prime
+    - Test.Math.NumberTheory.Prime.Factor
+    - Test.Math.Probability
     dependencies:
     - mod
     - primesieve

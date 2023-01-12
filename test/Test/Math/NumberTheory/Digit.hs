@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Math.NumberTheory.DigitSpec (spec) where
+module Test.Math.NumberTheory.Digit (spec) where
 
 import Control.Monad (forM_)
 import Data.Proxy (Proxy (Proxy))

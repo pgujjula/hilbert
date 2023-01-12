@@ -1,4 +1,4 @@
-module Math.NumberTheory.ContinuedFraction.CoreSpec
+module Test.Math.NumberTheory.ContinuedFraction.Core
   ( spec,
   )
 where

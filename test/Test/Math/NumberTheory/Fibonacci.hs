@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeApplications #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Math.NumberTheory.FibonacciSpec (spec) where
+module Test.Math.NumberTheory.Fibonacci (spec) where
 
 import Data.Mod (Mod, unMod)
 import Data.Proxy (Proxy (Proxy), asProxyTypeOf)

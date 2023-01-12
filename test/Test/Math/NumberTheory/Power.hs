@@ -1,4 +1,4 @@
-module Math.NumberTheory.PowerSpec (spec) where
+module Test.Math.NumberTheory.Power (spec) where
 
 import Data.Maybe (fromJust, isJust)
 import Math.NumberTheory.Power

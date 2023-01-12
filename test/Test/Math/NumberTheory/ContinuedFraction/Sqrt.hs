@@ -1,5 +1,5 @@
 {-# LANGUAGE ImportQualifiedPost #-}
-module Math.NumberTheory.ContinuedFraction.SqrtSpec (spec) where
+module Test.Math.NumberTheory.ContinuedFraction.Sqrt (spec) where
 
 import Control.Monad (zipWithM_)
 import Math.NumberTheory.ContinuedFraction

@@ -1,4 +1,4 @@
-module Math.ProbabilitySpec (spec) where
+module Test.Math.Probability (spec) where
 
 import Test.Hspec (Spec, describe, it, shouldBe)
 import Prelude hiding (map)

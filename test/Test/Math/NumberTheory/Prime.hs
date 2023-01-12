@@ -1,4 +1,4 @@
-module Math.NumberTheory.PrimeSpec (spec) where
+module Test.Math.NumberTheory.Prime (spec) where
 
 import Math.NumberTheory.Roots (integerSquareRoot)
 import Math.NumberTheory.Prime

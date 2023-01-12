@@ -1,4 +1,4 @@
-module Math.NumberTheory.DivisorSpec (spec) where
+module Test.Math.NumberTheory.Divisor (spec) where
 
 import Control.Exception (evaluate)
 import Control.Monad (forM_, zipWithM_)

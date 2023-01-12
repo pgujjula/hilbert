@@ -1,4 +1,4 @@
-module Math.NumberTheory.ModularSpec (spec) where
+module Test.Math.NumberTheory.Modular (spec) where
 
 import Math.NumberTheory.Modular (egcd)
 import Test.Hspec

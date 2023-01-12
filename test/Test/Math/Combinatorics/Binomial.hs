@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fplugin GHC.TypeLits.KnownNat.Solver #-}
 
-module Math.Combinatorics.BinomialSpec (spec) where
+module Test.Math.Combinatorics.Binomial (spec) where
 
 import Control.Exception (evaluate)
 import Control.Monad (forM_)

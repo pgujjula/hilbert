@@ -1,4 +1,4 @@
-module Math.NumberTheory.FigurateSpec (spec) where
+module Test.Math.NumberTheory.Figurate (spec) where
 
 import Math.NumberTheory.Figurate (triangular, triangularN)
 import Test.Hspec (Spec, describe, it, shouldBe)

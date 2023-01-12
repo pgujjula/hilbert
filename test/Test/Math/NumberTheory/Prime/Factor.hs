@@ -1,6 +1,6 @@
 {-# LANGUAGE MultiWayIf #-}
 
-module Math.NumberTheory.Prime.FactorSpec (spec) where
+module Test.Math.NumberTheory.Prime.Factor (spec) where
 
 import Control.Arrow ((>>>))
 import Control.Monad (forM_, zipWithM_)
