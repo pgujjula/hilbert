@@ -65,7 +65,7 @@ library:
   - vector
 
 tests:
-  spec:
+  hilbert-tests:
     source-dirs: test
     main: Main.hs
     other-modules:

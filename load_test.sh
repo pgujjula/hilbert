@@ -13,4 +13,4 @@ stack ghci \
   --ghci-options "-package HUnit" \
   --ghci-options "-package random" \
   --ghci-options "-Wno-type-defaults" \
-  --main-is hilbert:test:spec
+  --main-is hilbert:test:hilbert-tests
