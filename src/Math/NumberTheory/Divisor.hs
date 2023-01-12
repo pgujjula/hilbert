@@ -9,18 +9,27 @@
 --
 --   Divisors of integers.
 module Math.NumberTheory.Divisor
-  ( divides,
+  ( -- * Basic functions
+    divides,
+    relativelyPrime,
+
+    -- * Listing divisors
     divisors,
     divisorsF,
     divisorPairs,
     divisorPairsF,
+
+    -- * Summarizing divisors
     numDivisors,
     numDivisorsF,
     sumDivisors,
     sumDivisorsF,
-    relativelyPrime,
+
+    -- * Totient function
     totient,
     totientF,
+
+    -- * Mobius function
     mobius,
     mobiusF,
     mobiuses,
@@ -60,6 +69,20 @@ divides :: (Integral a) => a -> a -> Bool
 divides a b
   | a == 0 = b == 0
   | otherwise = b `rem` a == 0
+
+-- | @relativelyPrime m n@ is @True@ if @m@ and @n@ have no common positive
+--   divisors other than 1.
+--
+--   >>> relativelyPrime 3 5
+--   True
+--   >>> relativelyPrime 4 6
+--   False
+--   >>> relativelyPrime 0 1
+--   True
+--   >>> relativelyPrime 0 0
+--   False
+relativelyPrime :: (Integral a) => a -> a -> Bool
+relativelyPrime m n = gcd m n == 1
 
 -- | The positive divisors of an integer. Not necessarily in sorted order.
 --
@@ -154,20 +177,6 @@ sumDivisorsF = foldl' (*) 1 . map f
   where
     f (p, e) = (p ^ (e + 1) - 1) `quot` (p - 1)
 
--- | @relativelyPrime m n@ is @True@ if @m@ and @n@ have no common positive
---   divisors other than 1.
---
---   >>> relativelyPrime 3 5
---   True
---   >>> relativelyPrime 4 6
---   False
---   >>> relativelyPrime 0 1
---   True
---   >>> relativelyPrime 0 0
---   False
-relativelyPrime :: (Integral a) => a -> a -> Bool
-relativelyPrime m n = gcd m n == 1
-
 -- | @totient n@ is the number of integers in @[1..n]@ that are relatively prime
 --   to @n@. Also, @totient 0 == 1@ by convention.
 --
@@ -216,7 +225,7 @@ mobiuses :: [Int]
 mobiuses = mobiusesFrom 1
 
 -- | The mobius function starting from @n@.
---    
+--
 --   >>> take 10 (mobiusesFrom 5)
 --   [-1,1,-1,0,0,1,-1,0,-1,1]
 mobiusesFrom :: Int -> [Int]
