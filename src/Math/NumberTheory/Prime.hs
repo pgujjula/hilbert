@@ -24,13 +24,25 @@ import Data.Word (Word64)
 import Math.NumberTheory.Prime.Sieve qualified as PS
 import Math.NumberTheory.Roots (integerSquareRoot)
 
+-- | An infinite list of the primes.
+--
+--   >>> take 8 primes
+--   [2, 3, 5, 7, 11, 13, 17, 19]
 primes :: [Int]
 primes = fmap fromIntegral PS.primes
 
+-- | A list of the primes up to (and including) a limit.
+--
+--   >>> primesTo 10
+--   [2, 3, 5, 7]
 primesTo :: Int -> [Int]
 primesTo n | n < 0 = []
 primesTo n = fmap fromIntegral . PS.primesTo . fromIntegral $ n
 
+-- | A list of the primes between a start and end, inclusive.
+--
+--   >>> primesFromTo 10 20
+--   [11, 13, 17, 19]
 primesFromTo :: Int -> Int -> [Int]
 primesFromTo a b | a <= 0 = primesTo b
 primesFromTo a b =
