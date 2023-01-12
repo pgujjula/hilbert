@@ -12,7 +12,8 @@ where
 import Data.Function ((&))
 import Data.List (mapAccumL)
 import Data.Tuple (swap)
-import Math.NumberTheory.Power (integralSqrt, square)
+import Math.NumberTheory.Power (square)
+import Math.NumberTheory.Roots (integerSquareRoot)
 import Math.NumberTheory.Prime (primes)
 
 type Chunk = (Int, Int, Int)
@@ -23,7 +24,7 @@ mkChunks start =
   map (\a -> (a + 1, square a + 1, square (a + 1))) [a0 ..]
     & truncateHead
   where
-    a0 = integralSqrt (start - 1)
+    a0 = integerSquareRoot (start - 1)
     truncateHead ((sqrtm, _, m) : xs) = (sqrtm, start, m) : xs
 
 -- For all i, concat (take i primeGroups) are all the primes that are

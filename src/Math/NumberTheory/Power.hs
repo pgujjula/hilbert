@@ -14,9 +14,6 @@ module Math.NumberTheory.Power
     squares,
     cube,
     cubes,
-    integralSqrt,
-    isSquare,
-    integralRoot,
     integralLogBase,
   )
 where
@@ -49,70 +46,6 @@ cube a = a * a * a
 --   [0, 1, 8, 27, 64]
 cubes :: (Integral a) => [a]
 cubes = map cube [0 ..]
-
-{-
-   Generate potential roots using Newton's method.
-   If x is an approximation for sqrt(n), then (x*x + n)/(2*x) is
-   a better approximation.
--}
-
--- | @isSquare n@ returns whether @n@ is a perfect square.
---
---   >>> isSquare 4
---   True
---   >>> isSquare 11
---   False
---   >>> isSquare 0
---   True
-isSquare :: Integral a => a -> Bool
-isSquare n
-  | n < 0 = False
-  | otherwise = x * x == n
-  where
-    x = integralSqrt n
-
--- | @integralSqrt n@ computes the largest integer less than or equal to square
---   root of @n@.
-integralSqrt :: forall a. Integral a => a -> a
-integralSqrt n = fromIntegral $ search initial
-  where
-    -- To avoid overflow with fixed precision integers, we need to convert to
-    -- Integer first.
-    n' :: Integer
-    n' = toInteger n
-
-    -- The initial approximation
-    initial :: Integer
-    initial = maybe 2 (2 ^) (integralLogBase (2 :: Integer) n')
-
-    search :: Integer -> Integer
-    search x
-      | dy == doublex = x
-      | dx == 0 = x
-      | otherwise = search (x + dx)
-      where
-        dy = n' - squarex
-        dx = dy `div` doublex
-
-        squarex = x * x
-        doublex = 2 * x
-
--- | @integralRoot k n@ computes the largest integer less than the @k@th root of
---   @n@.
-integralRoot :: (Integral a, Integral b) => b -> a -> a
-integralRoot k n = fromIntegral $ search 0 n'
-  where
-    n' = toInteger n
-    search :: Integer -> Integer -> Integer
-    search lower upper
-      | lower == upper = lower
-      | otherwise =
-          case compare (midpoint ^ k) n' of
-            LT -> search midpoint upper
-            EQ -> midpoint
-            GT -> search lower (midpoint - 1)
-      where
-        midpoint = (lower + upper + 1) `div` 2
 
 -- | @integralLogBase b n@ is the largest integer k such that b^k is less than or
 --   equal to n.

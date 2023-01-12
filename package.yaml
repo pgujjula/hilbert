@@ -55,6 +55,7 @@ library:
   - chimera
   - data-ordlist
   - integer-gmp
+  - integer-roots
   - list-duplicate
   - list-filter
   - mod
@@ -87,6 +88,7 @@ tests:
     dependencies:
     - mod
     - primesieve
+    - integer-roots
     - hilbert
     - hspec
     - QuickCheck

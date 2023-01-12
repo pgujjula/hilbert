@@ -12,7 +12,8 @@ module Math.NumberTheory.ContinuedFraction.Sqrt
 where
 
 import Math.NumberTheory.ContinuedFraction.Core
-import Math.NumberTheory.Power (integralSqrt, isSquare, square)
+import Math.NumberTheory.Power (square)
+import Math.NumberTheory.Roots (integerSquareRoot, isSquare)
 
 -- | @sqrt n@ returns the continued fraction representation of the square root of
 --   @n@.
@@ -29,7 +30,7 @@ import Math.NumberTheory.Power (integralSqrt, isSquare, square)
 --   >>> fromRational $ convergent (sqrt 2) 30
 --   1.4142135623730951
 sqrt :: (Integral a) => a -> ContinuedFraction a
-sqrt x | isSquare x = mkAperiodic [integralSqrt x]
+sqrt x | isSquare x = mkAperiodic [integerSquareRoot x]
 sqrt x = mkPeriodic [first] periodicPart
   where
     untruncated = cfracSurd (Surd 1 x 0 1)
@@ -89,7 +90,7 @@ unsafeReciprocal (Surd a b c d) = simplify $ Surd a' b c' d'
 
 -- Compute the floor of a quadratic surd. We have
 -- * f1 = floor (a sqrt(b))
---       == integralSqrt (a^2 * b)
+--       == integerSquareRoot (a^2 * b)
 -- * f2 = floor ((a sqrt(b) + c)
 --       == floor (a sqrt(b)) + c
 --       == f1 + c
@@ -105,7 +106,7 @@ surdFloor = fromInteger . unsafeSurdFloor . cast
 -- precision integers.
 unsafeSurdFloor :: (Integral a) => Surd a -> a
 unsafeSurdFloor (Surd a b c d) =
-  let f1 = integralSqrt (square a * b)
+  let f1 = integerSquareRoot (square a * b)
       f2 = f1 + c
    in f2 `div` d
 

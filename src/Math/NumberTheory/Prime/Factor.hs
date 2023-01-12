@@ -33,7 +33,7 @@ import Data.Maybe (fromMaybe)
 import Data.Vector (Vector)
 import Data.Vector qualified as Vector
 import Data.Vector.Mutable qualified as MVector
-import Math.NumberTheory.Power (integralSqrt)
+import Math.NumberTheory.Roots (integerSquareRoot)
 import Math.NumberTheory.Prime (primes)
 import Math.NumberTheory.Prime.SegmentedSieve
   ( Chunk,
@@ -84,12 +84,12 @@ factor n
   | otherwise =
       Just $
         count $
-          factorWith (map fromIntegral primes) (integralSqrt n) n
+          factorWith (map fromIntegral primes) (integerSquareRoot n) n
 
 factorWith :: (Integral a) => [a] -> a -> a -> [a]
 factorWith (p : ps) limit n
   | p > limit = [n]
-  | r == 0 = p : factorWith (p : ps) (integralSqrt n') n'
+  | r == 0 = p : factorWith (p : ps) (integerSquareRoot n') n'
   | otherwise = factorWith ps limit n
   where
     (n', r) = n `quotRem` p

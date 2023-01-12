@@ -1,6 +1,6 @@
 module Math.NumberTheory.PrimeSpec (spec) where
 
-import Math.NumberTheory.Power (integralSqrt)
+import Math.NumberTheory.Roots (integerSquareRoot)
 import Math.NumberTheory.Prime
   ( composites,
     compositesTo,
@@ -22,7 +22,7 @@ spec = do
   describe "compositesTo" compositesToSpec
 
 naiveIsPrime :: (Integral a) => a -> Bool
-naiveIsPrime n = n >= 2 && not (any (\d -> n `rem` d == 0) [2 .. integralSqrt n])
+naiveIsPrime n = n >= 2 && not (any (\d -> n `rem` d == 0) [2 .. integerSquareRoot n])
 
 isPrimeSpec :: Spec
 isPrimeSpec = do

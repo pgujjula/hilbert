@@ -5,7 +5,7 @@ import Math.NumberTheory.Diophantine
     pythagoreanTriples,
     solvePell,
   )
-import Math.NumberTheory.Power (integralSqrt, isSquare)
+import Math.NumberTheory.Roots (integerSquareRoot, isSquare)
 import Test.Hspec (Spec, describe, it, shouldBe)
 import Test.QuickCheck (Gen, choose, forAll, suchThat, (===))
 
@@ -27,7 +27,7 @@ solvePellSpec = do
     solvePell 1 `shouldBe` [(1, 0)]
   it "arbitrary squares" $ do
     let gen :: Gen Integer
-        gen = (^ 2) <$> choose (2, integralSqrt dmax)
+        gen = (^ 2) <$> choose (2, integerSquareRoot dmax)
     forAll gen $ \d -> solvePell d === []
   it "arbitrary nonsquares" $ do
     let gen :: Gen Integer

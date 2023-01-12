@@ -54,6 +54,7 @@ library
     , data-ordlist
     , ghc-typelits-knownnat
     , integer-gmp
+    , integer-roots
     , list-duplicate
     , list-filter
     , mod
@@ -92,6 +93,7 @@ test-suite spec
     , ghc-typelits-knownnat
     , hilbert
     , hspec
+    , integer-roots
     , list-duplicate
     , mod
     , primesieve

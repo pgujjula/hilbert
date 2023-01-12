@@ -21,8 +21,8 @@ where
 import Data.Function ((&))
 import Data.List.Ordered (minus)
 import Data.Word (Word64)
-import Math.NumberTheory.Power (integralSqrt)
 import Math.NumberTheory.Prime.Sieve qualified as PS
+import Math.NumberTheory.Roots (integerSquareRoot)
 
 primes :: [Int]
 primes = fmap fromIntegral PS.primes
@@ -48,7 +48,7 @@ isPrime n = isPrime' . fromIntegral $ n
 isPrime' :: Word64 -> Bool
 isPrime' n = not $
   any (\p -> n `rem` p == 0) $
-    takeWhile (<= integralSqrt n) PS.primes
+    takeWhile (<= integerSquareRoot n) PS.primes
 
 -- | A lazy infinite list of composities.
 --

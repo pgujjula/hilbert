@@ -21,7 +21,8 @@ import Data.List.Ordered (mergeAll)
 import Data.Maybe (fromJust)
 import Data.Ratio (denominator, numerator)
 import Math.NumberTheory.ContinuedFraction as CF
-import Math.NumberTheory.Power (isSquare, square)
+import Math.NumberTheory.Power (square)
+import Math.NumberTheory.Roots (isSquare)
 
 -- | @solvePell d@ yields all solutions (x, y) in positive integers to the Pell
 --   equation x² - d y² = 1 in ascending order.
