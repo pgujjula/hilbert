@@ -96,7 +96,6 @@ test-suite hilbert-tests
     , primesieve
     , random
     , tasty
-    , tasty-hspec
     , tasty-hunit
     , tasty-quickcheck
     , type-natural

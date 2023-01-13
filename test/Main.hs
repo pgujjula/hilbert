@@ -19,24 +19,24 @@ import Test.Math.Probability qualified
 import Test.Tasty (TestTree, defaultMain, testGroup)
 
 main :: IO ()
-main = tests >>= defaultMain
+main = defaultMain tests
 
-tests :: IO TestTree
+tests :: TestTree
 tests =
-  testGroup "Hilbert tests"
-    <$> sequence
-      [pure Test.Math.Combinatorics.Binomial.tests,
-       pure Test.Math.Combinatorics.Partition.tests,
-       pure Test.Math.NumberTheory.ContinuedFraction.Core.tests,
-       pure Test.Math.NumberTheory.ContinuedFraction.Sqrt.tests,
-       pure Test.Math.NumberTheory.Digit.tests,
-       pure Test.Math.NumberTheory.Diophantine.tests,
-       pure Test.Math.NumberTheory.Divisor.tests,
-       pure Test.Math.NumberTheory.Fibonacci.tests,
-       pure Test.Math.NumberTheory.Figurate.tests,
-       pure Test.Math.NumberTheory.Modular.tests,
-       pure Test.Math.NumberTheory.Power.tests,
-       pure Test.Math.NumberTheory.Prime.tests,
-       pure Test.Math.NumberTheory.Prime.Factor.tests,
-       pure Test.Math.Probability.tests
-      ]
+  testGroup
+    "Hilbert tests"
+    [ Test.Math.Combinatorics.Binomial.tests,
+      Test.Math.Combinatorics.Partition.tests,
+      Test.Math.NumberTheory.ContinuedFraction.Core.tests,
+      Test.Math.NumberTheory.ContinuedFraction.Sqrt.tests,
+      Test.Math.NumberTheory.Digit.tests,
+      Test.Math.NumberTheory.Diophantine.tests,
+      Test.Math.NumberTheory.Divisor.tests,
+      Test.Math.NumberTheory.Fibonacci.tests,
+      Test.Math.NumberTheory.Figurate.tests,
+      Test.Math.NumberTheory.Modular.tests,
+      Test.Math.NumberTheory.Power.tests,
+      Test.Math.NumberTheory.Prime.tests,
+      Test.Math.NumberTheory.Prime.Factor.tests,
+      Test.Math.Probability.tests
+    ]

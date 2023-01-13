@@ -95,7 +95,6 @@ tests:
     - ghc-typelits-knownnat
     - HUnit
     - list-duplicate
-    - tasty-hspec
     - tasty
     - tasty-hunit
     - tasty-quickcheck
