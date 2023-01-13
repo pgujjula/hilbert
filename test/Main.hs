@@ -25,7 +25,7 @@ tests :: IO TestTree
 tests =
   testGroup "Hilbert tests"
     <$> sequence
-      [Test.Math.Combinatorics.Binomial.tests,
+      [pure Test.Math.Combinatorics.Binomial.tests,
        pure Test.Math.Combinatorics.Partition.tests,
        Test.Math.NumberTheory.ContinuedFraction.Core.tests,
        Test.Math.NumberTheory.ContinuedFraction.Sqrt.tests,
