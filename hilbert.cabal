@@ -45,7 +45,7 @@ library
       Math.NumberTheory.ContinuedFraction.Sqrt
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Wmissing-export-lists -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Wmissing-home-modules -Werror=missing-home-modules -Widentities -Wredundant-constraints -Wmissing-export-lists -Wunused-packages
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Werror=missing-home-modules -Wpartial-fields -Wredundant-constraints -Wunused-packages
   build-depends:
       apply-merge
     , base >=4.13 && <5.0
@@ -83,7 +83,7 @@ test-suite hilbert-tests
       Test.Util
   hs-source-dirs:
       test
-  ghc-options: -Wall -Wcompat -Wmissing-export-lists -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Wmissing-home-modules -Werror=missing-home-modules -Widentities -Wredundant-constraints -Wmissing-export-lists -Wunused-packages -Wno-type-defaults
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Werror=missing-home-modules -Wpartial-fields -Wredundant-constraints -Wunused-packages -Wno-type-defaults
   build-depends:
       HUnit
     , QuickCheck
@@ -110,7 +110,7 @@ benchmark primecount-bench
       Paths_hilbert
   hs-source-dirs:
       bench
-  ghc-options: -Wall -Wcompat -Wmissing-export-lists -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Wmissing-home-modules -Werror=missing-home-modules -Widentities -Wredundant-constraints -Wmissing-export-lists -Wunused-packages
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Werror=missing-home-modules -Wpartial-fields -Wredundant-constraints -Wunused-packages
   build-depends:
       base >=4.13 && <5.0
     , hilbert

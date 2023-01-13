@@ -16,15 +16,14 @@ extra-source-files:
 ghc-options:
 - -Wall
 - -Wcompat
-- -Wmissing-export-lists
-- -Wincomplete-uni-patterns
+- -Widentities
 - -Wincomplete-record-updates
-- -Wpartial-fields
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
 - -Wmissing-home-modules
 - -Werror=missing-home-modules
-- -Widentities
+- -Wpartial-fields
 - -Wredundant-constraints
-- -Wmissing-export-lists
 - -Wunused-packages
 
 dependencies:
@@ -55,12 +54,12 @@ library:
   - containers
   - chimera
   - data-ordlist
+  - ghc-typelits-knownnat
   - integer-roots
   - list-duplicate
   - mod
   - primesieve
   - semirings
-  - ghc-typelits-knownnat
   - type-natural
   - vector
 
@@ -85,19 +84,19 @@ tests:
     - Test.Math.Probability
     - Test.Util
     dependencies:
+    - ghc-typelits-knownnat
+    - hilbert
+    - HUnit
+    - integer-roots
+    - list-duplicate
     - mod
     - primesieve
-    - integer-roots
-    - hilbert
     - QuickCheck
     - random
-    - type-natural
-    - ghc-typelits-knownnat
-    - HUnit
-    - list-duplicate
     - tasty
     - tasty-hunit
     - tasty-quickcheck
+    - type-natural
     ghc-options:
     - -Wno-type-defaults
 
