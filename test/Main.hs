@@ -36,7 +36,7 @@ tests =
        pure Test.Math.NumberTheory.Figurate.tests,
        pure Test.Math.NumberTheory.Modular.tests,
        pure Test.Math.NumberTheory.Power.tests,
-       Test.Math.NumberTheory.Prime.tests,
+       pure Test.Math.NumberTheory.Prime.tests,
        Test.Math.NumberTheory.Prime.Factor.tests,
        pure Test.Math.Probability.tests
       ]
