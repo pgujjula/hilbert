@@ -1,4 +1,4 @@
-module Test.Math.NumberTheory.Divisor (spec, tests) where
+module Test.Math.NumberTheory.Divisor (tests) where
 
 import Control.Exception (evaluate)
 import Control.Monad (forM_, zipWithM_)
@@ -23,180 +23,216 @@ import Math.NumberTheory.Divisor
     totientF,
   )
 import Math.NumberTheory.Prime.Factor (factor, factorizations)
-import Test.Hspec
-  ( Spec,
-    anyException,
-    describe,
-    it,
-    shouldBe,
-    shouldThrow,
-  )
-import Test.Tasty (TestTree)
-import Test.Tasty.Hspec (testSpec)
+import Test.Hspec (anyException, shouldThrow)
+import Test.Tasty (TestTree, testGroup)
+import Test.Tasty.HUnit (testCase, (@?=))
 
-tests :: IO TestTree
-tests = testSpec "Math.NumberTheory.Divisor" spec
+tests :: TestTree
+tests =
+  testGroup
+    "Math.NumberTheory.Divisor"
+    [ dividesTest,
+      divisorsTest,
+      divisorsFTest,
+      divisorPairsTest,
+      divisorPairsFTest,
+      numDivisorsTest,
+      numDivisorsFTest,
+      sumDivisorsTest,
+      sumDivisorsFTest,
+      relativelyPrimeTest,
+      totientTest,
+      totientFTest,
+      mobiusTest,
+      mobiusFTest,
+      mobiusesTest,
+      mobiusesFromTest
+    ]
 
 limit :: Int
 limit = 1000
 
-spec :: Spec
-spec = do
-  describe "divides" dividesSpec
-  describe "divisors" divisorsSpec
-  describe "divisorsF" divisorsFSpec
-  describe "divisorPairs" divisorPairsSpec
-  describe "divisorPairsF" divisorPairsFSpec
+dividesTest :: TestTree
+dividesTest =
+  testGroup
+    "divides tests"
+    [ testCase "0 divides 0" $
+        (0 `divides` 0) @?= True,
+      testCase "0 doesn't divide anything else" $ do
+        (0 `divides` 1) @?= False
+        (0 `divides` (-5)) @?= False,
+      testCase "small cases" $ do
+        (5 `divides` 30) @?= True
+        (5 `divides` 31) @?= False
+    ]
 
-  describe "numDivisors" numDivisorsSpec
-  describe "numDivisorsF" numDivisorsFSpec
+divisorsTest :: TestTree
+divisorsTest =
+  testGroup
+    "divisors tests"
+    [ testCase ("correct for abs n up to " ++ show limit) $
+        let naive n = filter (`divides` n) [1 .. abs n]
+         in forM_ [(-limit) .. limit] $ \x ->
+              sort (divisors x) @?= naive x
+    ]
 
-  describe "sumDivisors" sumDivisorsSpec
-  describe "sumDivisorsF" sumDivisorsFSpec
+divisorsFTest :: TestTree
+divisorsFTest =
+  testGroup
+    "divisorsF tests"
+    [ testCase ("correct for n up to " ++ show limit) $
+        let naive n = filter (`divides` n) [1 .. abs n]
+         in forM_ [1 .. limit] $ \x ->
+              (sort . divisorsF . fromJust . factor $ x) @?= naive x
+    ]
 
-  describe "relativelyPrime" relativelyPrimeSpec
+divisorPairsTest :: TestTree
+divisorPairsTest =
+  testGroup
+    "divisorPairs tests"
+    [ testCase ("correct for abs n up to " ++ show limit) $
+        forM_ [(-limit) .. limit] $ \x -> do
+          let dps = divisorPairs x
+          length dps
+            @?= ((length (divisors x) + 1) `div` 2)
+          mapM_ (\(a, b) -> a * b @?= abs x) dps
+    ]
 
-  describe "totient" totientSpec
-  describe "totientF" totientFSpec
+divisorPairsFTest :: TestTree
+divisorPairsFTest =
+  testGroup
+    "divisorPairsF tests"
+    [ testCase ("correct for n up to " ++ show limit) $
+        forM_ [1 .. limit] $ \x -> do
+          let dps = divisorPairsF . fromJust . factor $ x
+          length dps
+            @?= ((length (divisors x) + 1) `div` 2)
+          mapM_ (\(a, b) -> a * b @?= x) dps
+    ]
 
-  describe "mobius" mobiusSpec
-  describe "mobiusF" mobiusFSpec
-  describe "mobiuses" mobiusesSpec
-  describe "mobiusesFrom" mobiusesFromSpec
+numDivisorsTest :: TestTree
+numDivisorsTest =
+  testGroup
+    "numDivisors tests"
+    [ testCase ("correct for abs n up to " ++ show limit) $
+        let naive n = length $ filter (`divides` n) [1 .. abs n]
+         in forM_ [(-limit) .. limit] $ \x -> numDivisors x @?= naive x
+    ]
 
-dividesSpec :: Spec
-dividesSpec = do
-  it "0 divides 0" $
-    (0 `divides` 0) `shouldBe` True
-  it "0 doesn't divide anything else" $ do
-    (0 `divides` 1) `shouldBe` False
-    (0 `divides` (-5)) `shouldBe` False
-  it "small cases" $ do
-    (5 `divides` 30) `shouldBe` True
-    (5 `divides` 31) `shouldBe` False
+numDivisorsFTest :: TestTree
+numDivisorsFTest =
+  testGroup
+    "numDivisorsF tests"
+    [ testCase ("correct for n up to " ++ show limit) $
+        let naive n = length $ filter (`divides` n) [1 .. abs n]
+         in forM_ [1 .. limit] $ \x ->
+              (numDivisorsF . fromJust . factor $ x) @?= naive x
+    ]
 
-divisorsSpec :: Spec
-divisorsSpec =
-  it ("correct for abs n up to " ++ show limit) $
-    let naive n = filter (`divides` n) [1 .. abs n]
-     in forM_ [(-limit) .. limit] $ \x ->
-          sort (divisors x) `shouldBe` naive x
+sumDivisorsTest :: TestTree
+sumDivisorsTest =
+  testGroup
+    "sumDivisors tests"
+    [ testCase ("correct for abs n up to " ++ show limit) $
+        let naive n = sum $ filter (`divides` n) [1 .. abs n]
+         in forM_ [(-limit) .. limit] $ \x -> sumDivisors x @?= naive x
+    ]
 
-divisorsFSpec :: Spec
-divisorsFSpec =
-  it ("correct for n up to " ++ show limit) $
-    let naive n = filter (`divides` n) [1 .. abs n]
-     in forM_ [1 .. limit] $ \x ->
-          (sort . divisorsF . fromJust . factor $ x) `shouldBe` naive x
+sumDivisorsFTest :: TestTree
+sumDivisorsFTest =
+  testGroup
+    "sumDivisorsF tests"
+    [ testCase ("correct for n up to " ++ show limit) $
+        let naive n = sum $ filter (`divides` n) [1 .. abs n]
+         in forM_ [1 .. limit] $ \x ->
+              (sumDivisorsF . fromJust . factor $ x) @?= naive x
+    ]
 
-divisorPairsSpec :: Spec
-divisorPairsSpec =
-  it ("correct for abs n up to " ++ show limit) $
-    forM_ [(-limit) .. limit] $ \x -> do
-      let dps = divisorPairs x
-      length dps
-        `shouldBe` ((length (divisors x) + 1) `div` 2)
-      mapM_ (\(a, b) -> a * b `shouldBe` abs x) dps
+relativelyPrimeTest :: TestTree
+relativelyPrimeTest =
+  testGroup
+    "relativelyPrime tests"
+    [ testCase "0 is not relatively prime to 0" $
+        relativelyPrime 0 0 @?= False,
+      testCase "0 is relatively prime to 1/-1" $ do
+        relativelyPrime 0 1 @?= True
+        relativelyPrime 0 (-1) @?= True,
+      testCase "0 is not relatively to integers with magnitude > 1" $ do
+        relativelyPrime 0 2 @?= False
+        relativelyPrime 0 (-2) @?= False,
+      testCase "1 is relatively prime to 1/-1" $ do
+        relativelyPrime 1 1 @?= True
+        relativelyPrime 1 (-1) @?= True,
+      testCase "3 is relatively prime to 5/-5" $ do
+        relativelyPrime 3 5 @?= True
+        relativelyPrime 3 (-5) @?= True,
+      testCase "-3 is not relatively prime to 6/-6" $ do
+        relativelyPrime (-3) 6 @?= False
+        relativelyPrime (-3) (-6) @?= False
+    ]
 
-divisorPairsFSpec :: Spec
-divisorPairsFSpec =
-  it ("correct for n up to " ++ show limit) $
-    forM_ [1 .. limit] $ \x -> do
-      let dps = divisorPairsF . fromJust . factor $ x
-      length dps
-        `shouldBe` ((length (divisors x) + 1) `div` 2)
-      mapM_ (\(a, b) -> a * b `shouldBe` x) dps
+totientTest :: TestTree
+totientTest =
+  testGroup
+    "totient tests"
+    [ testCase "totient of negative numbers is 0" $
+        totient (-1) @?= 0,
+      testCase "totient of 0 is 1" $
+        totient 0 @?= 1,
+      testCase ("correct for up to " ++ show limit) $
+        forM_ [1 .. limit] $ \n ->
+          totient n @?= length (filter (relativelyPrime n) [1 .. n])
+    ]
 
-numDivisorsSpec :: Spec
-numDivisorsSpec =
-  it ("correct for abs n up to " ++ show limit) $
-    let naive n = length $ filter (`divides` n) [1 .. abs n]
-     in forM_ [(-limit) .. limit] $ \x -> numDivisors x `shouldBe` naive x
+totientFTest :: TestTree
+totientFTest =
+  testGroup
+    "totientF tests"
+    [ testCase ("correct up to " ++ show limit) $
+        forM_ [1 .. limit] $ \n ->
+          totientF n (fromJust $ factor n)
+            @?= length (filter (relativelyPrime n) [1 .. n])
+    ]
 
-numDivisorsFSpec :: Spec
-numDivisorsFSpec =
-  it ("correct for n up to " ++ show limit) $
-    let naive n = length $ filter (`divides` n) [1 .. abs n]
-     in forM_ [1 .. limit] $ \x ->
-          (numDivisorsF . fromJust . factor $ x) `shouldBe` naive x
+mobiusTest :: TestTree
+mobiusTest =
+  testGroup
+    "mobius tests"
+    [ testCase "mobius of non-positive numbers is undefined" $ do
+        evaluate (mobius (-1)) `shouldThrow` anyException
+        evaluate (mobius 0) `shouldThrow` anyException,
+      testCase "correct up to 10" $ do
+        zipWithM_
+          (@?=)
+          (fmap mobius [1 .. 10])
+          [1, -1, -1, 0, -1, 1, -1, 0, 0, 1]
+    ]
 
-sumDivisorsSpec :: Spec
-sumDivisorsSpec =
-  it ("correct for abs n up to " ++ show limit) $
-    let naive n = sum $ filter (`divides` n) [1 .. abs n]
-     in forM_ [(-limit) .. limit] $ \x -> sumDivisors x `shouldBe` naive x
+mobiusFTest :: TestTree
+mobiusFTest =
+  testGroup
+    "mobiusF tests"
+    [ testCase "correct up to 10" $ do
+        zipWithM_
+          (@?=)
+          (mobiusF <$> take 10 factorizations)
+          [1, -1, -1, 0, -1, 1, -1, 0, 0, 1]
+    ]
 
-sumDivisorsFSpec :: Spec
-sumDivisorsFSpec =
-  it ("correct for n up to " ++ show limit) $
-    let naive n = sum $ filter (`divides` n) [1 .. abs n]
-     in forM_ [1 .. limit] $ \x ->
-          (sumDivisorsF . fromJust . factor $ x) `shouldBe` naive x
+mobiusesTest :: TestTree
+mobiusesTest =
+  testGroup
+    "mobiuses tests"
+    [ testCase "matches mobius up to limit" $ do
+        zipWithM_ (@?=) (take limit mobiuses) (map mobius [1 .. limit])
+    ]
 
-relativelyPrimeSpec :: Spec
-relativelyPrimeSpec = do
-  it "0 is not relatively prime to 0" $
-    relativelyPrime 0 0 `shouldBe` False
-  it "0 is relatively prime to 1/-1" $ do
-    relativelyPrime 0 1 `shouldBe` True
-    relativelyPrime 0 (-1) `shouldBe` True
-  it "0 is not relatively to integers with magnitude > 1" $ do
-    relativelyPrime 0 2 `shouldBe` False
-    relativelyPrime 0 (-2) `shouldBe` False
-  it "1 is relatively prime to 1/-1" $ do
-    relativelyPrime 1 1 `shouldBe` True
-    relativelyPrime 1 (-1) `shouldBe` True
-  it "3 is relatively prime to 5/-5" $ do
-    relativelyPrime 3 5 `shouldBe` True
-    relativelyPrime 3 (-5) `shouldBe` True
-  it "-3 is not relatively prime to 6/-6" $ do
-    relativelyPrime (-3) 6 `shouldBe` False
-    relativelyPrime (-3) (-6) `shouldBe` False
-
-totientSpec :: Spec
-totientSpec = do
-  it "totient of negative numbers is 0" $
-    totient (-1) `shouldBe` 0
-  it "totient of 0 is 1" $
-    totient 0 `shouldBe` 1
-  it ("correct for up to " ++ show limit) $
-    forM_ [1 .. limit] $ \n ->
-      totient n `shouldBe` length (filter (relativelyPrime n) [1 .. n])
-
-totientFSpec :: Spec
-totientFSpec =
-  it ("correct up to " ++ show limit) $
-    forM_ [1 .. limit] $ \n ->
-      totientF n (fromJust $ factor n)
-        `shouldBe` length (filter (relativelyPrime n) [1 .. n])
-
-mobiusSpec :: Spec
-mobiusSpec = do
-  it "mobius of non-positive numbers is undefined" $ do
-    evaluate (mobius (-1)) `shouldThrow` anyException
-    evaluate (mobius 0) `shouldThrow` anyException
-  it "correct up to 10" $ do
-    zipWithM_
-      shouldBe
-      (fmap mobius [1 .. 10])
-      [1, -1, -1, 0, -1, 1, -1, 0, 0, 1]
-
-mobiusFSpec :: Spec
-mobiusFSpec = do
-  it "correct up to 10" $ do
-    zipWithM_
-      shouldBe
-      (mobiusF <$> take 10 factorizations)
-      [1, -1, -1, 0, -1, 1, -1, 0, 0, 1]
-
-mobiusesSpec :: Spec
-mobiusesSpec = do
-  it "matches mobius up to limit" $ do
-    zipWithM_ shouldBe (take limit mobiuses) (map mobius [1 .. limit])
-
-mobiusesFromSpec :: Spec
-mobiusesFromSpec = do
-  it "correct up to limit, for many start points" $
-    forM_ [1 .. 30] $ \i ->
-      take limit (mobiusesFrom i)
-        `shouldBe` take limit (drop (i - 1) mobiuses)
+mobiusesFromTest :: TestTree
+mobiusesFromTest =
+  testGroup
+    "mobiusesFrom tests"
+    [ testCase "correct up to limit, for many start points" $
+        forM_ [1 .. 30] $ \i ->
+          take limit (mobiusesFrom i)
+            @?= take limit (drop (i - 1) mobiuses)
+    ]

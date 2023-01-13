@@ -31,7 +31,7 @@ tests =
        pure Test.Math.NumberTheory.ContinuedFraction.Sqrt.tests,
        Test.Math.NumberTheory.Digit.tests,
        pure Test.Math.NumberTheory.Diophantine.tests,
-       Test.Math.NumberTheory.Divisor.tests,
+       pure Test.Math.NumberTheory.Divisor.tests,
        Test.Math.NumberTheory.Fibonacci.tests,
        Test.Math.NumberTheory.Figurate.tests,
        Test.Math.NumberTheory.Modular.tests,
