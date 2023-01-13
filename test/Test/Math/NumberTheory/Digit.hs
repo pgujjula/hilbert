@@ -1,18 +1,13 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Test.Math.NumberTheory.Digit (spec, tests) where
+module Test.Math.NumberTheory.Digit (tests) where
 
 import Control.Monad (forM_)
 import Data.Proxy (Proxy (Proxy))
 import Math.NumberTheory.Digit (fromDigits, numDigits, sumDigits, toDigits)
 import System.Random (Random)
 import Test.Hspec
-  ( Expectation,
-    Spec,
-    anyErrorCall,
-    describe,
-    it,
-    shouldBe,
+  ( anyErrorCall,
     shouldThrow,
   )
 import Test.QuickCheck
@@ -29,129 +24,156 @@ import Test.QuickCheck
     suchThat,
     (===),
   )
-import Test.Tasty (TestTree)
-import Test.Tasty.Hspec (testSpec)
+import Test.Tasty (TestTree, testGroup)
+import Test.Tasty.HUnit (Assertion, testCase, (@?=))
+import Test.Tasty.QuickCheck (testProperty)
 
 maxNumDigits :: Int
 maxNumDigits = 50
 
-tests :: IO TestTree
-tests = testSpec "Math.NumberTheory.Digit" spec
+tests :: TestTree
+tests =
+  testGroup
+    "Math.NumberTheory.Digit"
+    [ numDigitsTest,
+      sumDigitsTest,
+      fromDigitsTest,
+      toDigitsTest
+    ]
 
-spec :: Spec
-spec = do
-  describe "numDigits" numDigitsSpec
-  describe "sumDigits" sumDigitsSpec
-  describe "fromDigits" fromDigitsSpec
-  describe "toDigits" toDigitsSpec
+numDigitsTest :: TestTree
+numDigitsTest =
+  testGroup
+    "numDigits tests"
+    [ testGroup "single-digit" $
+        let testDigits :: (Integral a) => [a] -> Assertion
+            testDigits ds = forM_ ds $ \x -> numDigits x @?= 1
+         in [ testCase "Ints" $
+                testDigits (signedDigits :: [Int]),
+              testCase "Integers" $
+                testDigits (signedDigits :: [Integer])
+            ],
+      testGroup "arbitrary length" $
+        let naive :: (Integral a, Show a) => a -> Int
+            naive = length . show . abs
 
-numDigitsSpec :: Spec
-numDigitsSpec = do
-  let testDigits :: (Integral a) => [a] -> Expectation
-      testDigits ds = forM_ ds $ \x -> numDigits x `shouldBe` 1
-   in do
-        it "single-digit Ints" $
-          testDigits (signedDigits :: [Int])
-        it "single-digit Integers" $
-          testDigits (signedDigits :: [Integer])
+            testArbitrary :: (Integral a, Show a) => a -> Property
+            testArbitrary x = numDigits x === naive x
+         in [ testProperty "Ints" $
+                forAll uniformLengthIntGen testArbitrary,
+              testProperty "Integers" $
+                forAll uniformLengthIntegerGen testArbitrary
+            ]
+    ]
 
-  let naive :: (Integral a, Show a) => a -> Int
-      naive = length . show . abs
+sumDigitsTest :: TestTree
+sumDigitsTest =
+  testGroup
+    "sumDigits"
+    [ testGroup "single-digit" $
+        let testDigits :: (Integral a) => [a] -> Assertion
+            testDigits ds = forM_ ds $ \x ->
+              sumDigits x @?= fromIntegral (abs x)
+         in [ testCase "Ints" $
+                testDigits (signedDigits :: [Int]),
+              testCase "Integers" $
+                testDigits (signedDigits :: [Integer])
+            ],
+      testGroup "arbitrary-length" $
+        let naive :: (Integral a, Show a) => a -> Int
+            naive = sum . map (read . (: [])) . show . abs
 
-      testArbitrary :: (Integral a, Show a) => a -> Property
-      testArbitrary x = numDigits x === naive x
-   in do
-        it "arbitrary-length Ints" $
-          forAll uniformLengthIntGen testArbitrary
-        it "arbitrary-length Integers" $
-          forAll uniformLengthIntegerGen testArbitrary
+            testArbitrary :: (Integral a, Show a) => a -> Property
+            testArbitrary x = sumDigits x === naive x
+         in [ testProperty "Ints" $
+                forAll uniformLengthIntGen testArbitrary,
+              testProperty "Integers" $
+                forAll uniformLengthIntegerGen testArbitrary
+            ]
+    ]
 
-sumDigitsSpec :: Spec
-sumDigitsSpec = do
-  let testDigits :: (Integral a) => [a] -> Expectation
-      testDigits ds = forM_ ds $ \x -> sumDigits x `shouldBe` fromIntegral (abs x)
-   in do
-        it "single-digit Ints" $
-          testDigits (signedDigits :: [Int])
-        it "single-digit Integers" $
-          testDigits (signedDigits :: [Integer])
+fromDigitsTest :: TestTree
+fromDigitsTest =
+  testGroup
+    "fromDigits"
+    [ testCase "invalid input" $
+        (fromDigits [1, 2, -1, 0] @?= 0)
+          `shouldThrow` anyErrorCall,
+      testGroup "empty list"
+        [ testCase "empty list, output type Int" $ hunitTest int [] 0,
+          testCase "empty list, output type Integer" $ hunitTest integer [] 0
+        ],
+      testGroup "single-digit" $
+        let testDigits :: (Integral a, Show a) => Proxy a -> [a] -> Assertion
+            testDigits proxy ds = forM_ ds $ \x ->
+              hunitTest proxy [fromIntegral x] x
+         in [ testCase "single-digit inputs, output type Int" $
+                testDigits int digits,
+              testCase "single-digit inputs, output type Integer" $
+                testDigits integer digits
+            ],
+      testGroup "arbitrary length" $
+        let naive :: (Read a) => [Int] -> a
+            naive = read . concatMap show . (0 :)
 
-  let naive :: (Integral a, Show a) => a -> Int
-      naive = sum . map (read . (: [])) . show . abs
+            qcTest :: forall a. (Integral a) => Proxy a -> [Int] -> Property
+            qcTest _ xs =
+              toInteger (fromDigits xs :: a) === (naive xs :: Integer)
 
-      testArbitrary :: (Integral a, Show a) => a -> Property
-      testArbitrary x = sumDigits x === naive x
-   in do
-        it "arbitrary-length Ints" $
-          forAll uniformLengthIntGen testArbitrary
-        it "arbitrary-length Integers" $
-          forAll uniformLengthIntegerGen testArbitrary
+            digitListGen :: Gen [Int]
+            digitListGen = listOf (elements digits)
 
-fromDigitsSpec :: Spec
-fromDigitsSpec = do
-  it "invalid input" $
-    (fromDigits [1, 2, -1, 0] `shouldBe` 0)
-      `shouldThrow` anyErrorCall
+            -- Lists that will not cause Int overflow
+            smallListGen :: Gen [Int]
+            smallListGen = digitListGen `suchThat` (not . overflow)
+              where
+                overflow xs =
+                  (naive xs :: Integer) > toInteger (maxBound :: Int)
+         in [ testProperty "arbitrary inputs, output type Int" $
+                forAll smallListGen (qcTest int),
+              testProperty "arbitrary inputs, output type Integer" $
+                forAll digitListGen (qcTest integer)
+            ]
+    ]
+  where
+    int = Proxy :: Proxy Int
+    integer = Proxy :: Proxy Integer
+    hunitTest ::
+      (Integral a, Show a) =>
+      Proxy a ->
+      [Int] ->
+      a ->
+      Assertion
+    hunitTest _ xs n = fromDigits xs @?= n
 
-  let hunitTest ::
-        (Integral a, Show a) =>
-        Proxy a ->
-        [Int] ->
-        a ->
-        Expectation
-      hunitTest _ xs n = fromDigits xs `shouldBe` n
+toDigitsTest :: TestTree
+toDigitsTest =
+  testGroup
+    "toDigits"
+    [ testCase "invalid input" $
+        (toDigits (-12) @?= [1, 2])
+          `shouldThrow` anyErrorCall,
+      testGroup "single-digit" $
+        let testDigits :: (Integral a) => [a] -> Assertion
+            testDigits ds = forM_ ds $ \x -> toDigits x @?= [fromIntegral x]
+         in [ testCase "single-digit Ints" $
+                testDigits (digits :: [Int]),
+              testCase "single-digit Integers" $
+                testDigits (digits :: [Integer])
+            ],
+      testCase "three digits" $ toDigits 345 @?= [3, 4, 5],
+      testGroup "arbitrary length" $
+        let naive :: (Show a) => a -> [Int]
+            naive = map (read . (: [])) . show
 
-      int = Proxy :: Proxy Int
-      integer = Proxy :: Proxy Integer
-  it "empty list, output type Int" $ hunitTest int [] 0
-  it "empty list, output type Integer" $ hunitTest integer [] 0
-
-  let testDigits :: (Integral a, Show a) => Proxy a -> [a] -> Expectation
-      testDigits proxy ds = forM_ ds $ \x ->
-        hunitTest proxy [fromIntegral x] x
-  it "single-digit inputs, output type Int" $ testDigits int digits
-  it "single-digit inputs, output type Integer" $ testDigits integer digits
-
-  let naive :: (Read a) => [Int] -> a
-      naive = read . concatMap show . (0 :)
-
-      qcTest :: forall a. (Integral a) => Proxy a -> [Int] -> Property
-      qcTest _ xs = toInteger (fromDigits xs :: a) === (naive xs :: Integer)
-
-      digitListGen :: Gen [Int]
-      digitListGen = listOf (elements digits)
-
-      -- Lists that will not cause Int overflow
-      smallListGen :: Gen [Int]
-      smallListGen = digitListGen `suchThat` (not . overflow)
-        where
-          overflow xs = (naive xs :: Integer) > toInteger (maxBound :: Int)
-  it "arbitrary inputs, output type Int" $
-    forAll smallListGen (qcTest int)
-  it "arbitrary inputs, output type Integer" $
-    forAll digitListGen (qcTest integer)
-
-toDigitsSpec :: Spec
-toDigitsSpec = do
-  it "invalid input" $
-    (toDigits (-12) `shouldBe` [1, 2])
-      `shouldThrow` anyErrorCall
-
-  let testDigits :: (Integral a) => [a] -> Expectation
-      testDigits ds = forM_ ds $ \x -> toDigits x `shouldBe` [fromIntegral x]
-  it "single-digit Ints" $ testDigits (digits :: [Int])
-  it "single-digit Integers" $ testDigits (digits :: [Integer])
-  it "three digits" $ toDigits 345 `shouldBe` [3, 4, 5]
-
-  let naive :: (Show a) => a -> [Int]
-      naive = map (read . (: [])) . show
-
-      test :: (Integral a, Show a) => a -> Property
-      test x = toDigits x === naive x
-  it "arbitrary length Int" $
-    forAll (arbitrary `suchThat` (>= 0) :: Gen Int) test
-  it "arbitrary length Integer" $
-    forAll (arbitrary `suchThat` (>= 0) :: Gen Integer) test
+            test :: (Integral a, Show a) => a -> Property
+            test x = toDigits x === naive x
+         in [ testProperty "arbitrary length Int" $
+                forAll (arbitrary `suchThat` (>= 0) :: Gen Int) test,
+              testProperty "arbitrary length Integer" $
+                forAll (arbitrary `suchThat` (>= 0) :: Gen Integer) test
+            ]
+    ]
 
 {- Utilities -}
 digits :: (Integral a) => [a]

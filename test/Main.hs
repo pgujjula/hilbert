@@ -29,7 +29,7 @@ tests =
        pure Test.Math.Combinatorics.Partition.tests,
        pure Test.Math.NumberTheory.ContinuedFraction.Core.tests,
        pure Test.Math.NumberTheory.ContinuedFraction.Sqrt.tests,
-       Test.Math.NumberTheory.Digit.tests,
+       pure Test.Math.NumberTheory.Digit.tests,
        pure Test.Math.NumberTheory.Diophantine.tests,
        pure Test.Math.NumberTheory.Divisor.tests,
        Test.Math.NumberTheory.Fibonacci.tests,
