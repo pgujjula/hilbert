@@ -9,9 +9,7 @@ import Math.NumberTheory.Prime
     primesTo,
   )
 import Math.NumberTheory.Roots (integerSquareRoot)
-import Test.Hspec ()
 import Test.QuickCheck (choose, forAll, (===))
--- for instance Testable Assertion
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.HUnit (testCase, (@?=))
 import Test.Tasty.QuickCheck (testProperty)
@@ -90,9 +88,7 @@ primesFromToTest =
         let limit = 10000
         forAll (choose (1, limit)) $ \lower ->
           forAll (choose (lower, limit)) $ \upper ->
-            do
-              primesFromTo lower upper
-              @?= filter isPrime [lower .. upper]
+            primesFromTo lower upper === filter isPrime [lower .. upper]
     ]
 
 compositesTest :: TestTree

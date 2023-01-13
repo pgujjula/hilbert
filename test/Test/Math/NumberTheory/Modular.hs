@@ -1,11 +1,10 @@
 module Test.Math.NumberTheory.Modular (tests) where
 
 import Math.NumberTheory.Modular (egcd)
-import Test.Hspec () -- for instance Testable Assertion
 import Test.QuickCheck (Gen, choose, forAll)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.HUnit (testCase, (@?=))
-import Test.Tasty.QuickCheck (testProperty)
+import Test.Tasty.QuickCheck (testProperty, (.&&.), (===))
 
 tests :: TestTree
 tests = testGroup "Math.NumberTheory.Modular" [egcdTest]
@@ -22,15 +21,14 @@ egcdTest =
         egcd 0 0 @?= (0, (0, 0)),
       testProperty "egcd m 0 == (abs m, (signum m, 0)) for all m" $
         forAll gen $
-          \m -> egcd m 0 @?= (abs m, (signum m, 0)),
+          \m -> egcd m 0 === (abs m, (signum m, 0)),
       testProperty "egcd 0 n == (abs n, (0, signum n)) for all n" $
         forAll gen $
-          \n -> egcd 0 n @?= (abs n, (0, signum n)),
+          \n -> egcd 0 n === (abs n, (0, signum n)),
       testProperty "works for arbitrary inputs" $
         forAll ((,) <$> gen <*> gen) $ \(m, n) -> do
           let (g, (a, b)) = egcd m n
-          g @?= gcd m n
-          a * m + b * n @?= g
+           in (g === gcd m n) .&&. (a * m + b * n === g)
     ]
   where
     gen :: Gen Integer

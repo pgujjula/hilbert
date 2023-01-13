@@ -26,8 +26,7 @@ import System.Random.Stateful
     uniformWord32R,
   )
 import Test.HUnit (Assertion)
-import Test.Hspec () -- for instance Testable Assertion
-import Test.QuickCheck (Gen, Property, choose, forAll, (.&&.))
+import Test.QuickCheck (Gen, Property, choose, forAll, (.&&.), (===))
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.HUnit (testCase, (@?=))
 import Test.Tasty.QuickCheck (testProperty)
@@ -65,18 +64,27 @@ seedLimit = 30
 
 -- typeclass for comparing prefixes
 class PrefixComparable a where
-  comparePrefix :: Int -> a -> a -> Assertion
+  comparePrefix :: Int -> a -> a -> Property
+  comparePrefixM :: Int -> a -> a -> Assertion
 
-comparePrefix' :: PrefixComparable a => a -> a -> Assertion
+comparePrefixM' :: PrefixComparable a => a -> a -> Assertion
+comparePrefixM' = comparePrefixM listLimit
+
+comparePrefix' :: PrefixComparable a => a -> a -> Property
 comparePrefix' = comparePrefix listLimit
 
 instance (Ord a, Show a) => PrefixComparable [a] where
-  comparePrefix n xs ys = take n xs @?= take n ys
+  comparePrefix n xs ys = take n xs === take n ys
+  comparePrefixM n xs ys = take n xs @?= take n ys
 
 instance (PrefixComparable a) => PrefixComparable (a, a) where
-  comparePrefix n xs ys = do
+  comparePrefix n xs ys =
     comparePrefix n (fst xs) (fst ys)
-    comparePrefix n (snd xs) (snd ys)
+      .&&. comparePrefix n (snd xs) (snd ys)
+
+  comparePrefixM n xs ys = do
+    comparePrefixM n (fst xs) (fst ys)
+    comparePrefixM n (snd xs) (snd ys)
 
 -- utilities
 transpose :: [(a, a)] -> ([a], [a])
@@ -103,7 +111,7 @@ fibonaccisTest =
     [ testCase ("first " ++ show listLimit ++ " correct") $
         let naiveFibonaccis :: [Integer]
             naiveFibonaccis = fst $ naiveLucas 1 (-1)
-         in comparePrefix' fibonaccis naiveFibonaccis
+         in comparePrefixM' fibonaccis naiveFibonaccis
     ]
 
 -- test first listLimit against reference
@@ -115,8 +123,8 @@ fibonacciNTest =
         let naiveFibonaccis :: [Integer]
             naiveFibonaccis = fst $ naiveLucas 1 (-1)
          in do
-              comparePrefix' (map fibonacciN [(0 :: Int) ..]) naiveFibonaccis
-              comparePrefix' (map fibonacciN [(0 :: Integer) ..]) naiveFibonaccis
+              comparePrefixM' (map fibonacciN [(0 :: Int) ..]) naiveFibonaccis
+              comparePrefixM' (map fibonacciN [(0 :: Integer) ..]) naiveFibonaccis
     ]
 
 -- test first listLimit against reference
@@ -127,7 +135,7 @@ lucasNumsTest =
     [ testCase ("first " ++ show listLimit ++ " correct") $
         let naiveLucasNums :: [Integer]
             naiveLucasNums = snd $ naiveLucas 1 (-1)
-         in comparePrefix' lucasNums naiveLucasNums
+         in comparePrefixM' lucasNums naiveLucasNums
     ]
 
 -- test first listLimit against reference
@@ -139,8 +147,8 @@ lucasNumNTest =
         let naiveLucasNums :: [Integer]
             naiveLucasNums = snd $ naiveLucas 1 (-1)
          in do
-              comparePrefix' (map lucasNumN [(0 :: Int) ..]) naiveLucasNums
-              comparePrefix' (map lucasNumN [(0 :: Integer) ..]) naiveLucasNums
+              comparePrefixM' (map lucasNumN [(0 :: Int) ..]) naiveLucasNums
+              comparePrefixM' (map lucasNumN [(0 :: Integer) ..]) naiveLucasNums
     ]
 
 -- check for random p and random q
@@ -174,13 +182,13 @@ lucasSeqNTest =
               Proxy (Gen (a, a)) ->
               Property
             test proxy =
-              forAll (seedsGen `asProxyTypeOf` proxy) $ \(p, q) -> do
+              forAll (seedsGen `asProxyTypeOf` proxy) $ \(p, q) ->
                 comparePrefix'
                   (transpose $ map (lucasSeqN p q) [(0 :: Int) ..])
                   (naiveLucas p q)
-                comparePrefix'
-                  (transpose $ map (lucasSeqN p q) [(0 :: Integer) ..])
-                  (naiveLucas p q)
+                  .&&. comparePrefix'
+                    (transpose $ map (lucasSeqN p q) [(0 :: Integer) ..])
+                    (naiveLucas p q)
          in test @Int Proxy
               .&&. test @Integer Proxy
               .&&. test @(Mod 5) Proxy
