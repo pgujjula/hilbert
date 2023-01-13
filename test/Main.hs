@@ -26,7 +26,7 @@ tests =
   testGroup "Hilbert tests"
     <$> sequence
       [Test.Math.Combinatorics.Binomial.tests,
-       Test.Math.Combinatorics.Partition.tests,
+       pure Test.Math.Combinatorics.Partition.tests,
        Test.Math.NumberTheory.ContinuedFraction.Core.tests,
        Test.Math.NumberTheory.ContinuedFraction.Sqrt.tests,
        Test.Math.NumberTheory.Digit.tests,
