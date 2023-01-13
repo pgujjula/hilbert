@@ -12,5 +12,6 @@ stack ghci \
   --ghci-options "-package tasty-hspec" \
   --ghci-options "-package HUnit" \
   --ghci-options "-package random" \
+  --ghci-options "-package tasty-hunit" \
   --ghci-options "-Wno-type-defaults" \
   --main-is hilbert:test:hilbert-tests

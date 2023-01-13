@@ -97,6 +97,7 @@ tests:
     - list-duplicate
     - tasty-hspec
     - tasty
+    - tasty-hunit
     ghc-options:
     - -Wno-type-defaults
 
