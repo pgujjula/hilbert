@@ -6,7 +6,6 @@
 
 module Test.Math.Combinatorics.Binomial (tests) where
 
-import Control.Exception (evaluate)
 import Control.Monad (forM_)
 import Data.Function ((&))
 import Data.Mod (Mod)
@@ -29,15 +28,12 @@ import Math.Combinatorics.Binomial
   )
 import Math.NumberTheory.Divisor (divides)
 import Math.NumberTheory.Prime (primesTo)
-import Test.Hspec
-  ( anyException,
-    shouldThrow,
-  )
 import Test.QuickCheck (forAll, (===))
 import Test.QuickCheck qualified as QuickCheck (choose)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.HUnit (testCase, (@?=))
 import Test.Tasty.QuickCheck (testProperty)
+import Test.Util (throwsException)
 
 -- Limit for quickcheck inputs
 limit :: Integer
@@ -93,8 +89,8 @@ binomialCoeffsTest =
   testGroup
     "binomialCoeffs tests"
     [ testCase "out of bounds throws an error" $ do
-        evaluate (binomialCoeffs (-1 :: Int) :: [Int]) `shouldThrow` anyException
-        evaluate (binomialCoeffs (-5 :: Int) :: [Int]) `shouldThrow` anyException,
+        throwsException (binomialCoeffs (-1 :: Int) :: [Int])
+        throwsException (binomialCoeffs (-5 :: Int) :: [Int]),
       testCase "matches behavior of choose" $ do
         forM_ [(1 :: Int) .. 10] $ \n -> do
           (binomialCoeffs n :: [Int]) @?= fmap (n `choose`) [(0 :: Int) .. n]

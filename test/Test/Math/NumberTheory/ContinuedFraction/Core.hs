@@ -3,7 +3,6 @@ module Test.Math.NumberTheory.ContinuedFraction.Core
   )
 where
 
-import Control.Exception (evaluate)
 import Control.Monad (forM_)
 import Data.Ratio ((%))
 import Math.NumberTheory.ContinuedFraction
@@ -17,9 +16,9 @@ import Math.NumberTheory.ContinuedFraction
     toList,
   )
 import Test.HUnit.Lang (assertFailure)
-import Test.Hspec (anyException, shouldThrow)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.HUnit (testCase, (@?=))
+import Test.Util (throwsException)
 
 tests :: TestTree
 tests =
@@ -39,8 +38,7 @@ mkPeriodicTests =
   testGroup
     "mkPeriodic"
     [ testCase "mkPeriodic _ [] throws an error" $
-        evaluate (mkPeriodic ([1, 2, 3] :: [Int]) [])
-          `shouldThrow` anyException
+        throwsException (mkPeriodic ([1, 2, 3] :: [Int]) [])
     ]
 
 repeatingPartTests :: TestTree

@@ -1,6 +1,5 @@
 module Test.Math.NumberTheory.Divisor (tests) where
 
-import Control.Exception (evaluate)
 import Control.Monad (forM_, zipWithM_)
 import Data.List (sort)
 import Data.Maybe (fromJust)
@@ -23,9 +22,9 @@ import Math.NumberTheory.Divisor
     totientF,
   )
 import Math.NumberTheory.Prime.Factor (factor, factorizations)
-import Test.Hspec (anyException, shouldThrow)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.HUnit (testCase, (@?=))
+import Test.Util (throwsException)
 
 tests :: TestTree
 tests =
@@ -199,8 +198,8 @@ mobiusTest =
   testGroup
     "mobius tests"
     [ testCase "mobius of non-positive numbers is undefined" $ do
-        evaluate (mobius (-1)) `shouldThrow` anyException
-        evaluate (mobius 0) `shouldThrow` anyException,
+        throwsException (mobius (-1))
+        throwsException (mobius 0),
       testCase "correct up to 10" $ do
         zipWithM_
           (@?=)

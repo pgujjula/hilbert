@@ -6,10 +6,6 @@ import Control.Monad (forM_)
 import Data.Proxy (Proxy (Proxy))
 import Math.NumberTheory.Digit (fromDigits, numDigits, sumDigits, toDigits)
 import System.Random (Random)
-import Test.Hspec
-  ( anyErrorCall,
-    shouldThrow,
-  )
 import Test.QuickCheck
   ( Gen,
     Property,
@@ -27,6 +23,7 @@ import Test.QuickCheck
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.HUnit (Assertion, testCase, (@?=))
 import Test.Tasty.QuickCheck (testProperty)
+import Test.Util (throwsException)
 
 maxNumDigits :: Int
 maxNumDigits = 50
@@ -97,9 +94,9 @@ fromDigitsTest =
   testGroup
     "fromDigits"
     [ testCase "invalid input" $
-        (fromDigits [1, 2, -1, 0] @?= 0)
-          `shouldThrow` anyErrorCall,
-      testGroup "empty list"
+        throwsException (fromDigits [1, 2, -1, 0]),
+      testGroup
+        "empty list"
         [ testCase "empty list, output type Int" $ hunitTest int [] 0,
           testCase "empty list, output type Integer" $ hunitTest integer [] 0
         ],
@@ -151,8 +148,7 @@ toDigitsTest =
   testGroup
     "toDigits"
     [ testCase "invalid input" $
-        (toDigits (-12) @?= [1, 2])
-          `shouldThrow` anyErrorCall,
+        throwsException (toDigits (-12)),
       testGroup "single-digit" $
         let testDigits :: (Integral a) => [a] -> Assertion
             testDigits ds = forM_ ds $ \x -> toDigits x @?= [fromIntegral x]
