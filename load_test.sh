@@ -15,4 +15,6 @@ stack ghci \
   --ghci-options "-package tasty-hunit" \
   --ghci-options "-package tasty-quickcheck" \
   --ghci-options "-Wno-type-defaults" \
+  --ghci-options "-fobject-code" \
+  --ghci-options "-O2" \
   --main-is hilbert:test:hilbert-tests
