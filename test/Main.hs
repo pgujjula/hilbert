@@ -38,5 +38,5 @@ tests =
        Test.Math.NumberTheory.Power.tests,
        Test.Math.NumberTheory.Prime.tests,
        Test.Math.NumberTheory.Prime.Factor.tests,
-       Test.Math.Probability.tests
+       pure Test.Math.Probability.tests
       ]

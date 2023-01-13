@@ -1,54 +1,101 @@
-module Test.Math.Probability (spec, tests) where
+module Test.Math.Probability (tests) where
 
-import Test.Hspec (Spec, describe, it, shouldBe)
+import Test.Tasty (TestTree, testGroup)
+import Test.Tasty.HUnit (testCase, (@?=))
 import Prelude hiding (map)
-import Test.Tasty (TestTree)
-import Test.Tasty.Hspec (testSpec)
 
-tests :: IO TestTree
-tests = testSpec "Math.Probability" spec
+tests :: TestTree
+tests =
+  testGroup
+    "Math.Probability"
+    [ fromToListTest,
+      certainTest,
+      uniformTest,
+      toMapTest,
+      probTest,
+      expectedValueTest,
+      varianceTest,
+      mapTest,
+      lift2Test,
+      bindTest
+    ]
 
-spec :: Spec
-spec = do
-  describe "fromToList" fromToListSpec
-  describe "certain" certainSpec
-  describe "uniform" uniformSpec
-  describe "toMap" toMapSpec
+fromToListTest :: TestTree
+fromToListTest =
+  testGroup
+    "fromToList tests"
+    [ testCase "1 == 1" $
+        (1 :: Int) @?= 1
+    ]
 
-  describe "prob" probSpec
-  describe "expectedValue" expectedValueSpec
-  describe "variance" varianceSpec
+certainTest :: TestTree
+certainTest =
+  testGroup
+    "certain tests"
+    [ testCase "1 == 1" $
+        (1 :: Int) @?= 1
+    ]
 
-  describe "map" mapSpec
-  describe "lift2" lift2Spec
-  describe "bind" bindSpec
+uniformTest :: TestTree
+uniformTest =
+  testGroup
+    "uniform tests"
+    [ testCase "1 == 1" $
+        (1 :: Int) @?= 1
+    ]
 
-fromToListSpec :: Spec
-fromToListSpec = it "1 == 1" $ 1 `shouldBe` 1
+toMapTest :: TestTree
+toMapTest =
+  testGroup
+    "toMap tests"
+    [ testCase "1 == 1" $
+        (1 :: Int) @?= 1
+    ]
 
-certainSpec :: Spec
-certainSpec = it "1 == 1" $ 1 `shouldBe` 1
+probTest :: TestTree
+probTest =
+  testGroup
+    "prob tests"
+    [ testCase "1 == 1" $
+        (1 :: Int) @?= 1
+    ]
 
-uniformSpec :: Spec
-uniformSpec = it "1 == 1" $ 1 `shouldBe` 1
+expectedValueTest :: TestTree
+expectedValueTest =
+  testGroup
+    "expectedValue tests"
+    [ testCase "1 == 1" $
+        (1 :: Int) @?= 1
+    ]
 
-toMapSpec :: Spec
-toMapSpec = it "1 == 1" $ 1 `shouldBe` 1
+varianceTest :: TestTree
+varianceTest =
+  testGroup
+    "variance tests"
+    [ testCase "1 == 1" $
+        (1 :: Int) @?= 1
+    ]
 
-probSpec :: Spec
-probSpec = it "1 == 1" $ 1 `shouldBe` 1
+mapTest :: TestTree
+mapTest =
+  testGroup
+    "map tests"
+    [ testCase "1 == 1" $
+        (1 :: Int) @?= 1
+    ]
 
-expectedValueSpec :: Spec
-expectedValueSpec = it "1 == 1" $ 1 `shouldBe` 1
+lift2Test :: TestTree
+lift2Test =
+  testGroup
+    "lift2 tests"
+    [ testCase "1 == 1" $
+        (1 :: Int) @?= 1
+    ]
 
-varianceSpec :: Spec
-varianceSpec = it "1 == 1" $ 1 `shouldBe` 1
-
-mapSpec :: Spec
-mapSpec = it "1 == 1" $ 1 `shouldBe` 1
-
-lift2Spec :: Spec
-lift2Spec = it "1 == 1" $ 1 `shouldBe` 1
-
-bindSpec :: Spec
-bindSpec = it "1 == 1" $ 1 `shouldBe` 1
+bindTest :: TestTree
+bindTest =
+  testGroup
+    "bind tests"
+    [ testCase "1 == 1" $
+        (1 :: Int) @?= 1
+    ]
