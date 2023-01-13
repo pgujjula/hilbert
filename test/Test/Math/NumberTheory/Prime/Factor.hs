@@ -1,6 +1,6 @@
 {-# LANGUAGE MultiWayIf #-}
 
-module Test.Math.NumberTheory.Prime.Factor (spec, tests) where
+module Test.Math.NumberTheory.Prime.Factor (tests) where
 
 import Control.Arrow ((>>>))
 import Control.Monad (forM_, zipWithM_)
@@ -16,22 +16,22 @@ import Math.NumberTheory.Prime.Factor
     simplify,
   )
 import Math.NumberTheory.Prime.Sieve (primes)
-import Test.Hspec (Spec, describe, it, shouldBe)
 import Test.QuickCheck (Gen, choose, forAll, (===))
-import Test.Tasty (TestTree)
-import Test.Tasty.Hspec (testSpec)
+import Test.Tasty (TestTree, testGroup)
+import Test.Tasty.HUnit (testCase, (@?=))
+import Test.Tasty.QuickCheck (testProperty)
 
-tests :: IO TestTree
-tests = testSpec "Math.NumberTheory.Prime.Factor" spec
-
-spec :: Spec
-spec = do
-  describe "multiply" multiplySpec
-  describe "pow" powSpec
-  describe "simplify" simplifySpec
-  describe "factor" factorSpec
-  describe "factorizations" factorizationsSpec
-  describe "factorizationsFrom" factorizationsFromSpec
+tests :: TestTree
+tests =
+  testGroup
+    "Math.NumberTheory.Prime.Factor"
+    [ multiplyTest,
+      powTest,
+      simplifyTest,
+      factorTest,
+      factorizationsTest,
+      factorizationsFromTest
+    ]
 
 limit :: (Integral a) => a
 limit = 5000
@@ -39,48 +39,66 @@ limit = 5000
 powLimit :: Int
 powLimit = 10
 
-multiplySpec :: Spec
-multiplySpec =
-  it "arbitrary inputs" $
-    let gen :: Gen (Int, Int)
-        gen = (,) <$> choose (1, limit) <*> choose (1, limit)
-     in forAll gen $ \(x, y) ->
-          (multiply <$> factor x <*> factor y) === factor (x * y)
+multiplyTest :: TestTree
+multiplyTest =
+  testGroup
+    "multiply tests"
+    [ testProperty "arbitrary inputs" $
+        let gen :: Gen (Int, Int)
+            gen = (,) <$> choose (1, limit) <*> choose (1, limit)
+         in forAll gen $ \(x, y) ->
+              (multiply <$> factor x <*> factor y) === factor (x * y)
+    ]
 
-powSpec :: Spec
-powSpec =
-  it "arbitrary inputs" $
-    let gen :: Gen (Integer, Int)
-        gen = (,) <$> choose (1, limit) <*> choose (1, powLimit)
-     in forAll gen $ \(x, k) ->
-          pow (fromJust $ factor x) k === fromJust (factor (x ^ k))
+powTest :: TestTree
+powTest =
+  testGroup
+    "pow tests"
+    [ testProperty "arbitrary inputs" $
+        let gen :: Gen (Integer, Int)
+            gen = (,) <$> choose (1, limit) <*> choose (1, powLimit)
+         in forAll gen $ \(x, k) ->
+              pow (fromJust $ factor x) k === fromJust (factor (x ^ k))
+    ]
 
-simplifySpec :: Spec
-simplifySpec = do
-  it "empty list" $
-    simplify [] == 1
-  it "small input" $ do
-    simplify [(2, 3), (3, 1)] `shouldBe` 24
-    simplify [(3, 1), (7, 1), (11, 1)] `shouldBe` 231
+simplifyTest :: TestTree
+simplifyTest =
+  testGroup
+    "simplify tests"
+    [ testCase "empty list" $
+        simplify [] @?= 1,
+      testCase "small input" $ do
+        simplify [(2, 3), (3, 1)] @?= 24
+        simplify [(3, 1), (7, 1), (11, 1)] @?= 231
+    ]
 
-factorSpec :: Spec
-factorSpec = do
-  it "can't factor 0" $
-    factor 0 `shouldBe` Nothing
-  it "correct up to limit" $
-    zipWithM_ shouldBe (map (fromJust . factor) [1 .. limit]) factorizations
+factorTest :: TestTree
+factorTest =
+  testGroup
+    "factor tests"
+    [ testCase "can't factor 0" $
+        factor 0 @?= Nothing,
+      testCase "correct up to limit" $
+        zipWithM_ (@?=) (map (fromJust . factor) [1 .. limit]) factorizations
+    ]
 
-factorizationsSpec :: Spec
-factorizationsSpec =
-  it "correct up to limit" $
-    zipWithM_ shouldBe (take limit factorizations) (map factorNaive [1 .. limit])
+factorizationsTest :: TestTree
+factorizationsTest =
+  testGroup
+    "factorizations tests"
+    [ testCase "correct up to limit" $
+        zipWithM_ (@?=) (take limit factorizations) (map factorNaive [1 .. limit])
+    ]
 
-factorizationsFromSpec :: Spec
-factorizationsFromSpec =
-  it "correct up to limit, for many start points" $
-    forM_ [1 .. 30] $ \i ->
-      take limit (factorizationsFrom i)
-        `shouldBe` take limit (drop (i - 1) factorizations)
+factorizationsFromTest :: TestTree
+factorizationsFromTest =
+  testGroup
+    "factorizationsFrom tests"
+    [ testCase "correct up to limit, for many start points" $
+        forM_ [1 .. 30] $ \i ->
+          take limit (factorizationsFrom i)
+            @?= take limit (drop (i - 1) factorizations)
+    ]
 
 factorNaive :: Int -> Factorization Int
 factorNaive =
