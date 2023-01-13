@@ -33,7 +33,7 @@ tests =
        pure Test.Math.NumberTheory.Diophantine.tests,
        pure Test.Math.NumberTheory.Divisor.tests,
        pure Test.Math.NumberTheory.Fibonacci.tests,
-       Test.Math.NumberTheory.Figurate.tests,
+       pure Test.Math.NumberTheory.Figurate.tests,
        Test.Math.NumberTheory.Modular.tests,
        Test.Math.NumberTheory.Power.tests,
        Test.Math.NumberTheory.Prime.tests,
