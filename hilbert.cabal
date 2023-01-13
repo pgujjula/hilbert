@@ -90,7 +90,6 @@ test-suite hilbert-tests
     , base >=4.13 && <5.0
     , ghc-typelits-knownnat
     , hilbert
-    , hspec
     , integer-roots
     , list-duplicate
     , mod

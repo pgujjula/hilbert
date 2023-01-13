@@ -89,7 +89,6 @@ tests:
     - primesieve
     - integer-roots
     - hilbert
-    - hspec
     - QuickCheck
     - random
     - type-natural
