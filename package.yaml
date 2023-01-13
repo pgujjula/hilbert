@@ -98,6 +98,7 @@ tests:
     - tasty-hspec
     - tasty
     - tasty-hunit
+    - tasty-quickcheck
     ghc-options:
     - -Wno-type-defaults
 

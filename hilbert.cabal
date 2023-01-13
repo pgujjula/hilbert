@@ -98,6 +98,7 @@ test-suite hilbert-tests
     , tasty
     , tasty-hspec
     , tasty-hunit
+    , tasty-quickcheck
     , type-natural
   default-language: Haskell2010
 
