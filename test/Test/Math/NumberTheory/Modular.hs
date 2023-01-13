@@ -1,42 +1,37 @@
-module Test.Math.NumberTheory.Modular (spec, tests) where
+module Test.Math.NumberTheory.Modular (tests) where
 
 import Math.NumberTheory.Modular (egcd)
-import Test.Hspec
-  ( Spec,
-    describe,
-    it,
-    shouldBe,
-  )
+import Test.Hspec () -- for instance Testable Assertion
 import Test.QuickCheck (Gen, choose, forAll)
-import Test.Tasty (TestTree)
-import Test.Tasty.Hspec (testSpec)
+import Test.Tasty (TestTree, testGroup)
+import Test.Tasty.HUnit (testCase, (@?=))
+import Test.Tasty.QuickCheck (testProperty)
 
-tests :: IO TestTree
-tests = testSpec "Math.NumberTheory.Modular" spec
-
-spec :: Spec
-spec = do
-  describe "egcd" egcdSpec
+tests :: TestTree
+tests = testGroup "Math.NumberTheory.Modular" [egcdTest]
 
 -- The maximum size of any argument in these tests
 limit :: Integer
 limit = 10000
 
-egcdSpec :: Spec
-egcdSpec = do
-  let gen :: Gen Integer
-      gen = choose (1, limit)
-
-  it "egcd 0 0 == (0, (0, 0))" $
-    egcd 0 0 `shouldBe` (0, (0, 0))
-  it "egcd m 0 == (abs m, (signum m, 0)) for all m" $
-    forAll gen $
-      \m -> egcd m 0 `shouldBe` (abs m, (signum m, 0))
-  it "egcd 0 n == (abs n, (0, signum n)) for all n" $
-    forAll gen $
-      \n -> egcd 0 n `shouldBe` (abs n, (0, signum n))
-  it "works for arbitrary inputs" $
-    forAll ((,) <$> gen <*> gen) $ \(m, n) -> do
-      let (g, (a, b)) = egcd m n
-      g `shouldBe` gcd m n
-      a * m + b * n `shouldBe` g
+egcdTest :: TestTree
+egcdTest =
+  testGroup
+    "egcd tests"
+    [ testCase "egcd 0 0 == (0, (0, 0))" $
+        egcd 0 0 @?= (0, (0, 0)),
+      testProperty "egcd m 0 == (abs m, (signum m, 0)) for all m" $
+        forAll gen $
+          \m -> egcd m 0 @?= (abs m, (signum m, 0)),
+      testProperty "egcd 0 n == (abs n, (0, signum n)) for all n" $
+        forAll gen $
+          \n -> egcd 0 n @?= (abs n, (0, signum n)),
+      testProperty "works for arbitrary inputs" $
+        forAll ((,) <$> gen <*> gen) $ \(m, n) -> do
+          let (g, (a, b)) = egcd m n
+          g @?= gcd m n
+          a * m + b * n @?= g
+    ]
+  where
+    gen :: Gen Integer
+    gen = choose (1, limit)
