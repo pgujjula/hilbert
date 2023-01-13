@@ -28,7 +28,7 @@ tests =
       [pure Test.Math.Combinatorics.Binomial.tests,
        pure Test.Math.Combinatorics.Partition.tests,
        Test.Math.NumberTheory.ContinuedFraction.Core.tests,
-       Test.Math.NumberTheory.ContinuedFraction.Sqrt.tests,
+       pure Test.Math.NumberTheory.ContinuedFraction.Sqrt.tests,
        Test.Math.NumberTheory.Digit.tests,
        pure Test.Math.NumberTheory.Diophantine.tests,
        Test.Math.NumberTheory.Divisor.tests,
