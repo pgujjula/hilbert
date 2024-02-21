@@ -1,11 +1,11 @@
-resolver: lts-20.5
+resolver: lts-22.11
 packages:
   - .
 extra-deps:
   - list-duplicate-0.1.0.0
   - list-filter-0.1.1.0
   - git: https://github.com/pgujjula/apply-merge
-    commit: 5c977e0de0d1ef0f757972378b2ee361b623436f
+    commit: bb8d4c0b30f3211f7c65f1cf95fa6ed300c2da2c
   - git: git@github.com:pgujjula/chimera.git
     commit: 7cba5f970a34483ce66d6b774416c8499feca4a4
   - git: https://github.com/pgujjula/primesieve-haskell.git
