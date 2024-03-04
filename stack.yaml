@@ -1,6 +1,13 @@
 resolver: lts-22.11
 packages:
   - .
+build:
+  benchmark-opts:
+    benchmark-arguments: "--color always"
+  test-arguments:
+    additional-args:
+    - "--color"
+    - "always"
 extra-deps:
   - list-duplicate-0.1.0.0
   - list-filter-0.1.1.0
