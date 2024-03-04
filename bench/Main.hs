@@ -33,7 +33,7 @@ mobiusesFromBenchmark = bgroup "mobiusesFrom" (map mkBench [1..8])
     mkBench :: Int -> Benchmark
     mkBench expo =
       bench
-        ("take (10^" ++ show expo ++ ") (factorizationsFrom 1)")
+        ("take (10^" ++ show expo ++ ") (mobiusesFrom 1)")
         (nf collapseMobiuses (10^expo))
 
     collapseMobiuses :: Int -> Int
