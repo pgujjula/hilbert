@@ -15,6 +15,7 @@ import Test.Math.NumberTheory.Modular qualified
 import Test.Math.NumberTheory.Power qualified
 import Test.Math.NumberTheory.Prime qualified
 import Test.Math.NumberTheory.Prime.Factor qualified
+import Test.Math.NumberTheory.QuadraticField qualified
 import Test.Math.Probability qualified
 import Test.Tasty (TestTree, defaultMain, testGroup)
 
@@ -38,5 +39,6 @@ tests =
       Test.Math.NumberTheory.Power.tests,
       Test.Math.NumberTheory.Prime.tests,
       Test.Math.NumberTheory.Prime.Factor.tests,
+      Test.Math.NumberTheory.QuadraticField.tests,
       Test.Math.Probability.tests
     ]

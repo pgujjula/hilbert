@@ -39,6 +39,7 @@ library
       Math.NumberTheory.Prime
       Math.NumberTheory.Prime.SegmentedSieve
       Math.NumberTheory.Prime.Factor
+      Math.NumberTheory.QuadraticField
       Math.Probability
   other-modules:
       Math.NumberTheory.ContinuedFraction.Core
@@ -79,6 +80,7 @@ test-suite hilbert-tests
       Test.Math.NumberTheory.Power
       Test.Math.NumberTheory.Prime
       Test.Math.NumberTheory.Prime.Factor
+      Test.Math.NumberTheory.QuadraticField
       Test.Math.Probability
       Test.Util
   hs-source-dirs:
