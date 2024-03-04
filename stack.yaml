@@ -11,9 +11,8 @@ build:
 extra-deps:
   - list-duplicate-0.1.0.0
   - list-filter-0.1.1.0
+  - chimera-0.4.0.0
   - git: https://github.com/pgujjula/apply-merge
     commit: bb8d4c0b30f3211f7c65f1cf95fa6ed300c2da2c
-  - git: git@github.com:pgujjula/chimera.git
-    commit: 7cba5f970a34483ce66d6b774416c8499feca4a4
   - git: https://github.com/pgujjula/primesieve-haskell.git
     commit: 1b6ba0ca663e585d26a2e46eda2a5b573ae1fc58
