@@ -37,7 +37,6 @@ module Math.NumberTheory.Divisor
   )
 where
 
-import Control.Applicative (liftA2)
 import Control.Monad (forM_)
 import Control.Monad.ST (runST)
 import Data.Function ((&))

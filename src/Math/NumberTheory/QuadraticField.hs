@@ -6,7 +6,7 @@
 module Math.NumberTheory.QuadraticField (QuadraticField, (+:), sqrt) where
 
 import Data.Ratio (denominator, numerator)
-import Data.Type.Natural (KnownNat, Nat, SNat, sNat, toNatural)
+import Data.Type.Natural (KnownNat, Nat, SNat, sNat, fromSNat)
 import Math.NumberTheory.Power (square)
 import Prelude hiding (sqrt)
 
@@ -27,7 +27,7 @@ instance KnownNat d => Show (QuadraticField d) where
       ++ "*sqrt @"
       ++ show d
     where
-      d = toNatural (sNat :: SNat d)
+      d = fromSNat (sNat :: SNat d)
 
 instance KnownNat d => Num (QuadraticField d) where
   (QuadraticField x1 y1) + (QuadraticField x2 y2) =
@@ -35,7 +35,7 @@ instance KnownNat d => Num (QuadraticField d) where
   (QuadraticField x1 y1) - (QuadraticField x2 y2) =
     QuadraticField (x1 - x2) (y1 - y2)
   (QuadraticField x1 y1) * (QuadraticField x2 y2) =
-    let d = fromIntegral . toNatural $ (sNat :: SNat d)
+    let d = fromIntegral . fromSNat $ (sNat :: SNat d)
      in QuadraticField (x1 * x2 + y1 * y2 * d) (x1 * y2 + x2 * y1)
   abs qf@(QuadraticField x y) =
     case (compare x 0, compare y 0) of
@@ -55,7 +55,7 @@ instance KnownNat d => Num (QuadraticField d) where
       (GT, EQ) -> qf
       (GT, GT) -> qf
     where
-      d = fromIntegral . toNatural $ (sNat :: SNat d)
+      d = fromIntegral . fromSNat $ (sNat :: SNat d)
   negate (QuadraticField x y) = QuadraticField (-x) (-y)
   signum qf@(QuadraticField x y)
     | x == 0 && y == 0 = 0
@@ -66,7 +66,7 @@ instance KnownNat d => Num (QuadraticField d) where
 instance KnownNat d => Fractional (QuadraticField d) where
   fromRational r = QuadraticField r 0
   recip (QuadraticField x y) =
-    let d = fromIntegral . toNatural $ (sNat :: SNat d)
+    let d = fromIntegral . fromSNat $ (sNat :: SNat d)
         r = square x - d * square y
      in QuadraticField (x / r) (-y / r)
 

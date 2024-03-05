@@ -42,7 +42,7 @@ import Data.Function ((&))
 import Data.List (foldl', scanl')
 import Data.Mod (Mod)
 import Data.Semiring (Semiring, fromNatural, one, plus, product', times, zero)
-import Data.Type.Natural (KnownNat, SNat, sNat, toNatural, type (^))
+import Data.Type.Natural (KnownNat, SNat, sNat, type (^), fromSNat)
 import Data.Vector (Vector, (!))
 import Data.Vector qualified as Vector
 import GHC.Real qualified as Integral (quot)
@@ -142,7 +142,7 @@ instance HasP (FactorialModP p) where
 mkFactorialModP :: forall p. KnownNat p => FactorialModP p
 mkFactorialModP =
   let p :: Int
-      p = fromIntegral . toNatural $ (sNat :: SNat p)
+      p = fromIntegral . fromSNat $ (sNat :: SNat p)
    in FactorialModP $ Vector.fromListN p $ scanl' (*) 1 [1 ..]
 
 -- | Compute @('factorial' n) `'mod'` p@ in \(O(\log n)\) time.
@@ -194,7 +194,7 @@ chooseModP fmp n m =
             `quot` (factorialNoPModP fmp m * factorialNoPModP fmp (n - m))
         else 0
 
--- | A data structure that allows finding @('factorial' n) `'mod'` p@ quickly.
+-- | A data structure that allows finding @('factorial' n) `'mod'` (p^2)@ quickly.
 data FactorialModP2 p = FactorialModP2
   { -- | (factorial i) (mod (p^2))
     fmp2Factorial :: Vector (Mod (p ^ 2)),
@@ -212,7 +212,7 @@ instance HasP (FactorialModP2 p) where
 mkFactorialModP2 :: forall p. KnownNat p => FactorialModP2 p
 mkFactorialModP2 =
   let p :: Int
-      p = fromIntegral . toNatural $ (sNat :: SNat p)
+      p = fromIntegral . fromSNat $ (sNat :: SNat p)
       factVec = Vector.fromListN p $ scanl' (*) 1 [1 ..]
       sigmaRecipVec =
         Vector.fromListN p $
@@ -270,7 +270,7 @@ factorialNoPModP2 fmp2 n =
         & map (factorialRelPrimeModP2 fmp2)
         & product
 
--- | Compute @(n `'choose'`  m) `'mod'` p@ in \(O(\log p)\) time.
+-- | Compute @(n `'choose'`  m) `'mod'` (p^2)@ in \(O(\log p)\) time.
 chooseModP2 ::
   KnownNat p => FactorialModP2 p -> Integer -> Integer -> Mod (p ^ 2)
 chooseModP2 _ n m | n < 0 || m < 0 || m > n = 0
