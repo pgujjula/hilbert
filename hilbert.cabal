@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           hilbert
-version:        0.1.21.0
+version:        0.1.21.1
 synopsis:       Mathematics in Haskell
 description:    Please see the README on GitHub at <https://github.com/pgujjula/hilbert#readme>
 category:       Math
@@ -50,6 +50,7 @@ library
   build-depends:
       apply-merge
     , base >=4.13 && <5.0
+    , bitvec
     , chimera
     , containers
     , data-ordlist
@@ -90,6 +91,7 @@ test-suite hilbert-tests
       HUnit
     , QuickCheck
     , base >=4.13 && <5.0
+    , chimera
     , ghc-typelits-knownnat
     , hilbert
     , integer-roots

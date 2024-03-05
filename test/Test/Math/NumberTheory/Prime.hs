@@ -1,3 +1,4 @@
+{-# LANGUAGE ImportQualifiedPost #-}
 module Test.Math.NumberTheory.Prime (tests) where
 
 import Math.NumberTheory.Prime
@@ -7,8 +8,12 @@ import Math.NumberTheory.Prime
     primes,
     primesFromTo,
     primesTo,
+    primesChimera,
+    isPrimeChimera
   )
 import Math.NumberTheory.Roots (integerSquareRoot)
+import Data.Chimera qualified as Chimera
+import Data.List (elemIndices)
 import Test.QuickCheck (choose, forAll, (===))
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.HUnit (testCase, (@?=))
@@ -23,7 +28,9 @@ tests =
       primesToTest,
       primesFromToTest,
       compositesTest,
-      compositesToTest
+      compositesToTest,
+      primesChimeraTest,
+      isPrimeChimeraTest
     ]
 
 naiveIsPrime :: Integral a => a -> Bool
@@ -105,4 +112,21 @@ compositesToTest =
     "compositesTo tests"
     [ testCase "correct for composities up to 10000" $
         compositesTo 10000 @?= filter (not . naiveIsPrime) [2 .. 10000]
+    ]
+
+primesChimeraTest :: TestTree
+primesChimeraTest =
+  testGroup
+    "primeChimera tests"
+    [ testCase "correct for primes up to 10000" $
+        takeWhile (<= 10000) (Chimera.toList primesChimera) @?= map fromIntegral (primesTo 10000)
+    ]
+
+isPrimeChimeraTest :: TestTree
+isPrimeChimeraTest =
+  testGroup
+    "isPrimeChimera tests"
+    [ testCase "correct up to 10000" $
+      elemIndices 1 (take 10001 (Chimera.toList isPrimeChimera))
+        @?= primesTo 10000
     ]

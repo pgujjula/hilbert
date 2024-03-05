@@ -1,5 +1,5 @@
 name:        hilbert
-version:     0.1.21.0
+version:     0.1.21.1
 synopsis:    Mathematics in Haskell
 github:      "pgujjula/hilbert"
 license:     BSD-3-Clause
@@ -52,6 +52,7 @@ library:
   - Math.NumberTheory.ContinuedFraction.Sqrt
   dependencies:
   - apply-merge
+  - bitvec
   - containers
   - chimera
   - data-ordlist
@@ -86,6 +87,7 @@ tests:
     - Test.Math.Probability
     - Test.Util
     dependencies:
+    - chimera
     - ghc-typelits-knownnat
     - hilbert
     - HUnit
