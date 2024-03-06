@@ -41,7 +41,6 @@ import Control.Monad (forM_)
 import Control.Monad.ST (runST)
 import Data.Function ((&))
 import Data.List (foldl')
-import Data.Maybe (fromMaybe)
 import Data.Vector.Unboxed (Vector)
 import Data.Vector.Unboxed qualified as Vector
 import Data.Vector.Unboxed.Mutable qualified as MVector
@@ -92,7 +91,10 @@ relativelyPrime m n = gcd m n == 1
 --   >>> divisors 0
 --   []
 divisors :: (Integral a) => a -> [a]
-divisors = maybe [] divisorsF . factor . abs
+divisors n =
+  if n == 0
+    then []
+    else divisorsF . factor . abs $ n
 
 -- | The positive divisors of an integer, from its factorization. Not necessarily
 --   in sorted order.
@@ -141,7 +143,10 @@ mkPairs xs = take ((length xs + 1) `quot` 2) $ zip xs (reverse xs)
 --   >>> numDivisors 0
 --   0
 numDivisors :: (Integral a) => a -> a
-numDivisors = maybe 0 numDivisorsF . factor . abs
+numDivisors n =
+  if n == 0
+  then 0
+  else numDivisorsF . factor . abs $ n
 
 -- | The number of positive divisors of @n@, from its factorization.
 --
@@ -162,7 +167,10 @@ numDivisorsF = foldl' (*) 1 . map (\(_, e) -> fromIntegral e + 1)
 --   >>> sumDivisors 0
 --   0
 sumDivisors :: (Integral a) => a -> a
-sumDivisors = maybe 0 sumDivisorsF . factor . abs
+sumDivisors n =
+  if n == 0
+  then 0
+  else sumDivisorsF . factor . abs $ n
 
 -- | The sum of the positive divisors of @n@, from its factorization.
 --
@@ -187,7 +195,7 @@ totient :: (Integral a) => a -> a
 totient n
   | n < 0 = 0
   | n == 0 = 1
-  | otherwise = totientF n $ fromMaybe (error "input not positive") $ factor n
+  | otherwise = totientF n (factor n)
 
 -- | Like 'totient', but takes the factorization of @n@ to speed up the
 --   computation of the totient.
@@ -206,13 +214,16 @@ totientF = foldl' step
 --   * -1 if n is square-free and has an odd number of prime factors.
 --
 --   It is not defined for @n <= 0@.
-mobius :: Integral a => a -> a
-mobius = mobiusF . fromMaybe (error "mobius: input not positive") . factor
+mobius :: (Integral a) => a -> a
+mobius n =
+  if n <= 0
+    then error "mobius: non-positive input"
+    else mobiusF . factor $ n
 
 -- | Like 'mobius', but takes the factorization for faster computation.
-mobiusF :: Integral a => Factorization a -> a
+mobiusF :: (Integral a) => Factorization a -> a
 mobiusF fact
-  | any (> 1) (fmap snd fact) = 0
+  | any ((> 1) . snd) fact = 0
   | even (length fact) = 1
   | otherwise = -1
 

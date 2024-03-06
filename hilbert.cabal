@@ -99,6 +99,7 @@ test-suite hilbert-tests
     , mod
     , primesieve
     , random
+    , silently
     , tasty
     , tasty-hunit
     , tasty-quickcheck

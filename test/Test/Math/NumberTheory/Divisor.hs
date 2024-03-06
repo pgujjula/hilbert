@@ -2,7 +2,6 @@ module Test.Math.NumberTheory.Divisor (tests) where
 
 import Control.Monad (forM_, zipWithM_)
 import Data.List (sort)
-import Data.Maybe (fromJust)
 import Math.NumberTheory.Divisor
   ( divides,
     divisorPairs,
@@ -82,7 +81,7 @@ divisorsFTest =
     [ testCase ("correct for n up to " ++ show limit) $
         let naive n = filter (`divides` n) [1 .. abs n]
          in forM_ [1 .. limit] $ \x ->
-              (sort . divisorsF . fromJust . factor $ x) @?= naive x
+              (sort . divisorsF . factor $ x) @?= naive x
     ]
 
 divisorPairsTest :: TestTree
@@ -103,7 +102,7 @@ divisorPairsFTest =
     "divisorPairsF tests"
     [ testCase ("correct for n up to " ++ show limit) $
         forM_ [1 .. limit] $ \x -> do
-          let dps = divisorPairsF . fromJust . factor $ x
+          let dps = divisorPairsF . factor $ x
           length dps
             @?= ((length (divisors x) + 1) `div` 2)
           mapM_ (\(a, b) -> a * b @?= x) dps
@@ -125,7 +124,7 @@ numDivisorsFTest =
     [ testCase ("correct for n up to " ++ show limit) $
         let naive n = length $ filter (`divides` n) [1 .. abs n]
          in forM_ [1 .. limit] $ \x ->
-              (numDivisorsF . fromJust . factor $ x) @?= naive x
+              (numDivisorsF . factor $ x) @?= naive x
     ]
 
 sumDivisorsTest :: TestTree
@@ -144,7 +143,7 @@ sumDivisorsFTest =
     [ testCase ("correct for n up to " ++ show limit) $
         let naive n = sum $ filter (`divides` n) [1 .. abs n]
          in forM_ [1 .. limit] $ \x ->
-              (sumDivisorsF . fromJust . factor $ x) @?= naive x
+              (sumDivisorsF . factor $ x) @?= naive x
     ]
 
 relativelyPrimeTest :: TestTree
@@ -189,7 +188,7 @@ totientFTest =
     "totientF tests"
     [ testCase ("correct up to " ++ show limit) $
         forM_ [1 .. limit] $ \n ->
-          totientF n (fromJust $ factor n)
+          totientF n (factor n)
             @?= length (filter (relativelyPrime n) [1 .. n])
     ]
 

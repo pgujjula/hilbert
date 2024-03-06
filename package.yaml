@@ -97,6 +97,7 @@ tests:
     - primesieve
     - QuickCheck
     - random
+    - silently
     - tasty
     - tasty-hunit
     - tasty-quickcheck

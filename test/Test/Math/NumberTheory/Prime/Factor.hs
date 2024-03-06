@@ -1,11 +1,12 @@
 {-# LANGUAGE MultiWayIf #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Test.Math.NumberTheory.Prime.Factor (tests) where
 
 import Control.Arrow ((>>>))
+import Control.Exception (SomeException, catch, evaluate)
 import Control.Monad (forM_, zipWithM_)
 import Data.List.Duplicate (groupAdj)
-import Data.Maybe (fromJust)
 import Math.NumberTheory.Prime.Factor
   ( Factorization,
     factor,
@@ -16,6 +17,8 @@ import Math.NumberTheory.Prime.Factor
     simplify,
   )
 import Math.NumberTheory.Prime.Sieve (primes)
+import System.IO (stderr)
+import System.IO.Silently (hSilence)
 import Test.QuickCheck (Gen, choose, forAll, (===))
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.HUnit (testCase, (@?=))
@@ -47,7 +50,7 @@ multiplyTest =
         let gen :: Gen (Int, Int)
             gen = (,) <$> choose (1, limit) <*> choose (1, limit)
          in forAll gen $ \(x, y) ->
-              (multiply <$> factor x <*> factor y) === factor (x * y)
+              multiply (factor x) (factor y) === factor (x * y)
     ]
 
 powTest :: TestTree
@@ -58,7 +61,7 @@ powTest =
         let gen :: Gen (Integer, Int)
             gen = (,) <$> choose (1, limit) <*> choose (1, powLimit)
          in forAll gen $ \(x, k) ->
-              pow (fromJust $ factor x) k === fromJust (factor (x ^ k))
+              pow (factor x) k === factor (x ^ k)
     ]
 
 simplifyTest :: TestTree
@@ -72,14 +75,19 @@ simplifyTest =
         simplify [(3, 1), (7, 1), (11, 1)] @?= 231
     ]
 
+throwsException :: a -> IO Bool
+throwsException thunk =
+  (hSilence [stderr] (evaluate thunk) >> pure False)
+    `catch` (\(_ :: SomeException) -> pure True)
+
 factorTest :: TestTree
 factorTest =
   testGroup
     "factor tests"
     [ testCase "can't factor 0" $
-        factor 0 @?= Nothing,
+        throwsException (factor 0) >>= (@?= True),
       testCase "correct up to limit" $
-        zipWithM_ (@?=) (map (fromJust . factor) [1 .. limit]) factorizations
+        zipWithM_ (@?=) (map factor [1 .. limit]) factorizations
     ]
 
 factorizationsTest :: TestTree
@@ -114,6 +122,6 @@ findFactorsWith _ [] = error "impossible"
 findFactorsWith n (p : ps) =
   let (q, r) = n `quotRem` p
    in if
-          | p > n -> []
-          | r == 0 -> p : findFactorsWith q (p : ps)
-          | otherwise -> findFactorsWith n ps
+        | p > n -> []
+        | r == 0 -> p : findFactorsWith q (p : ps)
+        | otherwise -> findFactorsWith n ps

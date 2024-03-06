@@ -77,14 +77,14 @@ count = map (\xs -> (head xs, length xs)) . groupAdj
 --   Nothing
 --   >>> factor (-60)
 --   Nothing
-factor :: (Integral a) => a -> Maybe (Factorization a)
+factor :: (Integral a) => a -> Factorization a
 factor n
-  | n <= 0 = Nothing
-  | n == 1 = Just []
+  | n < 0 = (-1, 1) : factor (-n)
+  | n == 0 = error "factor: input is 0"
+  | n == 1 = []
   | otherwise =
-      Just $
-        count $
-          factorWith (map fromIntegral primes) (integerSquareRoot n) n
+      count $
+        factorWith (map fromIntegral primes) (integerSquareRoot n) n
 
 factorWith :: (Integral a) => [a] -> a -> a -> [a]
 factorWith (p : ps) limit n

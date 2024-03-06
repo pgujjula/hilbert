@@ -71,11 +71,9 @@ egcdRecursive m n m_coeffs n_coeffs
 --   The result @(x, m)@ is the solution @x@ and its modulus @m@, if a
 --   solution exists.
 --
---   >>> EXAMPLE HERE
+--   >>> TODO: EXAMPLE HERE
 chineseRemainder :: Integral a => [(a, a)] -> Maybe (a, a)
-chineseRemainder =
-  traverse (\(x, m) -> (x,) <$> factor (abs m))
-    >=> chineseRemainderF
+chineseRemainder = chineseRemainderF . fmap (\(x, m) -> (x, factor (abs m)))
 
 -- | Like 'chineseRemainder', but takes in the factorizations of the moduli to
 --   speed up computation.
