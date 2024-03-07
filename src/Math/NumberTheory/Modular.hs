@@ -17,7 +17,7 @@ module Math.NumberTheory.Modular
 where
 
 import Control.Arrow ((>>>))
-import Control.Monad (foldM, (>=>))
+import Control.Monad (foldM)
 import Data.Foldable (foldl')
 import Data.List.Duplicate (groupBy)
 import Data.Maybe (fromJust)

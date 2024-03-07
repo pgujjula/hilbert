@@ -1,5 +1,4 @@
 {-# LANGUAGE ImportQualifiedPost #-}
-{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 -- | Module      : Math.NumberTheory.Prime.Factorization

@@ -42,7 +42,7 @@ import Data.Function ((&))
 import Data.List (foldl', scanl')
 import Data.Mod (Mod)
 import Data.Semiring (Semiring, fromNatural, one, plus, product', times, zero)
-import Data.Type.Natural (KnownNat, SNat, sNat, type (^), fromSNat)
+import Data.Type.Natural (KnownNat, SNat, fromSNat, sNat, type (^))
 import Data.Vector (Vector, (!))
 import Data.Vector qualified as Vector
 import GHC.Real qualified as Integral (quot)
@@ -100,11 +100,6 @@ binomialCoeffs n = scanl' step one [0 .. n - 1]
 -- > pascalDiagonal n == map (\m -> (n+m) `choose` m) [0..]
 --
 -- but more efficient
---
--- n `choose` 0    = n! / n! 0!      = 1
--- n+1 `choose` 1  = (n+1)! / n! 1!  = (n+1) `quot` 1
--- n+2 `choose` 2  = (n+2)! / n! 2!  = (n+2)*(n+1) `quot` 1*2
---                                   = (n+3)*(n+2)*(n+1) `quot` 1*2*3
 pascalDiagonal :: forall a b. (Integral a, Euclidean b) => a -> [b]
 pascalDiagonal n = scanl' step one [1 ..]
   where
@@ -128,7 +123,7 @@ permute n k
   | k < 0 = zero
   | otherwise = product' $ map (fromNatural . fromIntegral) [n, n - 1 .. n - k + 1]
 
--- | A data structure that allows finding @('factorial' n) `'mod'` p@ quickly.
+-- | A data structure that allows finding @('factorial' n) \`'mod'\` p@ quickly.
 newtype FactorialModP p = FactorialModP {unFactorialModP :: Vector (Mod p)}
   deriving (Eq, Show, Ord)
 
@@ -139,24 +134,24 @@ instance HasP (FactorialModP p) where
   getP = toInteger . Vector.length . unFactorialModP
 
 -- | Generate a 'FactorialModP' in \(O(p)\) time.
-mkFactorialModP :: forall p. KnownNat p => FactorialModP p
+mkFactorialModP :: forall p. (KnownNat p) => FactorialModP p
 mkFactorialModP =
   let p :: Int
       p = fromIntegral . fromSNat $ (sNat :: SNat p)
    in FactorialModP $ Vector.fromListN p $ scanl' (*) 1 [1 ..]
 
--- | Compute @('factorial' n) `'mod'` p@ in \(O(\log n)\) time.
-factorialModP :: KnownNat p => FactorialModP p -> Integer -> Mod p
+-- | Compute @('factorial' n) \`'mod'\` p@ in \(O(\log n)\) time.
+factorialModP :: (KnownNat p) => FactorialModP p -> Integer -> Mod p
 factorialModP (FactorialModP vec) n =
   let p = Vector.length vec
    in if
-          | n < 0 -> error "factorialModP: negative argument"
-          | n >= toInteger p -> 0
-          | otherwise -> vec ! fromInteger n
+        | n < 0 -> error "factorialModP: negative argument"
+        | n >= toInteger p -> 0
+        | otherwise -> vec ! fromInteger n
 
 -- | The product of the numbers less than @n@ relatively prime to @p@, modul
 --   @p@.
-factorialRelPrimeModP :: KnownNat p => FactorialModP p -> Integer -> Mod p
+factorialRelPrimeModP :: (KnownNat p) => FactorialModP p -> Integer -> Mod p
 factorialRelPrimeModP (FactorialModP vec) n =
   if n < 0
     then error "factorialRelPrimeModP: negative argument"
@@ -166,7 +161,7 @@ factorialRelPrimeModP (FactorialModP vec) n =
        in (-1) ^ q * (vec ! fromInteger r)
 
 -- | The factorial of @n@, without the factors of @p@, modulo @p@.
-factorialNoPModP :: KnownNat p => FactorialModP p -> Integer -> Mod p
+factorialNoPModP :: (KnownNat p) => FactorialModP p -> Integer -> Mod p
 factorialNoPModP fmp n =
   let p = toInteger (Vector.length (unFactorialModP fmp))
    in iterate (`quot` p) n
@@ -175,15 +170,15 @@ factorialNoPModP fmp n =
         & product
 
 -- | Efficient computation of snd (divideOut (factorial n) p)
-divideOutFactorialP :: Integral a => a -> a -> a
+divideOutFactorialP :: (Integral a) => a -> a -> a
 divideOutFactorialP n p =
   iterate (`Integral.quot` p) n
     & tail
     & takeWhile (> 0)
     & sum
 
--- | Compute @(n `'choose'`  m) `'mod'` p@ in \(O(\log n)\) time.
-chooseModP :: KnownNat p => FactorialModP p -> Integer -> Integer -> Mod p
+-- | Compute @(n \`'choose'\` m) \`'mod'\` p@ in \(O(\log n)\) time.
+chooseModP :: (KnownNat p) => FactorialModP p -> Integer -> Integer -> Mod p
 chooseModP _ n m | n < 0 || m < 0 || m > n = 0
 chooseModP fmp n m =
   let p = getP fmp
@@ -194,7 +189,7 @@ chooseModP fmp n m =
             `quot` (factorialNoPModP fmp m * factorialNoPModP fmp (n - m))
         else 0
 
--- | A data structure that allows finding @('factorial' n) `'mod'` (p^2)@ quickly.
+-- | A data structure that allows finding @('factorial' n) \`'mod'\` (p^2)@ quickly.
 data FactorialModP2 p = FactorialModP2
   { -- | (factorial i) (mod (p^2))
     fmp2Factorial :: Vector (Mod (p ^ 2)),
@@ -209,7 +204,7 @@ instance HasP (FactorialModP2 p) where
   getP = toInteger . Vector.length . fmp2Factorial
 
 -- | Generate a 'FactorialModP2' in \(O(p)\) time.
-mkFactorialModP2 :: forall p. KnownNat p => FactorialModP2 p
+mkFactorialModP2 :: forall p. (KnownNat p) => FactorialModP2 p
 mkFactorialModP2 =
   let p :: Int
       p = fromIntegral . fromSNat $ (sNat :: SNat p)
@@ -234,7 +229,7 @@ quotRem2 n p = (a, b, c)
 -- | The product of the numbers less than @n@ relatively prime to @p@, modulo
 --   @p^2@.
 factorialRelPrimeModP2 ::
-  forall p. KnownNat p => FactorialModP2 p -> Integer -> Mod (p ^ 2)
+  forall p. (KnownNat p) => FactorialModP2 p -> Integer -> Mod (p ^ 2)
 factorialRelPrimeModP2 fmp2 n =
   let p = getP fmp2
       (a, b, c) = quotRem2 n p
@@ -262,7 +257,7 @@ factorialRelPrimeModP2 fmp2 n =
    in part3 * part2 * (part1 ^ a)
 
 -- | The factorial of @n@, without the factors of @p@, modulo @p^2@.
-factorialNoPModP2 :: KnownNat p => FactorialModP2 p -> Integer -> Mod (p ^ 2)
+factorialNoPModP2 :: (KnownNat p) => FactorialModP2 p -> Integer -> Mod (p ^ 2)
 factorialNoPModP2 fmp2 n =
   let p = getP fmp2
    in iterate (`quot` p) n
@@ -270,9 +265,9 @@ factorialNoPModP2 fmp2 n =
         & map (factorialRelPrimeModP2 fmp2)
         & product
 
--- | Compute @(n `'choose'`  m) `'mod'` (p^2)@ in \(O(\log p)\) time.
+-- | Compute @(n \`'choose'\`  m) \`'mod'\` (p^2)@ in \(O(\log p)\) time.
 chooseModP2 ::
-  KnownNat p => FactorialModP2 p -> Integer -> Integer -> Mod (p ^ 2)
+  (KnownNat p) => FactorialModP2 p -> Integer -> Integer -> Mod (p ^ 2)
 chooseModP2 _ n m | n < 0 || m < 0 || m > n = 0
 chooseModP2 fmp2 n m =
   let p = getP fmp2

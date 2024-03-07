@@ -37,13 +37,13 @@ library
       Math.NumberTheory.Modular
       Math.NumberTheory.Power
       Math.NumberTheory.Prime
-      Math.NumberTheory.Prime.SegmentedSieve
       Math.NumberTheory.Prime.Factor
       Math.NumberTheory.QuadraticField
       Math.Probability
   other-modules:
       Math.NumberTheory.ContinuedFraction.Core
       Math.NumberTheory.ContinuedFraction.Sqrt
+      Math.NumberTheory.Prime.SegmentedSieve
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Werror=missing-home-modules -Wpartial-fields -Wredundant-constraints -Wunused-packages

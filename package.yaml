@@ -43,13 +43,13 @@ library:
   - Math.NumberTheory.Modular
   - Math.NumberTheory.Power
   - Math.NumberTheory.Prime
-  - Math.NumberTheory.Prime.SegmentedSieve
   - Math.NumberTheory.Prime.Factor
   - Math.NumberTheory.QuadraticField
   - Math.Probability
   other-modules:
   - Math.NumberTheory.ContinuedFraction.Core
   - Math.NumberTheory.ContinuedFraction.Sqrt
+  - Math.NumberTheory.Prime.SegmentedSieve
   dependencies:
   - apply-merge
   - bitvec
