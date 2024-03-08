@@ -44,7 +44,7 @@ library:
   - Math.NumberTheory.Power
   - Math.NumberTheory.Prime
   - Math.NumberTheory.Prime.Factor
-  - Math.NumberTheory.QuadraticField
+  - Math.NumberTheory.QuadraticExtension
   - Math.Probability
   other-modules:
   - Math.NumberTheory.ContinuedFraction.Core
@@ -83,7 +83,7 @@ tests:
     - Test.Math.NumberTheory.Power
     - Test.Math.NumberTheory.Prime
     - Test.Math.NumberTheory.Prime.Factor
-    - Test.Math.NumberTheory.QuadraticField
+    - Test.Math.NumberTheory.QuadraticExtension
     - Test.Math.Probability
     - Test.Util
     dependencies:
@@ -99,6 +99,7 @@ tests:
     - random
     - silently
     - tasty
+    - tasty-expected-failure
     - tasty-hunit
     - tasty-quickcheck
     - type-natural
