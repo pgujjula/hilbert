@@ -34,6 +34,9 @@ library
       Math.NumberTheory.Divisor
       Math.NumberTheory.Fibonacci
       Math.NumberTheory.Figurate
+      Math.NumberTheory.Gaussian.Divisor
+      Math.NumberTheory.Gaussian.Prime
+      Math.NumberTheory.Gaussian.Prime.Factor
       Math.NumberTheory.Modular
       Math.NumberTheory.Power
       Math.NumberTheory.Prime
