@@ -1,4 +1,4 @@
-{-| Module      : Math.NumberTheory.Digit
+{-| Module      : Math.Combinatorics.Partition
     Description : Counting partitions of an integer.
     Copyright   : (c) Preetham Gujjula, 2020
     License     : BSD-3-Clause

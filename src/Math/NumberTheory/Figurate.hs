@@ -1,4 +1,4 @@
--- | Module      : Math.NumberTheory.Digit
+-- | Module      : Math.NumberTheory.Figurate
 --   Description : Figurate numbers.
 --   Copyright   : (c) Preetham Gujjula, 2020
 --   License     : BSD-3-Clause
