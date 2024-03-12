@@ -10,7 +10,7 @@ import Data.Type.Natural (SNat, withSNat)
 import Math.NumberTheory.Divisor (mobius)
 import Math.NumberTheory.QuadraticExtension (QuadraticExtension (..))
 import Test.Tasty (TestTree, testGroup)
-import Test.Tasty.ExpectedFailure
+import Test.Tasty.ExpectedFailure (ignoreTest)
 import Test.Tasty.HUnit (testCase, (@?=))
 import Prelude hiding (sqrt)
 
