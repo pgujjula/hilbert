@@ -1,7 +1,7 @@
 {-# LANGUAGE ImportQualifiedPost #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
--- | Module      : Math.NumberTheory.Prime.Factorization
+-- | Module      : Math.NumberTheory.Prime
 --   Description : Functions related to primes.
 --   Copyright   : (c) Preetham Gujjula, 2020
 --   License     : BSD-3-Clause
