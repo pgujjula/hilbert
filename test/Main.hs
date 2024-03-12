@@ -11,6 +11,9 @@ import Test.Math.NumberTheory.Diophantine qualified
 import Test.Math.NumberTheory.Divisor qualified
 import Test.Math.NumberTheory.Fibonacci qualified
 import Test.Math.NumberTheory.Figurate qualified
+import Test.Math.NumberTheory.Gaussian.Prime qualified
+import Test.Math.NumberTheory.Gaussian.Prime.Factor qualified
+import Test.Math.NumberTheory.Gaussian.Divisor qualified
 import Test.Math.NumberTheory.Modular qualified
 import Test.Math.NumberTheory.Power qualified
 import Test.Math.NumberTheory.Prime qualified
@@ -35,6 +38,9 @@ tests =
       Test.Math.NumberTheory.Divisor.tests,
       Test.Math.NumberTheory.Fibonacci.tests,
       Test.Math.NumberTheory.Figurate.tests,
+      Test.Math.NumberTheory.Gaussian.Divisor.tests,
+      Test.Math.NumberTheory.Gaussian.Prime.tests,
+      Test.Math.NumberTheory.Gaussian.Prime.Factor.tests,
       Test.Math.NumberTheory.Modular.tests,
       Test.Math.NumberTheory.Power.tests,
       Test.Math.NumberTheory.Prime.tests,

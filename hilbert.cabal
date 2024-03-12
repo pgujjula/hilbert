@@ -80,6 +80,9 @@ test-suite hilbert-tests
       Test.Math.NumberTheory.Divisor
       Test.Math.NumberTheory.Figurate
       Test.Math.NumberTheory.Fibonacci
+      Test.Math.NumberTheory.Gaussian.Divisor
+      Test.Math.NumberTheory.Gaussian.Prime
+      Test.Math.NumberTheory.Gaussian.Prime.Factor
       Test.Math.NumberTheory.Modular
       Test.Math.NumberTheory.Power
       Test.Math.NumberTheory.Prime
