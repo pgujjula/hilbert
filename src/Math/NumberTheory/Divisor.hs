@@ -1,5 +1,3 @@
-{-# LANGUAGE ImportQualifiedPost #-}
-
 -- | Module      : Math.NumberTheory.Divisor
 --   Description : Divisors of integers.
 --   Copyright   : (c) Preetham Gujjula, 2020

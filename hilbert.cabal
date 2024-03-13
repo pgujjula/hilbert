@@ -65,7 +65,7 @@ library
     , semirings
     , type-natural
     , vector
-  default-language: Haskell2010
+  default-language: GHC2021
 
 test-suite hilbert-tests
   type: exitcode-stdio-1.0
@@ -111,7 +111,7 @@ test-suite hilbert-tests
     , tasty-hunit
     , tasty-quickcheck
     , type-natural
-  default-language: Haskell2010
+  default-language: GHC2021
 
 benchmark primecount-bench
   type: exitcode-stdio-1.0
@@ -127,4 +127,4 @@ benchmark primecount-bench
       base >=4.13 && <5.0
     , hilbert
     , tasty-bench
-  default-language: Haskell2010
+  default-language: GHC2021

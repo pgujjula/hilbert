@@ -1,5 +1,3 @@
-{-# LANGUAGE ImportQualifiedPost #-}
-
 module Main (main) where
 
 import Test.Math.Combinatorics.Binomial qualified

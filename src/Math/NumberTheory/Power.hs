@@ -1,5 +1,4 @@
 {-# LANGUAGE MagicHash #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 
 -- | Module      : Math.NumberTheory.Power
 --   Description : Functions related to powers.

@@ -1,5 +1,3 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-
 -- | Module      : Math.NumberTheory.ContinuedFraction.Core
 --   Description : Core continued fraction functionality.
 --   Copyright   : (c) Preetham Gujjula, 2016

@@ -1,6 +1,3 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TupleSections #-}
-
 -- | Module      : Math.NumberTheory.Modular
 --   Description : Functions to perform modular arithmetic.
 --   Copyright   : (c) Preetham Gujjula, 2016 - 2020

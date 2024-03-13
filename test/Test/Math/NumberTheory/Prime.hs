@@ -1,4 +1,3 @@
-{-# LANGUAGE ImportQualifiedPost #-}
 module Test.Math.NumberTheory.Prime (tests) where
 
 import Math.NumberTheory.Prime

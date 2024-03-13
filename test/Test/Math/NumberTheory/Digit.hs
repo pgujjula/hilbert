@@ -1,5 +1,3 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-
 module Test.Math.NumberTheory.Digit (tests) where
 
 import Control.Monad (forM_)

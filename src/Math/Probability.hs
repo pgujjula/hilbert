@@ -1,5 +1,3 @@
-{-# LANGUAGE ImportQualifiedPost #-}
-
 -- | Module      : Math.Probability
 --   Description : Discrete probability distributions
 --   Copyright   : (c) Preetham Gujjula, 2020

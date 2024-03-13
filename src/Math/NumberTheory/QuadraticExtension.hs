@@ -1,7 +1,4 @@
-{-# LANGUAGE ImportQualifiedPost #-}
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 
 -- | Module      : Math.NumberTheory.QuadraticExtension
 --   Description : Handle the digits of numbers

@@ -1,5 +1,3 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-
 -- | Module      : Math.NumberTheory.Diophantine
 --   Description : Solve diophantine equations
 --   Copyright   : (c) Preetham Gujjula, 2020

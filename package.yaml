@@ -9,6 +9,7 @@ copyright:   "2023 Preetham Gujjula"
 category:    Math
 description: Please see the README on GitHub at
              <https://github.com/pgujjula/hilbert#readme>
+language: GHC2021
 
 extra-source-files:
 - README.md

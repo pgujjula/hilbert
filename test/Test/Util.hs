@@ -1,5 +1,3 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-
 module Test.Util (throwsException) where
 
 import Control.Exception (SomeException, catch, evaluate)

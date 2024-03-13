@@ -1,5 +1,4 @@
 {-# LANGUAGE MultiWayIf #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 
 module Test.Math.NumberTheory.Prime.Factor (tests) where
 

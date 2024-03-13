@@ -1,5 +1,3 @@
-{-# LANGUAGE ImportQualifiedPost #-}
-
 module Test.Math.NumberTheory.ContinuedFraction.Sqrt (tests) where
 
 import Control.Monad (zipWithM_)
