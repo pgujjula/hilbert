@@ -22,3 +22,9 @@ isPrime n = undefined (realPart n + 1)
 -- by polar angle.
 primes :: (Integral a) => [Complex a]
 primes = [undefined :+ 0]
+
+-- | Enumerate the Gaussian integers, ordered by norm
+--enumerate :: (Integral a) => [Complex a]
+--enumerate =
+--  let xs = 0 : concatMap (\i -> [-i, i]) [1..]
+--   in applyMergeBy (comparing norm) (:+) xs xs
