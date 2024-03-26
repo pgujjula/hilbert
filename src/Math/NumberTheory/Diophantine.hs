@@ -14,7 +14,7 @@ module Math.NumberTheory.Diophantine
 where
 
 import Data.List (find)
-import Data.List.Merge (applyMerge)
+import Data.List.ApplyMerge (applyMerge)
 import Data.List.Ordered (mergeAll)
 import Data.Maybe (fromJust)
 import Data.Ratio (denominator, numerator)
