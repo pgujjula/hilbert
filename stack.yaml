@@ -13,6 +13,6 @@ extra-deps:
   - list-filter-0.1.1.0
   - chimera-0.4.0.0
   - git: git@github.com:pgujjula/apply-merge.git
-    commit: c2b30b7fa9c0ef38fd5a13d50b7b43f373710402
+    commit: 38d7fd16427585a9a9df110b6dde2a337f7d9708
   - git: https://github.com/pgujjula/primesieve-haskell.git
     commit: 1b6ba0ca663e585d26a2e46eda2a5b573ae1fc58
