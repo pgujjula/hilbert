@@ -89,6 +89,7 @@ test-suite hilbert-tests
       Test.Math.NumberTheory.Prime
       Test.Math.NumberTheory.Prime.Factor
       Test.Math.NumberTheory.QuadraticExtension
+      Test.Math.NumberTheory.SumOfSquares
       Test.Math.Probability
       Test.Util
   hs-source-dirs:

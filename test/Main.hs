@@ -17,6 +17,7 @@ import Test.Math.NumberTheory.Power qualified
 import Test.Math.NumberTheory.Prime qualified
 import Test.Math.NumberTheory.Prime.Factor qualified
 import Test.Math.NumberTheory.QuadraticExtension qualified
+import Test.Math.NumberTheory.SumOfSquares qualified
 import Test.Math.Probability qualified
 import Test.Tasty (TestTree, defaultMain, testGroup)
 
@@ -44,5 +45,6 @@ tests =
       Test.Math.NumberTheory.Prime.tests,
       Test.Math.NumberTheory.Prime.Factor.tests,
       Test.Math.NumberTheory.QuadraticExtension.tests,
+      Test.Math.NumberTheory.SumOfSquares.tests,
       Test.Math.Probability.tests
     ]
