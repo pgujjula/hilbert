@@ -1,30 +1,32 @@
 -- |
 -- Module      : Math.NumberTheory.SumOfSquares
--- Description : Express an natural number as the sum of squares
+-- Description : Express a natural number as the sum of squares
 -- Copyright   : (c) Preetham Gujjula, 2024
 -- License     : BSD-3-Clause
 -- Maintainer  : libraries@mail.preetham.io
 -- Stability   : experimental
 --
--- Express an natural number as the sum of squares
+-- Express a natural number as the sum of squares
 module Math.NumberTheory.SumOfSquares
-  ( -- * Expressing \(n\) as the sum of squares
+  ( -- * Listing solutions
     sumOfSquares,
     sumOfSquaresF,
+    sumOfSquaresUnique,
+    sumOfSquaresUniqueF,
+
+    -- * Counting solutions
     numSumOfSquares,
     numSumOfSquaresF,
-
-    -- * Expressing \(n^2\) as the sum of squares
-    sumOfSquaresOfSquare,
-    sumOfSquaresOfSquareF,
-    numSumOfSquaresOfSquare,
-    numSumOfSquaresOfSquareF,
   )
 where
 
-import Data.List (partition, foldl')
+import Data.List (foldl', partition)
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
 import Math.NumberTheory.Roots (integerSquareRoot)
+import Math.NumberTheory.SumOfSquares.Internal
+  ( sumOfSquaresNaive,
+    sumOfSquaresUniqueNaive,
+  )
 
 -- | @'sumOfSquares' n@ is all @(a, b)@ such that @a^2 + b^2 == n@. Note that
 --   @a@ and @b@ are allowed to be negative.
@@ -47,18 +49,22 @@ sumOfSquaresF fact =
         if odd e2
           then let x = 2 ^ (e2 `quot` 2) in (x, x)
           else (2 ^ (e2 `quot` 2), 0)
-      pe4k3Factor = (,0 :: a) $ product $ map (\(p, e) -> p ^ (e `quot` 2)) pe4k3s
+      pe4k3Factor =
+        (,0 :: a) $ product $ map (\(p, e) -> p ^ (e `quot` 2)) pe4k3s
    in if all (even . snd) pe4k3s
-        then map (foldl' mul (1, 0)) $ map ([pe2Factor, pe4k3Factor] ++) $ sequence pe4k1Factors
+        then
+          map (foldl' mul (1, 0) . ([pe2Factor, pe4k3Factor] ++)) $
+            sequence pe4k1Factors
         else []
 
-mul :: (Integral a) => (a, a) -> (a, a) -> (a, a)
-mul (a, b) (c, d) =
-  let e = a * c - b * d
-      f = a * d + b * c
-   in if e > 0
-        then (e, f)
-        else (f, -e)
+-- | @'sumOfSquaresUnique' n@ is all @(a, b)@ such that @0 <= a <= b@ with
+--   @a^2 + b^2 == n@. Note that @a@ and @b@ are allowed to be negative.
+sumOfSquaresUnique :: (Integral a) => a -> [(a, a)]
+sumOfSquaresUnique = undefined
+
+-- | Like 'sumOfSquaresUnique', but takes the factorization of @n@.
+sumOfSquaresUniqueF :: (Integral a) => Factorization a -> [(a, a)]
+sumOfSquaresUniqueF = undefined
 
 -- | @'numSumOfSquares' n@ is the number of @(a, b)@ such that @a^2 + b^2 == n@.
 --   Note that @a@ and @b@ are allowed to be negative.
@@ -85,62 +91,21 @@ numSumOfSquaresF fact =
         then 4 * product (map (\(_, e) -> e + 1) p4k1s)
         else 0
 
--- | @'sumOfSquaresOfSquare' n@ is all @(a, b)@ such that @a^2 + b^2 == n^2@.
---   Note that @a@ and @b@ are allowed to be negative.
-sumOfSquaresOfSquare :: (Integral a) => a -> [(a, a)]
-sumOfSquaresOfSquare = sumOfSquaresOfSquareF . factor
-
--- | Like 'sumSumOfSquaresOfSquare', but takes the factorization of @n@.
-sumOfSquaresOfSquareF :: (Integral a) => Factorization a -> [(a, a)]
-sumOfSquaresOfSquareF fact =
-  let (p2, p4k1s, p4k3s) = partitionPrimes fact
-   in undefined
-
-sumOfSquaresOfSquareF' :: (Integral a) => Factorization a -> [(a, a)]
-sumOfSquaresOfSquareF' fact =
-  let (p4k3s, prest) = span (\(p, _) -> (p `rem` 4) == 3) fact
-   in if any ((> 0) . snd) p4k3s
-        then []
-        else concatMap (\(p, e) -> replicate e (sumOfSquares4k1 p)) prest
-
--- | @'numSumOfSquaresOfSquare' n@ is the number of @(a, b)@ such that
---   @a^2 + b^2 == n^2@. Note that @a@ and @b@ are allowed to be negative.
-numSumOfSquaresOfSquare :: (Integral a) => a -> [(a, a)]
-numSumOfSquaresOfSquare = numSumOfSquaresOfSquareF . factor
-
--- | Like 'numSumOfSquaresOfSquare', but takes the factorization of @n@.
-numSumOfSquaresOfSquareF :: (Integral a) => Factorization a -> [(a, a)]
-numSumOfSquaresOfSquareF = undefined
-
-sumOfSquaresNaive :: forall a. (Integral a) => a -> [(a, a)]
-sumOfSquaresNaive p = go 0 sq
-  where
-    sq :: a
-    sq = integerSquareRoot p
-
-    go :: a -> a -> [(a, a)]
-    go i j =
-      if i == sq + 1 || j == 0
-        then []
-        else case compare (i * i + j * j) p of
-          LT -> go (i + 1) j
-          EQ -> (i, j) : go (i + 1) (j - 1)
-          GT -> go i (j - 1)
-
+-- Given a prime p = 4k + 1, find the unique solution (a, b) with 0 < a < b of
+-- a^2 + b^2 == p.
 sumOfSquares4k1 :: forall a. (Integral a) => a -> (a, a)
-sumOfSquares4k1 p = go 0 sq
-  where
-    sq :: a
-    sq = integerSquareRoot p
+sumOfSquares4k1 p =
+  case sumOfSquaresUniqueNaive p of
+    x : _ -> x
+    [] ->
+      error $
+        "sumOfSquares4k1: No solutions found. "
+          ++ "Ensure that input is a prime of the form 4k+1."
 
-    go :: a -> a -> (a, a)
-    go i j =
-      if i == sq + 1 || j == -1
-        then
-          error $
-            "sumOfSquares4k1: No solutions found. "
-              ++ "Ensure that input is a prime of the form 4k+1."
-        else case compare (i * i + j * j) p of
-          LT -> go (i + 1) j
-          EQ -> (i, j)
-          GT -> go i (j - 1)
+mul :: (Integral a) => (a, a) -> (a, a) -> (a, a)
+mul (a, b) (c, d) =
+  let e = a * c - b * d
+      f = a * d + b * c
+   in if e > 0
+        then (e, f)
+        else (f, -e)

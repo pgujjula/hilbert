@@ -50,6 +50,7 @@ library:
   - Math.NumberTheory.Prime.Factor
   - Math.NumberTheory.QuadraticExtension
   - Math.NumberTheory.SumOfSquares
+  - Math.NumberTheory.SumOfSquares.Internal
   - Math.Probability
   other-modules:
   - Math.NumberTheory.ContinuedFraction.Core
