@@ -3,13 +3,12 @@ module Test.Math.NumberTheory.SumOfSquares (tests) where
 import Control.Monad (forM_, guard)
 import Data.List (sort)
 import Math.NumberTheory.Roots (integerSquareRoot)
-import Math.NumberTheory.SumOfSquares ()
+import Math.NumberTheory.SumOfSquares (numSumOfSquares, sumOfSquares, sumOfSquaresUnique)
 import Math.NumberTheory.SumOfSquares.Internal
   ( sumOfSquaresNaive,
     sumOfSquaresUniqueNaive,
   )
 import Test.Tasty (TestTree, testGroup)
-import Test.Tasty.ExpectedFailure (ignoreTest)
 import Test.Tasty.HUnit (testCase, (@?=))
 
 tests :: TestTree
@@ -18,9 +17,9 @@ tests =
     "Math.NumberTheory.SumOfSquares"
     [ sumOfSquaresNaiveTest,
       sumOfSquaresUniqueNaiveTest,
-      sumOfSquaresFTest,
-      sumOfSquaresUniqueFTest,
-      numSumOfSquaresFTest
+      sumOfSquaresTest,
+      sumOfSquaresUniqueTest,
+      numSumOfSquaresTest
     ]
 
 sumOfSquaresVeryNaive :: (Integral a) => a -> [(a, a)]
@@ -62,11 +61,40 @@ sumOfSquaresUniqueNaiveTest =
             @?= sort (sumOfSquaresUniqueVeryNaive n)
     ]
 
-sumOfSquaresFTest :: TestTree
-sumOfSquaresFTest = ignoreTest $ testGroup "sumOfSquaresF" []
+sumOfSquaresTest :: TestTree
+sumOfSquaresTest =
+  testGroup
+    "sumOfSquares"
+    [ testCase "empty list for negative inputs" $
+        forM_ [(-10 :: Int) .. (-1 :: Int)] $ \i ->
+          sumOfSquares i @?= [],
+      testCase "correct for n in [0..1000]" $
+        forM_ [(0 :: Int) .. 1000] $ \n ->
+          sort (sumOfSquares n)
+            @?= sort (sumOfSquaresNaive n)
+    ]
 
-sumOfSquaresUniqueFTest :: TestTree
-sumOfSquaresUniqueFTest = ignoreTest $ testGroup "sumOfSquaresUniqueF" []
+sumOfSquaresUniqueTest :: TestTree
+sumOfSquaresUniqueTest =
+  testGroup
+    "sumOfSquaresUnique"
+    [ testCase "empty list for negative inputs" $
+        forM_ [(-10 :: Int) .. (-1 :: Int)] $ \i ->
+          sumOfSquaresUnique i @?= [],
+      testCase "correct for n in [0..10000]" $
+        forM_ [(0 :: Int) .. 10000] $ \n ->
+          sort (sumOfSquaresUnique n)
+            @?= sort (sumOfSquaresUniqueNaive n)
+    ]
 
-numSumOfSquaresFTest :: TestTree
-numSumOfSquaresFTest = ignoreTest $ testGroup "numSumOfSquaresF" []
+numSumOfSquaresTest :: TestTree
+numSumOfSquaresTest =
+  testGroup
+    "numSumOfSquares"
+    [ testCase "0 for negative inputs" $
+        forM_ [(-10 :: Int) .. (-1 :: Int)] $ \i ->
+          numSumOfSquares i @?= 0,
+      testCase "correct for n in [0..10000]" $
+        forM_ [(0 :: Int) .. 10000] $ \n ->
+          numSumOfSquares n @?= length (sumOfSquares n)
+    ]

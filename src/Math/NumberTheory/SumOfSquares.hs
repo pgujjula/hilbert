@@ -20,22 +20,42 @@ module Math.NumberTheory.SumOfSquares
   )
 where
 
+import Data.Tuple (swap)
 import Data.List (foldl', partition)
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
-import Math.NumberTheory.Roots (integerSquareRoot)
-import Math.NumberTheory.SumOfSquares.Internal
-  ( sumOfSquaresNaive,
-    sumOfSquaresUniqueNaive,
-  )
+import Math.NumberTheory.SumOfSquares.Internal (sumOfSquaresUniqueNaive)
 
 -- | @'sumOfSquares' n@ is all @(a, b)@ such that @a^2 + b^2 == n@. Note that
 --   @a@ and @b@ are allowed to be negative.
 sumOfSquares :: (Integral a) => a -> [(a, a)]
-sumOfSquares = sumOfSquaresF . factor
+sumOfSquares n =
+  case compare n 0 of
+    LT -> []
+    EQ -> [(0, 0)]
+    GT -> sumOfSquaresF (factor n)
 
 -- | Like 'sumOfSquares', but takes the factorization of @n@.
 sumOfSquaresF :: forall a. (Integral a) => Factorization a -> [(a, a)]
-sumOfSquaresF fact =
+sumOfSquaresF = concatMap rot . sumOfSquaresProperF
+
+rot :: (Integral a) => (a, a) -> [(a, a)]
+rot (x, y) = [(x, y), (-y, x), (-x, -y), (y, -x)]
+
+-- | @'sumOfSquaresUnique' n@ is all @(a, b)@ such that @0 <= a <= b@ with
+--   @a^2 + b^2 == n@. Note that @a@ and @b@ are allowed to be negative.
+sumOfSquaresUnique :: (Integral a) => a -> [(a, a)]
+sumOfSquaresUnique n =
+  case compare n 0 of
+    LT -> []
+    EQ -> [(0, 0)]
+    GT -> sumOfSquaresUniqueF (factor n)
+
+-- | Like 'sumOfSquaresUnique', but takes the factorization of @n@.
+sumOfSquaresUniqueF :: (Integral a) => Factorization a -> [(a, a)]
+sumOfSquaresUniqueF = map swap . filter (\(a, b) -> 0 <= b && a >= b) . sumOfSquaresProperF
+
+sumOfSquaresProperF :: forall a. (Integral a) => Factorization a -> [(a, a)]
+sumOfSquaresProperF fact =
   let ((_, e2), pe4k1s, pe4k3s) = partitionPrimes fact
       pe4k1Factors =
         flip map pe4k1s $ \(p, e) ->
@@ -57,19 +77,14 @@ sumOfSquaresF fact =
             sequence pe4k1Factors
         else []
 
--- | @'sumOfSquaresUnique' n@ is all @(a, b)@ such that @0 <= a <= b@ with
---   @a^2 + b^2 == n@. Note that @a@ and @b@ are allowed to be negative.
-sumOfSquaresUnique :: (Integral a) => a -> [(a, a)]
-sumOfSquaresUnique = undefined
-
--- | Like 'sumOfSquaresUnique', but takes the factorization of @n@.
-sumOfSquaresUniqueF :: (Integral a) => Factorization a -> [(a, a)]
-sumOfSquaresUniqueF = undefined
-
 -- | @'numSumOfSquares' n@ is the number of @(a, b)@ such that @a^2 + b^2 == n@.
 --   Note that @a@ and @b@ are allowed to be negative.
 numSumOfSquares :: (Integral a) => a -> Int
-numSumOfSquares = numSumOfSquaresF . factor
+numSumOfSquares n =
+  case compare n 0 of
+    LT -> 0
+    EQ -> 1
+    GT -> numSumOfSquaresF . factor $ n
 
 partitionPrimes ::
   (Integral a) =>
