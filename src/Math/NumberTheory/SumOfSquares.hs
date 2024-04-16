@@ -20,8 +20,12 @@ module Math.NumberTheory.SumOfSquares
   )
 where
 
-import Data.Tuple (swap)
+import Control.Applicative (liftA2)
+import Data.Bifunctor (bimap)
 import Data.List (foldl', partition)
+import Data.Tuple (swap)
+import Data.Vector (Vector, (!))
+import Data.Vector qualified as Vector
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
 import Math.NumberTheory.SumOfSquares.Internal (sumOfSquaresUniqueNaive)
 
@@ -59,7 +63,7 @@ sumOfSquaresProperF fact =
   let ((_, e2), pe4k1s, pe4k3s) = partitionPrimes fact
       pe4k1Factors =
         flip map pe4k1s $ \(p, e) ->
-          let (a, b) = sumOfSquares4k1 p
+          let (a, b) = sumOfSquares4k1Memo p
               half1 = take (e + 1) (iterate (mul (a, b)) (1, 0))
               half2 =
                 reverse $
@@ -73,9 +77,12 @@ sumOfSquaresProperF fact =
         (,0 :: a) $ product $ map (\(p, e) -> p ^ (e `quot` 2)) pe4k3s
    in if all (even . snd) pe4k3s
         then
-          map (foldl' mul (1, 0) . ([pe2Factor, pe4k3Factor] ++)) $
-            sequence pe4k1Factors
+          map (mul (mul pe2Factor pe4k3Factor)) $
+            foldl' combine [(1, 0)] pe4k1Factors
         else []
+
+combine :: (Integral a) => [(a, a)] -> [(a, a)] -> [(a, a)]
+combine = liftA2 mul
 
 -- | @'numSumOfSquares' n@ is the number of @(a, b)@ such that @a^2 + b^2 == n@.
 --   Note that @a@ and @b@ are allowed to be negative.
@@ -106,8 +113,20 @@ numSumOfSquaresF fact =
         then 4 * product (map (\(_, e) -> e + 1) p4k1s)
         else 0
 
+memoLimit :: Int
+memoLimit = 10 ^ (6 :: Int)
+
 -- Given a prime p = 4k + 1, find the unique solution (a, b) with 0 < a < b of
 -- a^2 + b^2 == p.
+sumOfSquares4k1Memo :: forall a. (Integral a) => a -> (a, a)
+sumOfSquares4k1Memo p =
+  if p <= fromIntegral memoLimit
+    then bimap fromIntegral fromIntegral (sumOfSquares4k1Vec ! fromIntegral p)
+    else sumOfSquares4k1 p
+
+sumOfSquares4k1Vec :: Vector (Int, Int)
+sumOfSquares4k1Vec = Vector.generate memoLimit sumOfSquares4k1
+
 sumOfSquares4k1 :: forall a. (Integral a) => a -> (a, a)
 sumOfSquares4k1 p =
   case sumOfSquaresUniqueNaive p of

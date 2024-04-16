@@ -120,6 +120,8 @@ benchmarks:
   primecount-bench:
     source-dirs: bench
     main: Main.hs
+    other-modules:
+    - Bench.Math.NumberTheory.SumOfSquares
     dependencies:
     - hilbert
     - tasty-bench

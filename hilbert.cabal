@@ -120,9 +120,7 @@ benchmark primecount-bench
   type: exitcode-stdio-1.0
   main-is: Main.hs
   other-modules:
-      Paths_hilbert
-  autogen-modules:
-      Paths_hilbert
+      Bench.Math.NumberTheory.SumOfSquares
   hs-source-dirs:
       bench
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Werror=missing-home-modules -Wpartial-fields -Wredundant-constraints -Wunused-packages

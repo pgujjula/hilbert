@@ -9,6 +9,7 @@ import Data.Function                  ((&))
 import Math.NumberTheory.Divisor      (mobiusesFrom)
 import Math.NumberTheory.Prime.Factor (factorizationsFrom)
 import Test.Tasty.Bench
+import Bench.Math.NumberTheory.SumOfSquares (sumOfSquaresBenchmarks)
 
 factorizationsFromBenchmark :: Benchmark
 factorizationsFromBenchmark = bgroup "factorizationsFrom" (fmap mkBench [1..7])
@@ -46,4 +47,5 @@ main :: IO ()
 main = defaultMain
   [ factorizationsFromBenchmark
   , mobiusesFromBenchmark
+  , sumOfSquaresBenchmarks
   ]
