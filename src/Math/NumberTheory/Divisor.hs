@@ -258,10 +258,10 @@ mobiusesFrom start =
         forM_ [lower, lower + p .. upper] $ \i ->
           MVector.unsafeModify v ((-p) *) (i - n)
 
-        forM_ (takeWhile (<= m) $ iterate (* p) (square p)) $ \pk ->
-          let lower' = smallestMultipleGE pk n
-              upper' = largestMultipleLE pk m
-           in forM_ [lower', lower' + pk .. upper'] $ \i -> do
-                MVector.unsafeWrite v (i - n) 0
+        let p2 = square p
+        let lower' = smallestMultipleGE p2 n
+            upper' = largestMultipleLE p2 m
+        forM_ [lower', lower' + p2 .. upper'] $ \i -> do
+          MVector.unsafeWrite v (i - n) 0
 
       Vector.unsafeFreeze v
