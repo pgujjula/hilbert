@@ -20,7 +20,6 @@ module Math.NumberTheory.SumOfSquares
   )
 where
 
-import Control.Applicative (liftA2)
 import Data.Bifunctor (bimap)
 import Data.List (foldl', partition)
 import Data.Tuple (swap)
