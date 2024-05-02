@@ -28,9 +28,10 @@ import Data.Vector.Storable qualified as Storable
 import Data.Vector.Unboxed.Mutable qualified as MUVector
 import Data.Vector.Unboxed qualified as UVector
 import Data.Word (Word64)
-import Math.NumberTheory.Prime.Sieve (generateNPrimes, generatePrimes)
-import Math.NumberTheory.Prime.Sieve qualified as PS
+import Math.Prime.FastSieve (generateNPrimes, generatePrimes)
+import Math.Prime.FastSieve qualified as PS
 import Math.NumberTheory.Roots (integerSquareRoot)
+import System.IO.Unsafe (unsafePerformIO)
 
 -- | An infinite list of the primes.
 --
@@ -54,7 +55,7 @@ primesTo n = fmap fromIntegral . PS.primesTo . fromIntegral $ n
 primesFromTo :: Int -> Int -> [Int]
 primesFromTo a b | a <= 0 = primesTo b
 primesFromTo a b =
-  PS.primesFromTo (fromIntegral a - 1) (fromIntegral b)
+  PS.primesFromTo (fromIntegral a) (fromIntegral b)
     & map fromIntegral
 
 -- | Whether a number is prime.
@@ -97,7 +98,7 @@ primesChimera = Chimera.imapSubvectors f (Chimera.tabulate (const ()))
               then 1
               else 1 + Chimera.index primesChimera (index - 1)
           count = fromIntegral (UVector.length vec)
-       in generateNPrimes count start
+       in unsafePerformIO (generateNPrimes count start)
 
 -- | A 'Chimera' for 'isPrime'.
 isPrimeChimera :: UChimera Bit
@@ -108,7 +109,7 @@ isPrimeChimera = Chimera.imapSubvectors f (Chimera.tabulate (const ()))
       let lower = fromIntegral index
           upper = fromIntegral index + fromIntegral (UVector.length vec) - 1
           ps :: Storable.Vector Word64
-          ps = generatePrimes lower upper
+          ps = unsafePerformIO $ generatePrimes lower upper
        in runST $ do
             isPrimeVec <- MUVector.new (UVector.length vec)
             Storable.forM_ ps $ \p ->

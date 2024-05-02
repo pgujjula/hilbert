@@ -15,7 +15,7 @@ import Math.NumberTheory.Prime.Factor
     pow,
     simplify,
   )
-import Math.NumberTheory.Prime.Sieve (primes)
+import Math.Prime.FastSieve (primes)
 import System.IO (stderr)
 import System.IO.Silently (hSilence)
 import Test.QuickCheck (Gen, choose, forAll, (===))
