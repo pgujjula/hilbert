@@ -10,7 +10,8 @@ import Math.NumberTheory.SumOfSquares
     sumOfSquaresUnique,
   )
 import Math.NumberTheory.SumOfSquares.Internal
-  ( sumOfSquaresNaive,
+  ( numSumOfSquaresLERef,
+    sumOfSquaresNaive,
     sumOfSquaresUniqueNaive,
   )
 import Test.Tasty (TestTree, testGroup)
@@ -25,7 +26,8 @@ tests =
       sumOfSquaresTest,
       sumOfSquaresUniqueTest,
       numSumOfSquaresTest,
-      numSumOfSquaresLETest
+      numSumOfSquaresLETest,
+      numSumOfSquaresLERefTest
     ]
 
 sumOfSquaresVeryNaive :: (Integral a) => a -> [(a, a)]
@@ -118,6 +120,21 @@ numSumOfSquaresLETest =
             (show n)
             (numSumOfSquaresLENaive n)
             (numSumOfSquaresLE n)
+    ]
+
+numSumOfSquaresLERefTest :: TestTree
+numSumOfSquaresLERefTest =
+  testGroup
+    "numSumOfSquaresLERef"
+    [ testCase "0 for negative inputs" $
+        forM_ [(-10 :: Int) .. (-1 :: Int)] $ \i ->
+          numSumOfSquaresLERef i @?= 0,
+      testCase "correct for n in [0..200]" $
+        forM_ [(0 :: Int) .. 200] $ \n ->
+          assertEqual
+            (show n)
+            (numSumOfSquaresLENaive n)
+            (numSumOfSquaresLERef n)
     ]
 
 numSumOfSquaresLENaive :: (Integral a) => a -> a

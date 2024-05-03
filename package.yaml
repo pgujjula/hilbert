@@ -32,6 +32,9 @@ dependencies:
 
 library:
   source-dirs: src
+  c-sources: 
+  - cbits/num_sum_of_squares_le.c
+  cc-options: "-O3"
   exposed-modules:
   - Math.Combinatorics.Binomial
   - Math.Combinatorics.Partition

@@ -3,6 +3,7 @@
 module Math.NumberTheory.SumOfSquares.Internal
   ( sumOfSquaresNaive,
     sumOfSquaresUniqueNaive,
+    numSumOfSquaresLERef,
   )
 where
 
@@ -44,3 +45,12 @@ sumOfSquaresUniqueNaive n =
           LT -> go (i + 1) j
           EQ -> (i, j) : go (i + 1) (j - 1)
           GT -> go i (j - 1)
+
+numSumOfSquaresLERef  :: Integral a => a -> a
+numSumOfSquaresLERef n =
+  if n < 0
+  then 0
+  else sum $ do
+    a <- [0..integerSquareRoot n]
+    pure (integerSquareRoot (n - a*a) + 1)
+{-# INLINE numSumOfSquaresLERef #-}

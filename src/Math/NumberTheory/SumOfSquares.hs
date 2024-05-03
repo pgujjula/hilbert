@@ -22,11 +22,11 @@ module Math.NumberTheory.SumOfSquares
 where
 
 import Data.Bifunctor (bimap)
+import Data.Int (Int64)
 import Data.List (foldl', partition)
 import Data.Tuple (swap)
 import Data.Vector (Vector, (!))
 import Data.Vector qualified as Vector
-import Math.NumberTheory.Power (square)
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
 import Math.NumberTheory.Roots (integerSquareRoot)
 import Math.NumberTheory.SumOfSquares.Internal (sumOfSquaresUniqueNaive)
@@ -146,17 +146,11 @@ mul (a, b) (c, d) =
         then (e, f)
         else (f, -e)
 
--- | 'numSumOfSquaresLE' n is the number of non-negative integers @a@, @b@ such
--- that @a^2 + b^2 == n@.
-numSumOfSquaresLE :: (Integral a) => a -> a
-numSumOfSquaresLE n | n < 0 = 0
+numSumOfSquaresLE :: Int -> Int
 numSumOfSquaresLE n =
-  let sq = integerSquareRoot n
-      go x _ | x > sq = []
-      go x y =
-        if square x + square y <= n
-          then (x, y) : go (x + 1) y
-          else go x (y - 1)
-      x0 = 0
-      y0 = sq
-   in sum (map ((+1) . snd) (go x0 y0))
+  let sq = integerSquareRoot (max n 0)
+   in fromIntegral $
+        numSumOfSquaresLE_ (fromIntegral n) (fromIntegral sq)
+
+foreign import ccall unsafe "num_sum_of_squares_le"
+  numSumOfSquaresLE_ :: Int64 -> Int64 -> Int64
