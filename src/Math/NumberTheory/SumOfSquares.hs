@@ -146,11 +146,17 @@ mul (a, b) (c, d) =
         then (e, f)
         else (f, -e)
 
+-- | @'numSumOfSquaresLE' n@ is the number of nonnegative integers @(a, b)@ such
+-- that @a^2 + b^2 == n@.
 numSumOfSquaresLE :: Int -> Int
 numSumOfSquaresLE n =
   let sq = integerSquareRoot (max n 0)
+      sq2 = integerSquareRoot (max (n `quot` 2) 0)
    in fromIntegral $
-        numSumOfSquaresLE_ (fromIntegral n) (fromIntegral sq)
+        numSumOfSquaresLE_
+          (fromIntegral n)
+          (fromIntegral sq)
+          (fromIntegral sq2)
 
 foreign import ccall unsafe "num_sum_of_squares_le"
-  numSumOfSquaresLE_ :: Int64 -> Int64 -> Int64
+  numSumOfSquaresLE_ :: Int64 -> Int64 -> Int64 -> Int64
