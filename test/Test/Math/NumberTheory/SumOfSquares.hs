@@ -6,6 +6,7 @@ import Math.NumberTheory.Roots (integerSquareRoot)
 import Math.NumberTheory.SumOfSquares
   ( numSumOfSquares,
     numSumOfSquaresLE,
+    numSumOfOddSquaresLE,
     sumOfSquares,
     sumOfSquaresUnique,
   )
@@ -27,7 +28,8 @@ tests =
       sumOfSquaresUniqueTest,
       numSumOfSquaresTest,
       numSumOfSquaresLETest,
-      numSumOfSquaresLERefTest
+      numSumOfSquaresLERefTest,
+      numSumOfOddSquaresLETest
     ]
 
 sumOfSquaresVeryNaive :: (Integral a) => a -> [(a, a)]
@@ -141,5 +143,29 @@ numSumOfSquaresLENaive :: (Integral a) => a -> a
 numSumOfSquaresLENaive n = genericLength $ do
   a <- [0 .. integerSquareRoot n]
   b <- [0 .. integerSquareRoot n]
+  guard (a * a + b * b <= n)
+  pure (a, b)
+
+numSumOfOddSquaresLETest :: TestTree
+numSumOfOddSquaresLETest =
+  testGroup
+    "numSumOfOddSquaresLE"
+    [ testCase "0 for negative inputs" $
+        forM_ [(-10 :: Int) .. (-1 :: Int)] $ \i ->
+          numSumOfOddSquaresLE i @?= 0,
+      testCase "correct for n in [0..200]" $
+        forM_ [(0 :: Int) .. 200] $ \n ->
+          assertEqual
+            (show n)
+            (numSumOfOddSquaresLENaive n)
+            (numSumOfOddSquaresLE n)
+    ]
+
+numSumOfOddSquaresLENaive :: (Integral a) => a -> a
+numSumOfOddSquaresLENaive n = genericLength $ do
+  a <- [0 .. integerSquareRoot n]
+  b <- [0 .. integerSquareRoot n]
+  guard (odd a)
+  guard (odd b)
   guard (a * a + b * b <= n)
   pure (a, b)

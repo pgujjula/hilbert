@@ -18,6 +18,7 @@ module Math.NumberTheory.SumOfSquares
     numSumOfSquares,
     numSumOfSquaresF,
     numSumOfSquaresLE,
+    numSumOfOddSquaresLE,
   )
 where
 
@@ -160,3 +161,18 @@ numSumOfSquaresLE n =
 
 foreign import ccall unsafe "num_sum_of_squares_le"
   numSumOfSquaresLE_ :: Int64 -> Int64 -> Int64 -> Int64
+
+-- | @'numSumOfOddSquaresLE' n@ is the number of nonnegative odd integers
+-- @(a, b)@ such that @a^2 + b^2 == n@.
+numSumOfOddSquaresLE :: Int -> Int
+numSumOfOddSquaresLE n =
+  let sq = integerSquareRoot (max n 0)
+      sq2 = integerSquareRoot (max (n `quot` 2) 0)
+   in fromIntegral $
+        numSumOfOddSquaresLE_
+          (fromIntegral n)
+          (fromIntegral sq)
+          (fromIntegral sq2)
+
+foreign import ccall unsafe "num_sum_of_odd_squares_le"
+  numSumOfOddSquaresLE_ :: Int64 -> Int64 -> Int64 -> Int64

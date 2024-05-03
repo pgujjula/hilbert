@@ -11,6 +11,7 @@ import Math.NumberTheory.Prime.Factor (factorizationsFrom)
 import Test.Tasty.Bench
 import Bench.Math.NumberTheory.SumOfSquares (sumOfSquaresBenchmarks,
   numSumOfSquaresLEBenchmarks,
+  numSumOfOddSquaresLEBenchmarks,
   numSumOfSquaresLERefBenchmarks)
 
 factorizationsFromBenchmark :: Benchmark
@@ -51,5 +52,6 @@ main = defaultMain
   , mobiusesFromBenchmark
   , sumOfSquaresBenchmarks
   , numSumOfSquaresLEBenchmarks
+  , numSumOfOddSquaresLEBenchmarks
   , numSumOfSquaresLERefBenchmarks
   ]
