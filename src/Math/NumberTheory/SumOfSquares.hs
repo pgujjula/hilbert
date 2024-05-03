@@ -17,6 +17,7 @@ module Math.NumberTheory.SumOfSquares
     -- * Counting solutions
     numSumOfSquares,
     numSumOfSquaresF,
+    numSumOfSquaresLE,
   )
 where
 
@@ -25,7 +26,9 @@ import Data.List (foldl', partition)
 import Data.Tuple (swap)
 import Data.Vector (Vector, (!))
 import Data.Vector qualified as Vector
+import Math.NumberTheory.Power (square)
 import Math.NumberTheory.Prime.Factor (Factorization, factor)
+import Math.NumberTheory.Roots (integerSquareRoot)
 import Math.NumberTheory.SumOfSquares.Internal (sumOfSquaresUniqueNaive)
 
 -- | @'sumOfSquares' n@ is all @(a, b)@ such that @a^2 + b^2 == n@. Note that
@@ -142,3 +145,18 @@ mul (a, b) (c, d) =
    in if e > 0
         then (e, f)
         else (f, -e)
+
+-- | 'numSumOfSquaresLE' n is the number of non-negative integers @a@, @b@ such
+-- that @a^2 + b^2 == n@.
+numSumOfSquaresLE :: (Integral a) => a -> a
+numSumOfSquaresLE n | n < 0 = 0
+numSumOfSquaresLE n =
+  let sq = integerSquareRoot n
+      go x _ | x > sq = []
+      go x y =
+        if square x + square y <= n
+          then (x, y) : go (x + 1) y
+          else go x (y - 1)
+      x0 = 0
+      y0 = sq
+   in sum (map ((+1) . snd) (go x0 y0))

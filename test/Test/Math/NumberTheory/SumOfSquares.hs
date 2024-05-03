@@ -1,15 +1,20 @@
 module Test.Math.NumberTheory.SumOfSquares (tests) where
 
 import Control.Monad (forM_, guard)
-import Data.List (sort)
+import Data.List (genericLength, sort)
 import Math.NumberTheory.Roots (integerSquareRoot)
-import Math.NumberTheory.SumOfSquares (numSumOfSquares, sumOfSquares, sumOfSquaresUnique)
+import Math.NumberTheory.SumOfSquares
+  ( numSumOfSquares,
+    numSumOfSquaresLE,
+    sumOfSquares,
+    sumOfSquaresUnique,
+  )
 import Math.NumberTheory.SumOfSquares.Internal
   ( sumOfSquaresNaive,
     sumOfSquaresUniqueNaive,
   )
 import Test.Tasty (TestTree, testGroup)
-import Test.Tasty.HUnit (testCase, (@?=))
+import Test.Tasty.HUnit (assertEqual, testCase, (@?=))
 
 tests :: TestTree
 tests =
@@ -19,7 +24,8 @@ tests =
       sumOfSquaresUniqueNaiveTest,
       sumOfSquaresTest,
       sumOfSquaresUniqueTest,
-      numSumOfSquaresTest
+      numSumOfSquaresTest,
+      numSumOfSquaresLETest
     ]
 
 sumOfSquaresVeryNaive :: (Integral a) => a -> [(a, a)]
@@ -98,3 +104,25 @@ numSumOfSquaresTest =
         forM_ [(0 :: Int) .. 10000] $ \n ->
           numSumOfSquares n @?= length (sumOfSquares n)
     ]
+
+numSumOfSquaresLETest :: TestTree
+numSumOfSquaresLETest =
+  testGroup
+    "numSumOfSquaresLE"
+    [ testCase "0 for negative inputs" $
+        forM_ [(-10 :: Int) .. (-1 :: Int)] $ \i ->
+          numSumOfSquaresLE i @?= 0,
+      testCase "correct for n in [0..200]" $
+        forM_ [(0 :: Int) .. 200] $ \n ->
+          assertEqual
+            (show n)
+            (numSumOfSquaresLENaive n)
+            (numSumOfSquaresLE n)
+    ]
+
+numSumOfSquaresLENaive :: (Integral a) => a -> a
+numSumOfSquaresLENaive n = genericLength $ do
+  a <- [0 .. integerSquareRoot n]
+  b <- [0 .. integerSquareRoot n]
+  guard (a * a + b * b <= n)
+  pure (a, b)
