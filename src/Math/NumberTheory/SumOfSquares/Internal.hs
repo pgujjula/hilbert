@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 {-# OPTIONS_HADDOCK hide #-}
 
 module Math.NumberTheory.SumOfSquares.Internal

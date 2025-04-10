@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Copyright Preetham Gujjula
+# SPDX-License-Identifier: BSD-3-Clause
 spec-version: 0.37.0
 name:        hilbert
 version:     0.1.21.1

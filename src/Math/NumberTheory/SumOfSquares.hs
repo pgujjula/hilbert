@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 -- |
 -- Module      : Math.NumberTheory.SumOfSquares
 -- Description : Express a natural number as the sum of squares

@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 -- | Module      : Math.NumberTheory.Figurate
 --   Description : Figurate numbers.
 --   Copyright   : (c) Preetham Gujjula, 2020

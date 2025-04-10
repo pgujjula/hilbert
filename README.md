@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: Copyright Preetham Gujjula
+SPDX-License-Identifier: BSD-3-Clause
+-->
 Hilbert is an exploratory library for mathematics in Haskell. I use it as a 
 testbed for mathematical algorithms and structures that might be useful in other
 libraries, and as a tool to help me solve Project Euler problems.

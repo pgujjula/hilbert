@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 -- | Module      : Math.NumberTheory.Prime
 --   Description : Functions related to primes.
 --   Copyright   : (c) Preetham Gujjula, 2020

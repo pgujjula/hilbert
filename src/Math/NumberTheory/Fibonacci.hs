@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 -- | Module      : Math.NumberTheory.Fibonacci
 --   Description : Fibonacci and Lucas numbers, and their generalization.
 --   Copyright   : (c) Preetham Gujjula, 2020

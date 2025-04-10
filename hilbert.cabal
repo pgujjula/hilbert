@@ -15,7 +15,6 @@ author:         Preetham Gujjula
 maintainer:     Preetham Gujjula <libraries@mail.preetham.io>
 copyright:      Preetham Gujjula
 license:        BSD-3-Clause
-license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md

@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 module Test.Math.NumberTheory.SumOfSquares (tests) where
 
 import Control.Monad (forM_, guard)

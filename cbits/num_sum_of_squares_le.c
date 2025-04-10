@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Copyright Preetham Gujjula
+// SPDX-License-Identifier: BSD-3-Clause
 #include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>

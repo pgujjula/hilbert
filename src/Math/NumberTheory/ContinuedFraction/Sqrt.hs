@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 -- | Module      : Math.NumberTheory.ContinuedFraction.Sqrt
 --   Description : Compute the square root of an integer as a continued fraction.
 --   Copyright   : (c) Preetham Gujjula, 2016

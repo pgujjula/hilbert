@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 -- | Module      : Math.NumberTheory.ContinuedFraction
 --   Description : Handle continued fractions.
 --   Copyright   : (c) Preetham Gujjula, 2016 - 2020

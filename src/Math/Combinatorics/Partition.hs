@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 {-| Module      : Math.Combinatorics.Partition
     Description : Counting partitions of an integer.
     Copyright   : (c) Preetham Gujjula, 2020

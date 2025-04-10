@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 {-# OPTIONS_GHC -Wno-redundant-constraints #-}
 
 -- | Module      : Math.NumberTheory.Digit

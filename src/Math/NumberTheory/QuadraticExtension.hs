@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 {-# LANGUAGE PatternSynonyms #-}
 
 -- | Module      : Math.NumberTheory.QuadraticExtension

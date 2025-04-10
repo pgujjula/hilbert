@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 -- | Module      : Math.NumberTheory.Gaussian.Divisor
 --   Description : Gaussian divisors of Gaussian integers.
 --   Copyright   : (c) Preetham Gujjula, 2024

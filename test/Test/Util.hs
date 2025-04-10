@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 module Test.Util (throwsException) where
 
 import Control.Exception (SomeException, catch, evaluate)

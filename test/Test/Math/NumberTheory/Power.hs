@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 module Test.Math.NumberTheory.Power (tests) where
 
 import Data.Maybe (fromJust, isJust)

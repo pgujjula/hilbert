@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 {-# LANGUAGE MultiWayIf #-}
 
 module Test.Math.NumberTheory.Prime.Factor (tests) where

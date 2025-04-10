@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 -- | Module      : Math.NumberTheory.Gaussian.Prime.Factor
 --   Description : Factorization into Gaussian primes.
 --   Copyright   : (c) Preetham Gujjula, 2024

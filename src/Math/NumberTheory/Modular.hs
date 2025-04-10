@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 -- | Module      : Math.NumberTheory.Modular
 --   Description : Functions to perform modular arithmetic.
 --   Copyright   : (c) Preetham Gujjula, 2016 - 2020

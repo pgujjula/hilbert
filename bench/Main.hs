@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Copyright Preetham Gujjula
+-- SPDX-License-Identifier: BSD-3-Clause
 -- |
 -- Copyright   : 2022 Preetham Gujjula
 -- License     : BSD-3-Clause
