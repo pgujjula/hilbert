@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.37.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -12,7 +12,7 @@ category:       Math
 homepage:       https://github.com/pgujjula/hilbert#readme
 bug-reports:    https://github.com/pgujjula/hilbert/issues
 author:         Preetham Gujjula
-maintainer:     libraries@mail.preetham.io
+maintainer:     Preetham Gujjula <libraries@mail.preetham.io>
 copyright:      2023 Preetham Gujjula
 license:        BSD-3-Clause
 license-file:   LICENSE
