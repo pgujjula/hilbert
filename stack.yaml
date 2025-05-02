@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: Copyright Preetham Gujjula
 # SPDX-License-Identifier: BSD-3-Clause
-resolver: lts-22.43
-compiler: ghc-9.6.7
+resolver: lts-22.44
 
 packages:
   - .
@@ -16,7 +15,6 @@ extra-deps:
   - list-duplicate-0.1.0.0
   - list-filter-0.1.1.0
   - chimera-0.4.1.0
-  - ghc-typelits-presburger-0.7.4.1
   - github: pgujjula/apply-merge # 0.1.0.0 (Release Candidate 2)
     commit: '78cdf2cbd844a404f2c0db3f557f0d5445bd1e73'
   - github: sighingnow/primesieve-haskell
