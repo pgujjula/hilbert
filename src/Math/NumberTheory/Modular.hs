@@ -19,7 +19,7 @@ where
 
 import Control.Arrow ((>>>))
 import Control.Monad (foldM, zipWithM)
-import Data.Foldable (foldl')
+import Data.List (foldl1')
 import Data.List (elemIndex)
 import Data.List.Duplicate (groupBy)
 import Data.Maybe (fromJust)
@@ -100,15 +100,15 @@ massage =
     >>> fmap (\xs -> (fst (head xs), fmap snd xs))
 
 solveAll :: (Integral a) => [(a, a)] -> (a, a)
-solveAll = foldl' solve (0, 1)
+solveAll = foldl1' solve
 
 solve :: (Integral a) => (a, a) -> (a, a) -> (a, a)
 solve (a, m) (b, n) = (x, s)
   where
     s = m * n
     x =
-      ( (a * (fromJust $ modInv n m)) * n
-          + (b * (fromJust $ modInv m n)) * m
+      ( (a * fromJust (modInv n m)) * n
+          + (b * fromJust (modInv m n)) * m
       )
         `rem` s
 
